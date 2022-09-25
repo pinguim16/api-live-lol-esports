@@ -89,13 +89,28 @@ export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetai
                         <div className="blue-team">
                             <img src={blueTeam.image} alt={blueTeam.name}/>
                         </div>
-                        <h3>{blueTeam.code}</h3>
+                        <h1>
+                            <div>
+                                {blueTeam.code}
+                            </div>
+                            <div>
+                                {blueTeam.result.gameWins}-{redTeam.result.gameWins}
+                            </div>
+                        </h1>
                         <h1>
                             VS
+                            <div>BEST OF {gameDetails.data.event.match.strategy.count}</div>
                             <div>{gameState.toUpperCase()}</div>
                             <div>{inGameTime}</div>
                         </h1>
-                        <h3>{redTeam.code}</h3>
+                        <h1>
+                            <div>
+                                {redTeam.code}
+                            </div>
+                            <div>
+                                {redTeam.result.gameWins}-{blueTeam.result.gameWins}
+                            </div>
+                        </h1>
                         <div className="red-team">
                             <img src={redTeam.image} alt={redTeam.name}/>
                         </div>
