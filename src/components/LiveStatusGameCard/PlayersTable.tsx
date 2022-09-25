@@ -332,6 +332,9 @@ export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetai
                     })}
                     </tbody>
                 </table>
+                <span className="player-stats">
+                    Patch Version: {gameMetadata.patchVersion}
+                </span>
             </div>
 
             <LiveAPIWatcher gameMetadata={gameMetadata} lastFrameWindow={lastFrameWindow} blueTeam={blueTeam} redTeam={redTeam}/>
