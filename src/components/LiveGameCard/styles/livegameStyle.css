@@ -18,11 +18,8 @@
     justify-content: center;
 }
 
-.live-game-card-content > h1 {
-    display: flex;
-    align-items: center;
-    padding: 0 1rem;
-    color: var(--text);
+.live-game-card-content > div {
+    padding-top: 0.3rem;
 }
 
 .live-game-card:hover {

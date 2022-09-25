@@ -9,7 +9,7 @@ export function ScheduleGameCard({ game }: Props) {
     return (
         <Link to={`live/${game.match.id}`}>
             <div className="live-game-card">
-                <h3>{game.league.name}</h3>
+                <h3>{game.league.name} - {game.blockName}</h3>
 
                 <div className="live-game-card-content">
                     <div className="live-game-card-team">
@@ -20,7 +20,10 @@ export function ScheduleGameCard({ game }: Props) {
                     </span>
                     </div>
 
-                    <h1>VS</h1>
+                    <div>
+                        <h1>VS</h1>
+                        <span>BEST OF {game.match.strategy.count}</span>
+                    </div>
 
                     <div className="live-game-card-team">
                         <img className="live-game-card-team-image" src={game.match.teams[1].image}
