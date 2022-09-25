@@ -5,7 +5,7 @@ import { useTheme } from "../../theme/ThemeContext";
 
 export function ThemeToggler() {
     const { setCurrentTheme} = useTheme();
-    const [toggled, setToggled] = useState(false);
+    const [toggled, setToggled] = useState(true);
 
     useEffect(() => {
         const themeData = localStorage.getItem("theme");
