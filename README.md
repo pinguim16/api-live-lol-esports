@@ -10,6 +10,7 @@
   * Translated to English?
   * Calculate stream delays?
   * Player stats?
+  * Current betting odds from top betting sites?
 
 
 ## 📦 Dependencies and programs used
