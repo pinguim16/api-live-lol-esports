@@ -4,7 +4,8 @@ import {
     getGameDetails,
     getISODateMultiplyOf10,
     getLiveDetailsGame,
-    getLiveWindowGame
+    getLiveWindowGame,
+    getSchedule
 } from "../../utils/LoLEsportsAPI";
 import {useEffect, useState} from "react";
 import {GameMetadata, Frame as FrameWindow} from "./types/windowLiveTypes";
@@ -13,18 +14,20 @@ import {PlayersTable} from "./PlayersTable";
 import BigNumber from "bignumber.js";
 import {Frame as FrameDetails} from "./types/detailsLiveTypes";
 import {GameDetails} from "./types/detailsPersistentTypes";
+import {Event as EventDetails} from "../LiveGameCard/types/scheduleType";
 
 export function LiveGame({ match }: any) {
     const [firstFrameWindow, setFirstFrameWindow] = useState<FrameWindow>();
     const [lastFrameWindow, setLastFrameWindow] = useState<FrameWindow>();
     const [lastFrameDetails, setLastFrameDetails] = useState<FrameDetails>();
+    const [eventDetails, setEventDetails] = useState<EventDetails>();
     const [gameData, setGameData] = useState<GameDetails>();
     const [metadata, setMetadata] = useState<GameMetadata>();
 
     const matchId = match.params.gameid;
     const preGameId = new BigNumber(matchId);
     let gameId = BigNumber.sum(preGameId, 1).toString();
-
+    
     useEffect(() => {
         getLiveGameDetails();
         /*getLiveWindow();
@@ -37,6 +40,16 @@ export function LiveGame({ match }: any) {
 
         return () => {
             clearInterval(windowIntervalID);
+        }
+
+        function getEventDetails(){
+            getSchedule().then(response => {
+                setEventDetails(response.data.data.schedule.events.find((event: EventDetails) => {
+                    return event.match.id == matchId
+                }));
+            }).catch(error =>
+                console.error(error)
+            )
         }
 
         function getFirstWindow(){
@@ -72,6 +85,7 @@ export function LiveGame({ match }: any) {
         function getLiveGameDetails() {
             getGameDetails(matchId).then(response => {
                 let gameData: GameDetails = response.data;
+                console.log(gameData)
                 if(gameData === undefined) return;
 
                 for (const game of gameData.data.event.match.games) {
@@ -80,6 +94,7 @@ export function LiveGame({ match }: any) {
                         console.log(gameId)
                     }
                 }
+                getEventDetails()
                 getFirstWindow()
                 setGameData(gameData);
             })
@@ -96,10 +111,43 @@ export function LiveGame({ match }: any) {
         return (
             <PlayersTable firstFrameWindow={firstFrameWindow} lastFrameWindow={lastFrameWindow} lastFrameDetails={lastFrameDetails} gameMetadata={metadata} gameDetails={gameData} />
         );
-    }else {
+    }else if (eventDetails !== undefined && gameData !== undefined) {
         return(
             <div className="loading-game-container">
-                <img className="loading-game-image" alt="game loading" src={Loading}/>
+                <div>
+                    <img className="loading-game-image" alt="game loading" src={Loading}/>
+                    <div className="live-game-card-content">
+                        <div className="live-game-card-team">
+                            <img className="live-game-card-team-image" src={gameData.data.event.match.teams[0].image}
+                                alt={gameData.data.event.match.teams[0].name}/>
+                            <span className="live-game-card-title">
+                            {gameData.data.event.match.teams[0].name}
+                        </span>
+                        </div>
+
+                        <div>
+                            <h1>VS</h1>
+                            <span>BEST OF {gameData.data.event.match.strategy.count}</span>
+                        </div>
+
+                        <div className="live-game-card-team">
+                            <img className="live-game-card-team-image" src={gameData.data.event.match.teams[1].image}
+                                alt={gameData.data.event.match.teams[1].name}/>
+                            <span className="live-game-card-title">
+                            {gameData.data.event.match.teams[1].name}
+                        </span>
+                        </div>
+                    </div>
+                    <h3>Game {gameData.data.event.match.games.length} out of {eventDetails.match.strategy.count} will start at {new Date(eventDetails.startTime).toLocaleTimeString([], {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit'})}</h3>
+                </div>
+            </div>
+        )
+    } else {
+        return(
+            <div className="loading-game-container">
+                <div>
+                    <img className="loading-game-image" alt="game loading" src={Loading}/>
+                </div>
             </div>
         )
     }

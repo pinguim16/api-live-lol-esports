@@ -41,7 +41,7 @@ export interface Match {
 }
 
 export interface Event {
-    startTime: Date;
+    startTime: string;
     state: string;
     type: string;
     blockName: string;

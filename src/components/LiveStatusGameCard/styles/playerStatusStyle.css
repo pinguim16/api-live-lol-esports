@@ -321,6 +321,15 @@ Status dragons
     align-items: center;
 }
 
+.loading-game-container div {
+    text-align: center;
+    width: 100%;
+}
+
+.loading-game-container .live-game-card-title {
+    display: block;
+}
+
 .loading-game-image{
     width: 20%;
 }

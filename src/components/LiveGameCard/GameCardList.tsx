@@ -3,15 +3,17 @@ import {ScheduleGameCard} from "./ScheduleGameCard";
 
 import {Event as LiveEvent} from "./types/liveGameTypes";
 import {Event as TodayEvent} from "./types/scheduleType";
+import {Event as FutureEvent} from "./types/scheduleType";
 
 import Galaxy from "../../assets/images/galaxy.svg"
 
 type Props = {
     liveGames: LiveEvent[];
     todayGames: TodayEvent[];
+    futureGames: FutureEvent[];
 }
 
-export function GameCardList({ liveGames, todayGames }: Props) {
+export function GameCardList({ liveGames, todayGames, futureGames }: Props) {
     return (
         <div>
             <LiveGames liveGames={liveGames}/>
@@ -19,6 +21,10 @@ export function GameCardList({ liveGames, todayGames }: Props) {
             <div className="games-separator"/>
 
             <TodayGames todayGames={todayGames}/>
+
+            <div className="games-separator"/>
+
+            <FutureGames futureGames={futureGames}/>
         </div>
     );
 }
@@ -66,6 +72,37 @@ function TodayGames({todayGames}: PropsToday) {
                 <div className="games-list-container">
                     <div className="games-list-items">
                         {todayGames.map(game => (
+                            <ScheduleGameCard
+                                key={game.match.id}
+                                game={game}
+                            />
+                        ))}
+                    </div>
+                </div>
+            </div>
+        );
+    }else{
+        return (
+            <div/>
+        );
+    }
+}
+
+type PropsFuture = {
+    futureGames: FutureEvent[];
+}
+
+function FutureGames({futureGames}: PropsFuture) {
+    if (futureGames !== undefined && futureGames.length !== 0) {
+
+        let date = new Date();
+
+        return (
+            <div>
+                <h2 className="games-of-day">NEXT 7 DAYS</h2>
+                <div className="games-list-container">
+                    <div className="games-list-items">
+                        {futureGames.map(game => (
                             <ScheduleGameCard
                                 key={game.match.id}
                                 game={game}

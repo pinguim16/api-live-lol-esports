@@ -10,7 +10,11 @@ export function ScheduleGameCard({ game }: Props) {
         <Link to={`live/${game.match.id}`}>
             <div className="live-game-card">
                 <h3>{game.league.name} - {game.blockName}</h3>
-
+                <h4>
+                    <span>
+                        {new Date(game.startTime).toLocaleTimeString([], {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit'})}
+                    </span>
+                </h4>
                 <div className="live-game-card-content">
                     <div className="live-game-card-team">
                         <img className="live-game-card-team-image" src={game.match.teams[0].image}

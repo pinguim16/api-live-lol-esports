@@ -6,11 +6,12 @@ import {useEffect, useState} from "react";
 
 import {Event as LiveEvents} from "./types/liveGameTypes";
 import {Event as TodayEvent} from "./types/scheduleType";
+import {Event as FutureEvent} from "./types/scheduleType";
 
 export function LiveGames() {
     const [liveEvents, setLiveEvents] = useState<LiveEvents[]>([])
     const [todayEvents, setTodayEvents] = useState<TodayEvent[]>([])
-
+    const [futureEvents, setFutureEvents] = useState<FutureEvent[]>([])
 
     useEffect(() => {
         getLiveGames().then(response => {
@@ -21,7 +22,7 @@ export function LiveGames() {
 
         getSchedule().then(response => {
             setTodayEvents(response.data.data.schedule.events.filter(filterByTodayDate));
-
+            setFutureEvents(response.data.data.schedule.events.filter(filterByNextWeek))
         }).catch(error =>
             console.error(error)
         )
@@ -32,7 +33,7 @@ export function LiveGames() {
     return (
         <div className="orders-container">
             <GameCardList
-                liveGames={liveEvents} todayGames={todayEvents}
+                liveGames={liveEvents} todayGames={todayEvents} futureGames={futureEvents}
             />
         </div>
     );
@@ -49,6 +50,23 @@ function filterByTodayDate(event: TodayEvent) {
     if(parseInt(eventDate[0]) === date.getFullYear() &&
         parseInt(eventDate[1]) === (date.getUTCMonth() + 1) &&
         parseInt(eventDate[2]) === date.getDate()){
+
+        if(event.match === undefined) return false
+        if(event.match.id === undefined) return false
+
+        return true;
+    }else{
+        return false;
+    }
+}
+
+function filterByNextWeek(event: TodayEvent) {
+    let minDate = new Date();
+    let maxDate = new Date()
+    maxDate.setDate(maxDate.getDate() + 7)
+    let eventDate = new Date(event.startTime)
+
+    if(eventDate.valueOf() > minDate.valueOf() && eventDate.valueOf() < maxDate.valueOf()){
 
         if(event.match === undefined) return false
         if(event.match.id === undefined) return false
