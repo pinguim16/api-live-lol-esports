@@ -55,7 +55,7 @@ export interface RedTeam {
 }
 
 export interface Frame {
-    rfc460Timestamp: Date;
+    rfc460Timestamp: string;
     gameState: string;
     blueTeam: BlueTeam;
     redTeam: RedTeam;

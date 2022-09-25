@@ -27,13 +27,16 @@ import {LiveAPIWatcher} from "./LiveAPIWatcher";
 import { CHAMPIONS_URL } from '../../utils/LoLEsportsAPI';
 
 type Props = {
+    firstFrameWindow: FrameWindow,
     lastFrameWindow: FrameWindow,
     lastFrameDetails: FrameDetails,
     gameMetadata: GameMetadata,
     gameDetails: GameDetails,
 }
 
-export function PlayersTable({ lastFrameWindow, lastFrameDetails, gameMetadata, gameDetails } : Props) {
+// const firstFrame = 
+
+export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetails, gameMetadata, gameDetails } : Props) {
     const [gameState, setGameState] = useState<GameState>(GameState[lastFrameWindow.gameState as keyof typeof GameState]);
 
     useEffect(() => {
@@ -70,7 +73,7 @@ export function PlayersTable({ lastFrameWindow, lastFrameDetails, gameMetadata, 
     }
 
     const goldPercentage = getGoldPercentage(lastFrameWindow.blueTeam.totalGold, lastFrameWindow.redTeam.totalGold);
-
+    let inGameTime = getInGameTime(firstFrameWindow.rfc460Timestamp, lastFrameWindow.rfc460Timestamp)
     document.title = `${blueTeam.name} VS ${redTeam.name}`;
 
     return (
@@ -89,7 +92,8 @@ export function PlayersTable({ lastFrameWindow, lastFrameDetails, gameMetadata, 
                         <h3>{blueTeam.code}</h3>
                         <h1>
                             VS
-                            <h3>{gameState.toUpperCase()}</h3>
+                            <div>{gameState.toUpperCase()}</div>
+                            <div>{inGameTime}</div>
                         </h1>
                         <h3>{redTeam.code}</h3>
                         <div className="red-team">
@@ -152,14 +156,14 @@ export function PlayersTable({ lastFrameWindow, lastFrameDetails, gameMetadata, 
                     </div>
                     <div className="live-game-stats-header-dragons">
                         <div className="blue-team">
-                            {lastFrameWindow.blueTeam.dragons.map(dragon => (
-                                getDragonSVG(dragon)
+                            {lastFrameWindow.blueTeam.dragons.map((dragon, i) => (
+                                getDragonSVG(dragon, 'blue', i)
                             ))}
                         </div>
                         <div className="red-team">
 
-                            {lastFrameWindow.redTeam.dragons.slice().reverse().map(dragon => (
-                                getDragonSVG(dragon)
+                            {lastFrameWindow.redTeam.dragons.slice().reverse().map((dragon, i) => (
+                                getDragonSVG(dragon, 'red', i)
                             ))}
                         </div>
                     </div>
@@ -167,7 +171,7 @@ export function PlayersTable({ lastFrameWindow, lastFrameDetails, gameMetadata, 
 
                 <table className="status-live-game-card-table">
                     <thead>
-                    <tr>
+                    <tr key={blueTeam.name.toUpperCase()}>
                         <th className="table-top-row-champion" title="champion/team">
                             <span>{blueTeam.name.toUpperCase()}</span>
                         </th>
@@ -202,7 +206,7 @@ export function PlayersTable({ lastFrameWindow, lastFrameDetails, gameMetadata, 
                         let goldDifference = getGoldDifference(player, "blue", gameMetadata, lastFrameWindow);
 
                         return (
-                            <tr>
+                            <tr key={`${CHAMPIONS_URL}${gameMetadata.blueTeamMetadata.participantMetadata[player.participantId - 1].championId}`}>
                                 <th>
                                     <div className="player-champion-info">
                                         <img
@@ -250,7 +254,7 @@ export function PlayersTable({ lastFrameWindow, lastFrameDetails, gameMetadata, 
 
                 <table className="status-live-game-card-table">
                     <thead>
-                    <tr>
+                    <tr key={redTeam.name.toUpperCase()}>
                         <th className="table-top-row-champion" title="champion/team">
                             <span>{redTeam.name.toUpperCase()}</span>
                         </th>
@@ -285,7 +289,7 @@ export function PlayersTable({ lastFrameWindow, lastFrameDetails, gameMetadata, 
                         let goldDifference = getGoldDifference(player, "red", gameMetadata, lastFrameWindow);
 
                         return(
-                            <tr>
+                            <tr key={`${CHAMPIONS_URL}${gameMetadata.redTeamMetadata.participantMetadata[player.participantId - 6].championId}`}>
                                 <th>
                                     <div className="player-champion-info">
                                         <img
@@ -335,6 +339,21 @@ export function PlayersTable({ lastFrameWindow, lastFrameDetails, gameMetadata, 
     );
 }
 
+function getInGameTime(startTime: string, currentTime: string) {
+    let startDate = new Date(startTime)
+    let currentDate = new Date(currentTime)
+    let seconds = Math.floor((currentDate.valueOf() - (startDate.valueOf()))/1000)
+    let minutes = Math.floor(seconds/60);
+    let hours = Math.floor(minutes/60);
+    let days = Math.floor(hours/24);
+    
+    hours = hours-(days*24);
+    minutes = minutes-(days*24*60)-(hours*60);
+    seconds = seconds-(days*24*60*60)-(hours*60*60)-(minutes*60);
+
+    return hours ? `${hours}:${minutes}:${seconds}` : `${minutes}:${seconds}`
+}
+
 function getGoldDifference(player: ParticipantWindow, side: string, gameMetadata: GameMetadata, frame: FrameWindow) {
     if(6 > player.participantId) { // blue side
         const redPlayer = frame.redTeam.participants[player.participantId - 1];
@@ -355,13 +374,14 @@ function getGoldDifference(player: ParticipantWindow, side: string, gameMetadata
     }
 }
 
-function getDragonSVG(dragonName: string){
+function getDragonSVG(dragonName: string, teamColor: string, index: number){
+    let key = `${teamColor}_${index}_${dragonName}`
     switch (dragonName) {
-        case "ocean": return <OceanDragonSVG className="dragon"/>;
-        case "infernal": return <InfernalDragonSVG className="dragon"/>
-        case "cloud": return <CloudDragonSVG className="dragon"/>
-        case "mountain": return <MountainDragonSVG className="dragon"/>
-        case "elder": return <ElderDragonSVG className="dragon"/>
+        case "ocean": return <OceanDragonSVG className="dragon" key={key}/>;
+        case "infernal": return <InfernalDragonSVG className="dragon" key={key}/>
+        case "cloud": return <CloudDragonSVG className="dragon" key={key}/>
+        case "mountain": return <MountainDragonSVG className="dragon" key={key}/>
+        case "elder": return <ElderDragonSVG className="dragon" key={key}/>
     }
 }
 
@@ -374,7 +394,7 @@ function getGoldPercentage(goldBlue: number, goldRed: number){
 }
 
 enum GameState {
-    in_game = "ao vivo",
-    paused = "pausado",
-    finished = "finalizado"
+    in_game = "in game",
+    paused = "paused",
+    finished = "match ended"
 }

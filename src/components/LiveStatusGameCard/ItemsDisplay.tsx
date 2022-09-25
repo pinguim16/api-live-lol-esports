@@ -36,18 +36,18 @@ export function ItemsDisplay({ participantId, lastFrame }: Props) {
     }
 
     return (
-        <div className="player-stats-items">
+        <div className="player-stats-items" key={`${participantId}`}>
             {[...Array(6)].map((x, i) => {
 
                 if(itemsID[i] !== undefined) {
                     return (
-                        <div className="player-stats-item">
+                        <div className="player-stats-item" key={`${participantId}_${i}_${itemsID[i]}`}>
                             <img src={`${ITEMS_URL}${itemsID[i]}.png`}/>
                         </div>
                     )
                 }else{
                     return (
-                        <div className="player-stats-item"/>
+                        <div className="player-stats-item" key={`${participantId}_${i}_${itemsID[i]}`}/>
                     )
                 }
 

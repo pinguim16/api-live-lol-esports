@@ -41,12 +41,12 @@ span.mini-current-health {
     text-align: center;
 }
 
-.live-game-stats-header-team-images > h1 > h3 {
+.live-game-stats-header-team-images > h1 > div {
     font-weight: 500;
     font-size: 1rem;
 }
 
-.live-game-stats-header-team-images > h3 {
+.live-game-stats-header-team-images > div {
     flex: 1;
     text-align: center;
 }

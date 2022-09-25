@@ -24,7 +24,7 @@ export function getSchedule() {
     })
 }
 
-export function getLiveWindowGame(gameId: string, date: string) {
+export function getLiveWindowGame(gameId: string, date?: string) {
     return axios.get(`${API_URL_LIVE}/window/${gameId}`, {
         params: {
             "hl": "pt-BR",

@@ -15,6 +15,7 @@ import {Frame as FrameDetails} from "./types/detailsLiveTypes";
 import {GameDetails} from "./types/detailsPersistentTypes";
 
 export function LiveGame({ match }: any) {
+    const [firstFrameWindow, setFirstFrameWindow] = useState<FrameWindow>();
     const [lastFrameWindow, setLastFrameWindow] = useState<FrameWindow>();
     const [lastFrameDetails, setLastFrameDetails] = useState<FrameDetails>();
     const [gameData, setGameData] = useState<GameDetails>();
@@ -36,6 +37,15 @@ export function LiveGame({ match }: any) {
 
         return () => {
             clearInterval(windowIntervalID);
+        }
+
+        function getFirstWindow(){
+            getLiveWindowGame(gameId).then(response => {
+                let frames = response.data.frames;
+                if(frames === undefined) return;
+                
+                setFirstFrameWindow(frames[0])
+            });
         }
 
         function getLiveWindow(){
@@ -70,6 +80,7 @@ export function LiveGame({ match }: any) {
                         console.log(gameId)
                     }
                 }
+                getFirstWindow()
                 setGameData(gameData);
             })
         }
@@ -81,9 +92,9 @@ export function LiveGame({ match }: any) {
         )
     }*/
 
-    if(lastFrameWindow !== undefined && lastFrameDetails !== undefined && metadata !== undefined && gameData !== undefined) {
+    if(firstFrameWindow !== undefined && lastFrameWindow !== undefined && lastFrameDetails !== undefined && metadata !== undefined && gameData !== undefined) {
         return (
-            <PlayersTable lastFrameWindow={lastFrameWindow} lastFrameDetails={lastFrameDetails} gameMetadata={metadata} gameDetails={gameData} />
+            <PlayersTable firstFrameWindow={firstFrameWindow} lastFrameWindow={lastFrameWindow} lastFrameDetails={lastFrameDetails} gameMetadata={metadata} gameDetails={gameData} />
         );
     }else {
         return(
