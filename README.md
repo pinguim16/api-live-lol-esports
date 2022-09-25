@@ -1,9 +1,21 @@
-# Live LoL Esports
+# 📊 Live LoL Esports - Forked from [Aureom](https://github.com/Aureom/live-lol-esports)
 
-## 📦 Dependências e programas utilizados
+# 🔑 Key Differences
+* Defaults to dark theme
+* Shows patch version
+* Shows series information such as "Best of 5" and "Semi-Finals"
+* Shows in-game timer (approximate)
+* More to come
+  * Translated to English?
+  * Calculate stream delays?
+  * Game start times?
+  * Player stats?
 
-| Nome                                             | Uso no projeto                                               |
+
+## 📦 Dependencies and programs used
+
+| Name                                             | Use in project                                               |
 | ------------------------------------------------ | ------------------------------------------------------------ |
-| [WebStorm](https://www.jetbrains.com/webstorm/)        | IDE |
+| [Visual Studio Code](https://code.visualstudio.com/)        | IDE |
 | [React](https://reactjs.org/) | FrameWork |
-| [Documentação da API](https://github.com/vickz84259/lolesports-api-docs) | Documentação da API de esports por [vickz84259](https://github.com/vickz84259) |
+| [Unofficial Lolesports API](https://github.com/vickz84259/lolesports-api-docs) | Requesting live data [vickz84259](https://github.com/vickz84259) |
