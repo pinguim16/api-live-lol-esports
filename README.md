@@ -5,10 +5,10 @@
 * Shows patch version
 * Shows series information such as "Best of 5" and "Semi-Finals"
 * Shows in-game timer (approximate)
+* Show game start times and upcoming games
 * More to come
   * Translated to English?
   * Calculate stream delays?
-  * Game start times?
   * Player stats?
 
 
