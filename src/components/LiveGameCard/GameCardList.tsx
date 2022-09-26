@@ -5,7 +5,7 @@ import {Event as LiveEvent} from "./types/liveGameTypes";
 import {Event as TodayEvent} from "./types/scheduleType";
 import {Event as FutureEvent} from "./types/scheduleType";
 
-import Galaxy from "../../assets/images/galaxy.svg"
+import Bedge from "../../assets/images/bedge.png"
 
 type Props = {
     liveGames: LiveEvent[];
@@ -50,7 +50,7 @@ function LiveGames({liveGames}: PropsLive) {
     }else {
         return (
             <div className="empty-games-list-container">
-                <img className="empty-games-galaxy" alt="NO GAMES CURRENTLY LIVE" src={Galaxy}/>
+                <img className="empty-games-galaxy" alt="NO GAMES CURRENTLY LIVE" src={Bedge}/>
                 <h2 className="game-list-items-empty">NO MATCHES CURRENTLY LIVE</h2>
             </div>
         );
