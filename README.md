@@ -1,12 +1,12 @@
 # 📊 Live LoL Esports - Forked from [Aureom](https://github.com/Aureom/live-lol-esports)
 
 # 🔑 Key Differences
-* Defaults to dark theme
-* Shows patch version
-* Shows series information such as "Best of 5" and "Semi-Finals"
-* Shows in-game timer (approximate)
-* Show game start times and upcoming games
-* More to come
+* Defaults to dark theme 😎
+* Shows patch version 🤓
+* Shows series information such as "Best of 5" and "European Semi-Finals" 🏆
+* Shows in-game timer (approximate) ⏲
+* Show game start times and upcoming games 📅
+* More to come 👀
   * Translated to English?
   * Calculate stream delays?
   * Player stats?
