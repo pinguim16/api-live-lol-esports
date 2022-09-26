@@ -50,8 +50,8 @@ function LiveGames({liveGames}: PropsLive) {
     }else {
         return (
             <div className="empty-games-list-container">
-                <img className="empty-games-galaxy" alt="nenhum jogo ao vivo" src={Galaxy}/>
-                <h2 className="game-list-items-empty">NENHUM JOGO AO VIVO</h2>
+                <img className="empty-games-galaxy" alt="NO GAMES CURRENTLY LIVE" src={Galaxy}/>
+                <h2 className="game-list-items-empty">NO MATCHES CURRENTLY LIVE</h2>
             </div>
         );
     }
@@ -68,7 +68,7 @@ function TodayGames({todayGames}: PropsToday) {
 
         return (
             <div>
-                <h2 className="games-of-day">JOGOS DO DIA</h2>
+                <h2 className="games-of-day">TODAY'S FINISHED MATCHES</h2>
                 <div className="games-list-container">
                     <div className="games-list-items">
                         {todayGames.map(game => (

@@ -9,7 +9,7 @@ const API_URL_LIVE = "https://feed.lolesports.com/livestats/v1"
 const API_KEY = "0TvQnueqKa5mxJntVWt0w4LpLfEkrV1Ta8rQBb9Z"
 
 export function getLiveGames() {
-    return axios.get(`${API_URL_PERSISTED}/getLive?hl=pt-BR`, {
+    return axios.get(`${API_URL_PERSISTED}/getLive?hl=en-US`, {
         headers: {
             "x-api-key": API_KEY,
         },
@@ -17,7 +17,7 @@ export function getLiveGames() {
 }
 
 export function getSchedule() {
-    return axios.get(`${API_URL_PERSISTED}/getSchedule?hl=pt-BR`, {
+    return axios.get(`${API_URL_PERSISTED}/getSchedule?hl=en-US`, {
         headers: {
             "x-api-key": API_KEY,
         },
@@ -27,7 +27,7 @@ export function getSchedule() {
 export function getLiveWindowGame(gameId: string, date?: string) {
     return axios.get(`${API_URL_LIVE}/window/${gameId}`, {
         params: {
-            "hl": "pt-BR",
+            "hl": "en-US",
             "startingTime": date,
         },
         headers: {
@@ -39,7 +39,7 @@ export function getLiveWindowGame(gameId: string, date?: string) {
 export function getLiveDetailsGame(gameId: string, date: string) {
     return axios.get(`${API_URL_LIVE}/details/${gameId}`, {
         params: {
-            "hl": "pt-BR",
+            "hl": "en-US",
             "startingTime": date,
         },
         headers: {
@@ -51,7 +51,7 @@ export function getLiveDetailsGame(gameId: string, date: string) {
 export function getGameDetails(gameId: string) {
     return axios.get(`${API_URL_PERSISTED}/getEventDetails`, {
         params: {
-            "hl": "pt-BR",
+            "hl": "en-US",
             "id": gameId,
         },
         headers: {
