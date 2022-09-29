@@ -20,15 +20,9 @@ export function GameCardList({ liveGames, last24HoursGames, next24HoursGames, ne
         <div>
             <LiveGames liveGames={liveGames}/>
 
-            <div className="games-separator"/>
-
             <Last24HoursGames last24HoursGames={last24HoursGames}/>
 
-            <div className="games-separator"/>
-
             <Next24HoursGames next24HoursGames={next24HoursGames}/>
-
-            <div className="games-separator"/>
 
             <Next7DaysGames next7DaysGames={next7DaysGames}/>
         </div>
@@ -72,6 +66,7 @@ function Last24HoursGames({last24HoursGames}: PropsLast24Hours) {
 
         return (
             <div>
+                <div className="games-separator"/>
                 <h2 className="games-of-day">LAST 24 HOURS</h2>
                 <div className="games-list-container">
                     <div className="games-list-items">
@@ -101,6 +96,7 @@ function Next24HoursGames({next24HoursGames}: PropsNext24Hours) {
 
         return (
             <div>
+                <div className="games-separator"/>
                 <h2 className="games-of-day">NEXT 24 HOURS</h2>
                 <div className="games-list-container">
                     <div className="games-list-items">
@@ -130,6 +126,7 @@ function Next7DaysGames({next7DaysGames}: PropsNext7Days) {
 
         return (
             <div>
+                <div className="games-separator"/>
                 <h2 className="games-of-day">NEXT 7 DAYS</h2>
                 <div className="games-list-container">
                     <div className="games-list-items">
