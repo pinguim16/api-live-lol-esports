@@ -2,29 +2,35 @@ import {LiveGameCard} from "./LiveGameCard";
 import {ScheduleGameCard} from "./ScheduleGameCard";
 
 import {Event as LiveEvent} from "./types/liveGameTypes";
-import {Event as TodayEvent} from "./types/scheduleType";
-import {Event as FutureEvent} from "./types/scheduleType";
+import {Event as Last24HoursEvent} from "./types/scheduleType";
+import {Event as Next24HoursEvent} from "./types/scheduleType";
+import {Event as Next7DaysEvent} from "./types/scheduleType";
 
 import Bedge from "../../assets/images/bedge.png"
 
 type Props = {
     liveGames: LiveEvent[];
-    todayGames: TodayEvent[];
-    futureGames: FutureEvent[];
+    last24HoursGames: Last24HoursEvent[];
+    next24HoursGames: Next24HoursEvent[];
+    next7DaysGames: Next7DaysEvent[];
 }
 
-export function GameCardList({ liveGames, todayGames, futureGames }: Props) {
+export function GameCardList({ liveGames, last24HoursGames, next24HoursGames, next7DaysGames }: Props) {
     return (
         <div>
             <LiveGames liveGames={liveGames}/>
 
             <div className="games-separator"/>
 
-            <TodayGames todayGames={todayGames}/>
+            <Last24HoursGames last24HoursGames={last24HoursGames}/>
 
             <div className="games-separator"/>
 
-            <FutureGames futureGames={futureGames}/>
+            <Next24HoursGames next24HoursGames={next24HoursGames}/>
+
+            <div className="games-separator"/>
+
+            <Next7DaysGames next7DaysGames={next7DaysGames}/>
         </div>
     );
 }
@@ -57,19 +63,19 @@ function LiveGames({liveGames}: PropsLive) {
     }
 }
 
-type PropsToday = {
-    todayGames: TodayEvent[];
+type PropsLast24Hours = {
+    last24HoursGames: Last24HoursEvent[];
 }
 
-function TodayGames({todayGames}: PropsToday) {
-    if (todayGames !== undefined && todayGames.length !== 0) {
+function Last24HoursGames({last24HoursGames}: PropsLast24Hours) {
+    if (last24HoursGames !== undefined && last24HoursGames.length !== 0) {
 
         return (
             <div>
-                <h2 className="games-of-day">TODAY'S FINISHED MATCHES</h2>
+                <h2 className="games-of-day">LAST 24 HOURS</h2>
                 <div className="games-list-container">
                     <div className="games-list-items">
-                        {todayGames.map(game => (
+                        {last24HoursGames.map(game => (
                             <ScheduleGameCard
                                 key={game.match.id}
                                 game={game}
@@ -86,19 +92,48 @@ function TodayGames({todayGames}: PropsToday) {
     }
 }
 
-type PropsFuture = {
-    futureGames: FutureEvent[];
+type PropsNext24Hours = {
+    next24HoursGames: Next24HoursEvent[];
 }
 
-function FutureGames({futureGames}: PropsFuture) {
-    if (futureGames !== undefined && futureGames.length !== 0) {
+function Next24HoursGames({next24HoursGames}: PropsNext24Hours) {
+    if (next24HoursGames !== undefined && next24HoursGames.length !== 0) {
+
+        return (
+            <div>
+                <h2 className="games-of-day">NEXT 24 HOURS</h2>
+                <div className="games-list-container">
+                    <div className="games-list-items">
+                        {next24HoursGames.map(game => (
+                            <ScheduleGameCard
+                                key={game.match.id}
+                                game={game}
+                            />
+                        ))}
+                    </div>
+                </div>
+            </div>
+        );
+    }else{
+        return (
+            <div/>
+        );
+    }
+}
+
+type PropsNext7Days = {
+    next7DaysGames: Next24HoursEvent[];
+}
+
+function Next7DaysGames({next7DaysGames}: PropsNext7Days) {
+    if (next7DaysGames !== undefined && next7DaysGames.length !== 0) {
 
         return (
             <div>
                 <h2 className="games-of-day">NEXT 7 DAYS</h2>
                 <div className="games-list-container">
                     <div className="games-list-items">
-                        {futureGames.map(game => (
+                        {next7DaysGames.map(game => (
                             <ScheduleGameCard
                                 key={game.match.id}
                                 game={game}

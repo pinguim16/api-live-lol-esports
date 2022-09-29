@@ -5,13 +5,15 @@ import {GameCardList} from "./GameCardList";
 import {useEffect, useState} from "react";
 
 import {Event as LiveEvents} from "./types/liveGameTypes";
-import {Event as TodayEvent} from "./types/scheduleType";
-import {Event as FutureEvent} from "./types/scheduleType";
+import {Event as Last24HoursEvent} from "./types/scheduleType";
+import {Event as Next24HoursEvent} from "./types/scheduleType";
+import {Event as Next7DaysEvent} from "./types/scheduleType";
 
 export function LiveGames() {
     const [liveEvents, setLiveEvents] = useState<LiveEvents[]>([])
-    const [todayEvents, setTodayEvents] = useState<TodayEvent[]>([])
-    const [futureEvents, setFutureEvents] = useState<FutureEvent[]>([])
+    const [last24HoursEvents, setLast24HoursEvents] = useState<Last24HoursEvent[]>([])
+    const [next24HoursEvents, setNext24HoursEvents] = useState<Next24HoursEvent[]>([])
+    const [next7DaysEvents, setNext7DaysEvents] = useState<Next7DaysEvent[]>([])
 
     useEffect(() => {
         getLiveGames().then(response => {
@@ -21,8 +23,9 @@ export function LiveGames() {
         )
 
         getSchedule().then(response => {
-            setTodayEvents(response.data.data.schedule.events.filter(filterByTodayDate));
-            setFutureEvents(response.data.data.schedule.events.filter(filterByNextWeek))
+            setLast24HoursEvents(response.data.data.schedule.events.filter(filterByLast24Hours))
+            setNext24HoursEvents(response.data.data.schedule.events.filter(filterByNext24Hours))
+            setNext7DaysEvents(response.data.data.schedule.events.filter(filterByNext7Days))
         }).catch(error =>
             console.error(error)
         )
@@ -33,7 +36,7 @@ export function LiveGames() {
     return (
         <div className="orders-container">
             <GameCardList
-                liveGames={liveEvents} todayGames={todayEvents} futureGames={futureEvents}
+                liveGames={liveEvents} last24HoursGames={last24HoursEvents} next24HoursGames={next24HoursEvents} next7DaysGames={next7DaysEvents}
             />
         </div>
     );
@@ -44,12 +47,13 @@ function filterByTeams(event: LiveEvents) {
 }
 
 let date = new Date(Date.now());
-function filterByTodayDate(event: TodayEvent) {
-    let eventDate = event.startTime.toString().split("T")[0].split("-");
+function filterByLast24Hours(event: Last24HoursEvent) {
+    let minDate = new Date();
+    let maxDate = new Date()
+    minDate.setDate(minDate.getDate() - 1)
+    let eventDate = new Date(event.startTime)
 
-    if(parseInt(eventDate[0]) === date.getFullYear() &&
-        parseInt(eventDate[1]) === (date.getUTCMonth() + 1) &&
-        parseInt(eventDate[2]) === date.getDate()){
+    if(eventDate.valueOf() > minDate.valueOf() && eventDate.valueOf() < maxDate.valueOf()){
 
         if(event.match === undefined) return false
         if(event.match.id === undefined) return false
@@ -60,9 +64,27 @@ function filterByTodayDate(event: TodayEvent) {
     }
 }
 
-function filterByNextWeek(event: TodayEvent) {
+function filterByNext24Hours(event: Next24HoursEvent) {
     let minDate = new Date();
     let maxDate = new Date()
+    maxDate.setDate(maxDate.getDate() + 1)
+    let eventDate = new Date(event.startTime)
+
+    if(eventDate.valueOf() > minDate.valueOf() && eventDate.valueOf() < maxDate.valueOf()){
+
+        if(event.match === undefined) return false
+        if(event.match.id === undefined) return false
+
+        return true;
+    }else{
+        return false;
+    }
+}
+
+function filterByNext7Days(event: Next7DaysEvent) {
+    let minDate = new Date();
+    let maxDate = new Date()
+    minDate.setDate(minDate.getDate() + 1)
     maxDate.setDate(maxDate.getDate() + 7)
     let eventDate = new Date(event.startTime)
 
