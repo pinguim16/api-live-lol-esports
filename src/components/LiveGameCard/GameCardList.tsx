@@ -64,8 +64,6 @@ type PropsToday = {
 function TodayGames({todayGames}: PropsToday) {
     if (todayGames !== undefined && todayGames.length !== 0) {
 
-        let date = new Date();
-
         return (
             <div>
                 <h2 className="games-of-day">TODAY'S FINISHED MATCHES</h2>
@@ -94,8 +92,6 @@ type PropsFuture = {
 
 function FutureGames({futureGames}: PropsFuture) {
     if (futureGames !== undefined && futureGames.length !== 0) {
-
-        let date = new Date();
 
         return (
             <div>
