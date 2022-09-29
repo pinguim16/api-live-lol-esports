@@ -51,6 +51,7 @@ function filterByLast24Hours(event: Last24HoursEvent) {
     let minDate = new Date();
     let maxDate = new Date()
     minDate.setDate(minDate.getDate() - 1)
+    maxDate.setHours(maxDate.getHours() - 1)
     let eventDate = new Date(event.startTime)
 
     if(eventDate.valueOf() > minDate.valueOf() && eventDate.valueOf() < maxDate.valueOf()){
@@ -67,6 +68,7 @@ function filterByLast24Hours(event: Last24HoursEvent) {
 function filterByNext24Hours(event: Next24HoursEvent) {
     let minDate = new Date();
     let maxDate = new Date()
+    minDate.setHours(minDate.getHours() - 1)
     maxDate.setDate(maxDate.getDate() + 1)
     let eventDate = new Date(event.startTime)
 

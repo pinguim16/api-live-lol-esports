@@ -36,14 +36,17 @@ type PropsLive = {
 function LiveGames({liveGames}: PropsLive) {
     if (liveGames !== undefined && liveGames.length !== 0) {
         return (
-            <div className="games-list-container">
-                <div className="games-list-items">
-                    {liveGames.map(game => (
-                        <LiveGameCard
-                            key={game.id}
-                            game={game}
-                        />
-                    ))}
+            <div>
+                <h2 className="games-of-day">LIVE</h2>
+                <div className="games-list-container">
+                    <div className="games-list-items">
+                        {liveGames.map(game => (
+                            <LiveGameCard
+                                key={game.id}
+                                game={game}
+                            />
+                        ))}
+                    </div>
                 </div>
             </div>
         );
