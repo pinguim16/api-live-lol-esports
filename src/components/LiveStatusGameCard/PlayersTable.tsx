@@ -345,8 +345,11 @@ export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetai
                     })}
                     </tbody>
                 </table>
-                <span className="player-stats">
+                <span className="footer-notes">
                     Patch Version: {gameMetadata.patchVersion}
+                </span>
+                <span className="footer-notes">
+                    Stream Delay: { gameDetails.data.event.streams.length ? `Approximately ${Math.round(gameDetails.data.event.streams.reduce((a, b) => a.offset < b.offset ? a : b).offset / 1000 / 60)} minutes` : `None`}
                 </span>
             </div>
 

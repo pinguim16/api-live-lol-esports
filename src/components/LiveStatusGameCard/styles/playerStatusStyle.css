@@ -234,7 +234,7 @@ Status dragons
     background: var(--gray-line);
 }
 
-.player-stats{
+.player-stats {
     color: var(--text)
 }
 
@@ -256,7 +256,7 @@ Status dragons
     height: 28px;
 }
 
-.player-stats {
+.player-stats, .footer-notes {
     /*width: 64px;*/
     height: 28px;
     line-height: 28px;
@@ -265,6 +265,10 @@ Status dragons
     background: var(--gray-line);
     text-align: center;
     border-radius: 3px;
+}
+
+.footer-notes {
+    margin-right: 10px;
 }
 
 .player-stats-kda {
