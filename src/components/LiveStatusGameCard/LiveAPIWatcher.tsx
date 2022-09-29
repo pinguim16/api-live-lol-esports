@@ -9,16 +9,16 @@ import {Frame as FrameWindow} from "./types/windowLiveTypes";
 import useSound from "use-sound";
 import {Team} from "./types/detailsPersistentTypes";
 
-const firstblood = require("../../assets/audios/firstblood.ogg");
-const kill = require("../../assets/audios/campeao_eliminado.ogg");
-const tower_blue = require("../../assets/audios/azul_torre_destruida.ogg");
-const tower_red = require("../../assets/audios/vermelha_torre_destruida.ogg");
-const dragon_blue = require("../../assets/audios/azul_dragao.ogg");
-const dragon_red = require("../../assets/audios/vermelha_dragao.ogg");
-const baron_blue = require("../../assets/audios/azul_baron.ogg");
-const baron_red = require("../../assets/audios/vermelha_baron.ogg");
-const inib_blue = require("../../assets/audios/azul_inib_destruido.ogg");
-const inib_red = require("../../assets/audios/vermelha_inib_destruido.ogg");
+const firstblood = require("../../assets/audios/first_blood.ogg");
+const kill = require("../../assets/audios/champion_slain.ogg");
+const tower_blue = require("../../assets/audios/blue_turret_destroyed.ogg");
+const tower_red = require("../../assets/audios/red_turret_destroyed.ogg");
+const dragon_blue = require("../../assets/audios/blue_dragon_slain.ogg");
+const dragon_red = require("../../assets/audios/red_dragon_slain.ogg");
+const baron_blue = require("../../assets/audios/blue_baron_slain.ogg");
+const baron_red = require("../../assets/audios/red_baron_slain.ogg");
+const inib_blue = require("../../assets/audios/blue_inhibitor_destroyed.ogg");
+const inib_red = require("../../assets/audios/red_inhibitor_destroyed.ogg");
 
 type Props = {
     lastFrameWindow: FrameWindow,
