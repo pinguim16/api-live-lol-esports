@@ -76,55 +76,55 @@ export function LiveAPIWatcher({ lastFrameWindow, gameMetadata, blueTeam, redTea
         let isPlaying = isMuted;
 
         if(status.inhibitors.blue !== lastFrameWindow.blueTeam.inhibitors){
-            createToast(true, isPlaying, inib_red.default, "Destruiu um inibidor", blueTeam.image);
+            createToast(true, isPlaying, inib_red.default, "Destroyed an inhibitor", blueTeam.image);
             isPlaying = true
         }
 
         if(status.inhibitors.red !== lastFrameWindow.redTeam.inhibitors){
-            createToast(false, isPlaying, inib_blue.default, "Destruiu um Inibidor", redTeam.image);
+            createToast(false, isPlaying, inib_blue.default, "Destroyed an inhibitor", redTeam.image);
             isPlaying = true
         }
 
         if(status.barons.blue !== lastFrameWindow.blueTeam.barons){
-            createToast(true, isPlaying, baron_blue.default, "Derrotou o barão", blueTeam.image);
+            createToast(true, isPlaying, baron_blue.default, "Defeated the baron", blueTeam.image);
             isPlaying = true
         }
 
         if(status.barons.red !== lastFrameWindow.redTeam.barons){
-            createToast(false, isPlaying, baron_red.default, "Derrotou o barão", redTeam.image);
+            createToast(false, isPlaying, baron_red.default, "Defeated the baron", redTeam.image);
             isPlaying = true
         }
 
         if(status.dragons.blue !== lastFrameWindow.blueTeam.dragons.length){
-            createToast(true, isPlaying, dragon_blue.default, "Derrotou o dragão", blueTeam.image);
+            createToast(true, isPlaying, dragon_blue.default, "Defeated the dragon", blueTeam.image);
             isPlaying = true
         }
 
         if(status.dragons.red !== lastFrameWindow.redTeam.dragons.length){
-            createToast(false, isPlaying, dragon_red.default, "Derrotou o dragão", redTeam.image);
+            createToast(false, isPlaying, dragon_red.default, "Defeated the dragon", redTeam.image);
             isPlaying = true
         }
 
         if(status.towers.blue !== lastFrameWindow.blueTeam.towers){
-            createToast(true, isPlaying, tower_red.default, "Destruiu uma torre", blueTeam.image);
+            createToast(true, isPlaying, tower_red.default, "Destroyed a turret", blueTeam.image);
             isPlaying = true
         }
 
         if(status.towers.red !== lastFrameWindow.redTeam.towers){
-            createToast(false, isPlaying, tower_blue.default, "Destruiu uma torre", redTeam.image);
+            createToast(false, isPlaying, tower_blue.default, "Destroyed a turret", redTeam.image);
             isPlaying = true
         }
 
         for (let i = 0; i < status.participants.blue.length; i++) {
             if(status.participants.blue[i].kills !== lastFrameWindow.blueTeam.participants[i].kills){
-                createToast(true, isPlaying, kill.default, "Eliminou um inimigo", `http://ddragon.leagueoflegends.com/cdn/11.4.1/img/champion/${gameMetadata.blueTeamMetadata.participantMetadata[status.participants.blue[i].participantId - 1].championId}.png`)
+                createToast(true, isPlaying, kill.default, "Killed an enemy", `http://ddragon.leagueoflegends.com/cdn/11.4.1/img/champion/${gameMetadata.blueTeamMetadata.participantMetadata[status.participants.blue[i].participantId - 1].championId}.png`)
                 isPlaying = true
             }
         }
 
         for (let i = 0; i < status.participants.red.length; i++) {
             if(status.participants.red[i].kills !== lastFrameWindow.redTeam.participants[i].kills){
-                createToast(false, isPlaying, kill.default, "Eliminou um inimigo", `http://ddragon.leagueoflegends.com/cdn/11.4.1/img/champion/${gameMetadata.redTeamMetadata.participantMetadata[status.participants.red[i].participantId - 6].championId}.png`)
+                createToast(false, isPlaying, kill.default, "Killed an enemy", `http://ddragon.leagueoflegends.com/cdn/11.4.1/img/champion/${gameMetadata.redTeamMetadata.participantMetadata[status.participants.red[i].participantId - 6].championId}.png`)
                 isPlaying = true
             }
         }
