@@ -4,7 +4,7 @@ import TagManager from 'react-gtm-module'
 
 // Anti ESA na live do Baiano
 export function SoundToggler() {
-    const [toggled, setToggled] = useState(true);
+    const [toggled, setToggled] = useState(false);
 
     useEffect(() => {
         const soundData = localStorage.getItem("sound");
