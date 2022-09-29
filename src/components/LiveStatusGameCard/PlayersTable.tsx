@@ -43,7 +43,7 @@ export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetai
         if(currentGameState !== gameState){
             setGameState(currentGameState);
 
-            toast.info(`Status atual do jogo alterado: ${currentGameState.toUpperCase()}`, {
+            toast.info(`Game status changed: ${currentGameState.toUpperCase()}`, {
                 position: "top-right",
                 autoClose: 15000,
                 hideProgressBar: false,
@@ -130,7 +130,7 @@ export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetai
                             <div className="team-stats gold">
                                 <GoldSVG/>
                                 <span>
-                                    {Number(lastFrameWindow.blueTeam.totalGold).toLocaleString('pt-br')}
+                                    {Number(lastFrameWindow.blueTeam.totalGold).toLocaleString('en-us')}
                                 </span>
                             </div>
                             <div className="team-stats kills">
@@ -154,7 +154,7 @@ export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetai
                             <div className="team-stats gold">
                                 <GoldSVG/>
                                 <span>
-                                    {Number(lastFrameWindow.redTeam.totalGold).toLocaleString('pt-br')}
+                                    {Number(lastFrameWindow.redTeam.totalGold).toLocaleString('en-us')}
                                 </span>
                             </div>
                             <div className="team-stats">
@@ -254,7 +254,7 @@ export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetai
                                 </td>
                                 <td>
                                     <div
-                                        className=" player-stats">{Number(player.totalGold).toLocaleString('pt-br')}</div>
+                                        className=" player-stats">{Number(player.totalGold).toLocaleString('en-us')}</div>
                                 </td>
                                 <td>
                                     <div className={`player-stats player-gold-${goldDifference?.style}`}>{goldDifference.goldDifference}</div>
@@ -335,7 +335,7 @@ export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetai
                                     <div className=" player-stats player-stats-kda">{player.assists}</div>
                                 </td>
                                 <td>
-                                    <div className=" player-stats">{Number(player.totalGold).toLocaleString('pt-br')}</div>
+                                    <div className=" player-stats">{Number(player.totalGold).toLocaleString('en-us')}</div>
                                 </td>
                                 <td>
                                     <div className={`player-stats player-gold-${goldDifference?.style}`}>{goldDifference.goldDifference}</div>
@@ -380,7 +380,7 @@ function getGoldDifference(player: ParticipantWindow, side: string, gameMetadata
 
         return {
             style: goldResult > 0 ? "positive" : "negative",
-            goldDifference: goldResult > 0 ? "+" + Number(goldResult).toLocaleString("pt-br") : Number(goldResult).toLocaleString("pt-br")
+            goldDifference: goldResult > 0 ? "+" + Number(goldResult).toLocaleString("en-us") : Number(goldResult).toLocaleString("en-us")
         };
     }else{
         const bluePlayer = frame.blueTeam.participants[player.participantId - 6];
@@ -388,7 +388,7 @@ function getGoldDifference(player: ParticipantWindow, side: string, gameMetadata
 
         return {
             style: goldResult > 0 ? "positive" : "negative",
-            goldDifference: goldResult > 0 ? "+" + Number(goldResult).toLocaleString("pt-br") : Number(goldResult).toLocaleString("pt-br")
+            goldDifference: goldResult > 0 ? "+" + Number(goldResult).toLocaleString("en-us") : Number(goldResult).toLocaleString("en-us")
         };
     }
 }
