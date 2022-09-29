@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import './styles/navbarStyle.css'
 
 import { useTheme } from "../../theme/ThemeContext";
+import TagManager from 'react-gtm-module'
 
 export function ThemeToggler() {
     const { setCurrentTheme} = useTheme();
@@ -24,9 +25,11 @@ export function ThemeToggler() {
         if(toggled) {
             setCurrentTheme("light");
             localStorage.setItem("theme", "light");
+            TagManager.dataLayer({ dataLayer: { event: 'theme_toggled', action: 'light' } })
         }else{
             setCurrentTheme("dark");
             localStorage.setItem("theme", "dark");
+            TagManager.dataLayer({ dataLayer: { event: 'theme_toggled', action: 'dark' } })
         }
 
         setToggled((s) => !s);

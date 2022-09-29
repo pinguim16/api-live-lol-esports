@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import './styles/navbarStyle.css'
+import TagManager from 'react-gtm-module'
 
 // Anti ESA na live do Baiano
 export function SoundToggler() {
@@ -19,8 +20,10 @@ export function SoundToggler() {
     const handleClick = () => {
         if(toggled) {
             localStorage.setItem("sound", "mute");
+            TagManager.dataLayer({ dataLayer: { event: 'sound_toggled', action: 'muted'} })
         }else{
             localStorage.setItem("sound", "unmute");
+            TagManager.dataLayer({ dataLayer: { event: 'sound_toggled', action: 'unmuted' } })
         }
 
         setToggled((s) => !s);
