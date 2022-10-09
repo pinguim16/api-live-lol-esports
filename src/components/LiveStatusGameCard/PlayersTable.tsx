@@ -189,7 +189,7 @@ export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetai
                             <span>{blueTeam.name.toUpperCase()}</span>
                         </th>
                         <th className="table-top-row-vida" title="life">
-                            <span>VIDA</span>
+                            <span>Health</span>
                         </th>
                         <th className="table-top-row-items" title="items">
                             <span>ITEMS</span>
@@ -207,7 +207,7 @@ export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetai
                             <span>A</span>
                         </th>
                         <th className="table-top-row" title="gold">
-                            <span>Ouro</span>
+                            <span>Gold</span>
                         </th>
                         <th className="table-top-row" title="gold difference">
                             <span>+/-</span>
