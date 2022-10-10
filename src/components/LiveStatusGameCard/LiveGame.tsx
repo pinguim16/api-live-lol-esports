@@ -57,6 +57,12 @@ export function LiveGame({ match }: any) {
                 let frames = response.data.frames;
                 if(frames === undefined) return;
                 
+                console.groupCollapsed(`Meta Data`)
+                console.log(response.data.gameMetadata)
+                console.groupEnd()
+                console.groupCollapsed(`First Frame`)
+                console.log(frames[0])
+                console.groupEnd()
                 setFirstFrameWindow(frames[0])
             });
         }
