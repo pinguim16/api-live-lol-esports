@@ -85,7 +85,9 @@ export function LiveGame({ match }: any) {
         function getLiveGameDetails() {
             getGameDetails(matchId).then(response => {
                 let gameData: GameDetails = response.data;
-                console.log(gameData)
+                console.groupCollapsed(`Game Data`)
+                console.log(gameData.data)
+                console.groupEnd()
                 if(gameData === undefined) return;
 
                 for (const game of gameData.data.event.match.games) {
