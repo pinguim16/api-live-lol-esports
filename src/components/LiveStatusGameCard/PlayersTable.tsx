@@ -8,6 +8,7 @@ import React, {useEffect, useState} from "react";
 import {toast} from 'react-toastify';
 import {Frame as FrameDetails} from "./types/detailsLiveTypes";
 import {Frame as FrameWindow, Participant as ParticipantWindow} from "./types/windowLiveTypes";
+import {Event as EventDetails} from "../LiveGameCard/types/scheduleType";
 
 import {ReactComponent as TowerSVG} from '../../assets/images/tower.svg';
 import {ReactComponent as BaronSVG} from '../../assets/images/baron.svg';
@@ -32,10 +33,11 @@ type Props = {
     lastFrameDetails: FrameDetails,
     gameMetadata: GameMetadata,
     gameDetails: GameDetails,
+    eventDetails: EventDetails,
     videoLink: JSX.Element
 }
 
-export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetails, gameMetadata, gameDetails, videoLink } : Props) {
+export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetails, gameMetadata, gameDetails, eventDetails, videoLink } : Props) {
     const [gameState, setGameState] = useState<GameState>(GameState[lastFrameWindow.gameState as keyof typeof GameState]);
 
     useEffect(() => {
@@ -93,13 +95,14 @@ export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetai
                                 {blueTeam.code}
                             </div>
                             <div>
-                                {blueTeam.result.gameWins}-{redTeam.result.gameWins}
+                                {eventDetails.match.teams[0].record.wins}-{eventDetails.match.teams[0].record.losses}
                             </div>
                         </h1>
                         <h1>
                             VS
                             <div>BEST OF {gameDetails.data.event.match.strategy.count}</div>
                             <div>{gameState.toUpperCase()}</div>
+                            <div>{eventDetails.match.teams[0].result.gameWins}-{eventDetails.match.teams[1].result.gameWins}</div>
                             <div>{inGameTime}</div>
                         </h1>
                         <h1>
@@ -107,7 +110,7 @@ export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetai
                                 {redTeam.code}
                             </div>
                             <div>
-                                {redTeam.result.gameWins}-{blueTeam.result.gameWins}
+                                {eventDetails.match.teams[1].record.wins}-{eventDetails.match.teams[1].record.losses}
                             </div>
                         </h1>
                         <div className="red-team">

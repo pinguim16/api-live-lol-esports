@@ -118,9 +118,9 @@ export function LiveGame({ match }: any) {
         )
     }*/
 
-    if(firstFrameWindow !== undefined && lastFrameWindow !== undefined && lastFrameDetails !== undefined && metadata !== undefined && gameData !== undefined) {
+    if(firstFrameWindow !== undefined && lastFrameWindow !== undefined && lastFrameDetails !== undefined && metadata !== undefined && gameData !== undefined && eventDetails !== undefined) {
         return (
-            <PlayersTable firstFrameWindow={firstFrameWindow} lastFrameWindow={lastFrameWindow} lastFrameDetails={lastFrameDetails} gameMetadata={metadata} gameDetails={gameData} videoLink={getStreamOrVod(gameData)} />
+            <PlayersTable firstFrameWindow={firstFrameWindow} lastFrameWindow={lastFrameWindow} lastFrameDetails={lastFrameDetails} gameMetadata={metadata} gameDetails={gameData} eventDetails={eventDetails} videoLink={getStreamOrVod(gameData)} />
         );
     }else if (eventDetails !== undefined && gameData !== undefined) {
         return(
