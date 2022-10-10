@@ -44,9 +44,13 @@ export function LiveGame({ match }: any) {
 
         function getEventDetails(){
             getSchedule().then(response => {
-                setEventDetails(response.data.data.schedule.events.find((event: EventDetails) => {
+                let event = response.data.data.schedule.events.find((event: EventDetails) => {
                     return event.match ? (event.match.id == matchId) : false
-                }));
+                })
+                console.groupCollapsed(`Event Details`)
+                console.log(event)
+                console.groupEnd()
+                setEventDetails(event);
             }).catch(error =>
                 console.error(error)
             )
