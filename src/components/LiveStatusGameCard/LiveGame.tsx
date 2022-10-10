@@ -93,7 +93,6 @@ export function LiveGame({ match }: any) {
                 for (const game of gameData.data.event.match.games) {
                     if(game.state === "inProgress"){
                         gameId = BigNumber.sum(preGameId, game.number).toString()
-                        console.log(gameId)
                     }
                 }
                 getEventDetails()
