@@ -22,6 +22,11 @@
     padding-top: 0.3rem;
 }
 
+.live-game-card-content h4 {
+    max-width: 120px;
+    margin: 0px auto;
+}
+
 .live-game-card:hover {
     transform: scale(1.05);
 }
