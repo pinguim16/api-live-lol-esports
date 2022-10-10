@@ -26,7 +26,7 @@ export function LiveGame({ match }: any) {
 
     const matchId = match.params.gameid;
     const preGameId = new BigNumber(matchId);
-    let gameId = BigNumber.sum(preGameId, 1).toString();
+    let gameId = gameData?.data.event.match.games[gameData?.data.event.match.games.length - 1].id || BigNumber.sum(preGameId, 1).toString();
     
     useEffect(() => {
         getLiveGameDetails();
@@ -100,9 +100,12 @@ export function LiveGame({ match }: any) {
                 console.groupEnd()
                 if(gameData === undefined) return;
 
+                gameId = gameData.data.event.match.games[gameData?.data.event.match.games.length - 1].id
+
                 for (const game of gameData.data.event.match.games) {
                     if(game.state === "inProgress"){
-                        gameId = BigNumber.sum(preGameId, game.number).toString()
+                        console.log(gameData)
+                        gameId = gameData.data.event.match.games[gameData?.data.event.match.games.length - 1].id || BigNumber.sum(preGameId, game.number).toString();
                     }
                 }
                 getEventDetails()
