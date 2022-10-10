@@ -1,4 +1,5 @@
 import './styles/playerStatusStyle.css'
+import '../LiveGameCard/styles/livegameStyle.css'
 
 import { GameMetadata } from "./types/windowLiveTypes";
 import {GameDetails, Stream as Video} from "./types/detailsPersistentTypes";
@@ -87,35 +88,55 @@ export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetai
             <div className="status-live-game-card-content">
                 <div className="live-game-stats-header">
                     <div className="live-game-stats-header-team-images">
-                        <div className="blue-team">
-                            <img src={blueTeam.image} alt={blueTeam.name}/>
-                        </div>
                         <h1>
-                            <div>
-                                {blueTeam.code}
-                            </div>
-                            <div>
-                                {eventDetails.match.teams[0].record.wins}-{eventDetails.match.teams[0].record.losses}
+                            <div className="live-game-card-team">
+                                <img className="live-game-card-team-image" src={eventDetails.match.teams[0].image}
+                                    alt={eventDetails.match.teams[0].name}/>
+                                <span className='outcome'>
+                                    <p className={eventDetails.match.teams[0].result.outcome}>
+                                        {eventDetails.match.teams[0].result.outcome}
+                                    </p>
+                                </span>
+                                <span>
+                                    <h4>
+                                        {eventDetails.match.teams[0].name}
+                                    </h4>
+                                </span>
+                                <span>
+                                    <p>
+                                        {eventDetails.match.teams[0].record.wins} - {eventDetails.match.teams[0].record.losses}
+                                    </p>
+                                </span>
                             </div>
                         </h1>
                         <h1>
-                            VS
                             <div>BEST OF {gameDetails.data.event.match.strategy.count}</div>
-                            <div>{gameState.toUpperCase()}</div>
                             <div>{eventDetails.match.teams[0].result.gameWins}-{eventDetails.match.teams[1].result.gameWins}</div>
+                            VS
+                            <div>{gameState.toUpperCase()}</div>
                             <div>{inGameTime}</div>
                         </h1>
                         <h1>
-                            <div>
-                                {redTeam.code}
-                            </div>
-                            <div>
-                                {eventDetails.match.teams[1].record.wins}-{eventDetails.match.teams[1].record.losses}
+                            <div className="live-game-card-team">
+                                <img className="live-game-card-team-image" src={eventDetails.match.teams[1].image}
+                                    alt={eventDetails.match.teams[1].name}/>
+                                <span className='outcome'>
+                                    <p className={eventDetails.match.teams[1].result.outcome}>
+                                        {eventDetails.match.teams[1].result.outcome}
+                                    </p>
+                                </span>
+                                <span>
+                                    <h4>
+                                        {eventDetails.match.teams[1].name}
+                                    </h4>
+                                </span>
+                                <span>
+                                    <p>
+                                        {eventDetails.match.teams[1].record.wins} - {eventDetails.match.teams[1].record.losses}
+                                    </p>
+                                </span>
                             </div>
                         </h1>
-                        <div className="red-team">
-                            <img src={redTeam.image} alt={redTeam.name}/>
-                        </div>
                     </div>
                     <div className="live-game-stats-header-status">
                         <div className="blue-team">

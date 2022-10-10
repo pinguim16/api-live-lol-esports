@@ -132,21 +132,52 @@ export function LiveGame({ match }: any) {
                             <img className="live-game-card-team-image" src={gameData.data.event.match.teams[0].image}
                                 alt={gameData.data.event.match.teams[0].name}/>
                             <span className="live-game-card-title">
-                            {gameData.data.event.match.teams[0].name}
-                        </span>
+                                <span className="outcome">
+                                    <p className={eventDetails.match.teams[0].result.outcome}>
+                                        {eventDetails.match.teams[0].result.outcome}
+                                    </p>
+                                </span>
+                                <span>
+                                    <h4>
+                                        {eventDetails.match.teams[0].name}
+                                    </h4>
+                                </span>
+                                <span>
+                                    <p>
+                                        {eventDetails.match.teams[0].record.wins} - {eventDetails.match.teams[0].record.losses}
+                                    </p>
+                                </span>
+                            </span>
                         </div>
 
-                        <div>
-                            <h1>VS</h1>
-                            <span>BEST OF {gameData.data.event.match.strategy.count}</span>
-                        </div>
+                    <div className="game-card-versus">
+                        <span>BEST OF {gameData.data.event.match.strategy.count}</span>
+                        <span>
+                            <p>
+                                {gameData.data.event.match.teams[0].result.gameWins} - {gameData.data.event.match.teams[1].result.gameWins}
+                            </p>
+                        </span>
+                        <h1>VS</h1>
+                    </div>
 
                         <div className="live-game-card-team">
                             <img className="live-game-card-team-image" src={gameData.data.event.match.teams[1].image}
                                 alt={gameData.data.event.match.teams[1].name}/>
-                            <span className="live-game-card-title">
-                            {gameData.data.event.match.teams[1].name}
-                        </span>
+                            <span className="outcome">
+                                <p className={eventDetails.match.teams[1].result.outcome}>
+                                    {eventDetails.match.teams[1].result.outcome}
+                                </p>
+                            </span>
+                            <span>
+                                <h4>
+                                    {eventDetails.match.teams[1].name}
+                                </h4>
+                            </span>
+                            <span>
+                                <p>
+                                    {eventDetails.match.teams[1].record.wins} - {eventDetails.match.teams[1].record.losses}
+                                </p>
+                            </span>
                         </div>
                     </div>
                     <h3>Game {gameData.data.event.match.games.length} out of {eventDetails.match.strategy.count} will start at {new Date(eventDetails.startTime).toLocaleTimeString([], {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit'})}</h3>
@@ -173,7 +204,7 @@ function getStreamOrVod(gameDetails: GameDetails) {
 
 
     if (!gameDetails.data.event.streams.length) {
-        return (<p>No streams available</p>)
+        return (<span>No streams currently available</span>)
     }
     let shortestDelayStream = gameDetails.data.event.streams.reduce((a, b) => b.offset < 0 && b.offset > a.offset ? b : a)
     let streamOffset = Math.round(shortestDelayStream.offset / 1000 / 60 * -1)

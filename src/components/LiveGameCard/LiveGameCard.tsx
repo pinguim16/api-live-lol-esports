@@ -19,22 +19,51 @@ export function LiveGameCard({ game }: Props) {
                     <div className="live-game-card-team">
                         <img className="live-game-card-team-image" src={game.match.teams[0].image}
                              alt={game.match.teams[0].name}/>
-                        <span className="live-game-card-title">
-                        {game.match.teams[0].name}
-                    </span>
+                        <span>
+                            <p>
+                                {game.match.teams[0].result.outcome}
+                            </p>
+                        </span>
+                        <span>
+                            <h4>
+                                {game.match.teams[0].name}
+                            </h4>
+                        </span>
+                        <span>
+                            <p>
+                                {game.match.teams[0].record.wins} - {game.match.teams[0].record.losses}
+                            </p>
+                        </span>
                     </div>
 
-                    <div>
-                        <h1>VS</h1>
+                    <div className="game-card-versus">
                         <span>BEST OF {game.match.strategy.count}</span>
+                        <span>
+                            <p>
+                                {game.match.teams[0].result.gameWins} - {game.match.teams[1].result.gameWins}
+                            </p>
+                        </span>
+                        <h1>VS</h1>
                     </div>
 
                     <div className="live-game-card-team">
                         <img className="live-game-card-team-image" src={game.match.teams[1].image}
                              alt={game.match.teams[1].name}/>
-                        <span className="live-game-card-title">
-                        {game.match.teams[1].name}
-                    </span>
+                        <span>
+                            <p>
+                                {game.match.teams[1].result.outcome}
+                            </p>
+                        </span>
+                        <span>
+                            <h4>
+                                {game.match.teams[1].name}
+                            </h4>
+                        </span>
+                        <span>
+                            <p>
+                                {game.match.teams[1].record.wins} - {game.match.teams[1].record.losses}
+                            </p>
+                        </span>
                     </div>
                 </div>
             </div>
