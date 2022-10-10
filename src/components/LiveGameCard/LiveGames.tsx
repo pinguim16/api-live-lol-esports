@@ -46,7 +46,6 @@ function filterByTeams(event: LiveEvents) {
     return event.match !== undefined;
 }
 
-let date = new Date(Date.now());
 function filterByLast24Hours(event: Last24HoursEvent) {
     let minDate = new Date();
     let maxDate = new Date()
