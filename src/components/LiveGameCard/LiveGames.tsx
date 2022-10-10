@@ -17,12 +17,18 @@ export function LiveGames() {
 
     useEffect(() => {
         getLiveGames().then(response => {
-            setLiveEvents(response.data.data.schedule.events.filter(filterByTeams))
+            console.groupCollapsed(`Live Games: ${response.data.data.schedule.events.length}`)
+            console.table(response.data.data.schedule.events)
+            console.groupEnd()
+            setLiveEvents(response.data.data.schedule.events.filter(filterLiveEvents))
         }).catch(error =>
             console.error(error)
         )
 
         getSchedule().then(response => {
+            console.groupCollapsed(`Scheduled Games: ${response.data.data.schedule.events.length}`)
+            console.table(response.data.data.schedule.events)
+            console.groupEnd()
             setLast24HoursEvents(response.data.data.schedule.events.filter(filterByLast24Hours))
             setNext24HoursEvents(response.data.data.schedule.events.filter(filterByNext24Hours))
             setNext7DaysEvents(response.data.data.schedule.events.filter(filterByNext7Days))
@@ -42,11 +48,14 @@ export function LiveGames() {
     );
 }
 
-function filterByTeams(event: LiveEvents) {
-    return event.match !== undefined;
+function filterLiveEvents(event: LiveEvents) {
+    return event.match !== undefined && event.state == "inProgress";
 }
 
 function filterByLast24Hours(event: Last24HoursEvent) {
+    if (event.state !== 'completed') {
+        return false
+    }
     let minDate = new Date();
     let maxDate = new Date()
     minDate.setDate(minDate.getDate() - 1)
@@ -65,6 +74,9 @@ function filterByLast24Hours(event: Last24HoursEvent) {
 }
 
 function filterByNext24Hours(event: Next24HoursEvent) {
+    if (event.state !== 'unstarted') {
+        return false
+    }
     let minDate = new Date();
     let maxDate = new Date()
     minDate.setHours(minDate.getHours() - 1)
@@ -83,6 +95,9 @@ function filterByNext24Hours(event: Next24HoursEvent) {
 }
 
 function filterByNext7Days(event: Next7DaysEvent) {
+    if (event.state !== 'unstarted') {
+        return false
+    }
     let minDate = new Date();
     let maxDate = new Date()
     minDate.setDate(minDate.getDate() + 1)
