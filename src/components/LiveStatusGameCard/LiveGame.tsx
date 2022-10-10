@@ -13,7 +13,7 @@ import Loading from '../../assets/images/loading.svg'
 import {PlayersTable} from "./PlayersTable";
 import BigNumber from "bignumber.js";
 import {Frame as FrameDetails} from "./types/detailsLiveTypes";
-import {GameDetails} from "./types/detailsPersistentTypes";
+import {GameDetails, Stream as Video} from "./types/detailsPersistentTypes";
 import {Event as EventDetails} from "../LiveGameCard/types/scheduleType";
 
 export function LiveGame({ match }: any) {
@@ -110,7 +110,7 @@ export function LiveGame({ match }: any) {
 
     if(firstFrameWindow !== undefined && lastFrameWindow !== undefined && lastFrameDetails !== undefined && metadata !== undefined && gameData !== undefined) {
         return (
-            <PlayersTable firstFrameWindow={firstFrameWindow} lastFrameWindow={lastFrameWindow} lastFrameDetails={lastFrameDetails} gameMetadata={metadata} gameDetails={gameData} />
+            <PlayersTable firstFrameWindow={firstFrameWindow} lastFrameWindow={lastFrameWindow} lastFrameDetails={lastFrameDetails} gameMetadata={metadata} gameDetails={gameData} videoLink={getStreamOrVod(gameData)} />
         );
     }else if (eventDetails !== undefined && gameData !== undefined) {
         return(
@@ -140,6 +140,7 @@ export function LiveGame({ match }: any) {
                         </div>
                     </div>
                     <h3>Game {gameData.data.event.match.games.length} out of {eventDetails.match.strategy.count} will start at {new Date(eventDetails.startTime).toLocaleTimeString([], {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit'})}</h3>
+                    {getStreamOrVod(gameData)}
                 </div>
             </div>
         )
@@ -152,4 +153,25 @@ export function LiveGame({ match }: any) {
             </div>
         )
     }
+}
+
+function getStreamOrVod(gameDetails: GameDetails) {
+    let vods = gameDetails.data.event.match.games[gameDetails.data.event.match.games.length - 1].vods
+    if (vods.length) {
+        return (<span className="footer-notes"><a href={getVideoLink(vods[0])} target="_blank">VOD Link</a></span>)
+    }
+
+
+    if (!gameDetails.data.event.streams.length) {
+        return (<p>No streams available</p>)
+    }
+    let shortestDelayStream = gameDetails.data.event.streams.reduce((a, b) => b.offset < 0 && b.offset > a.offset ? b : a)
+    let streamOffset = Math.round(shortestDelayStream.offset / 1000 / 60 * -1)
+    let link = shortestDelayStream.provider == "youtube" ? `https://www.youtube.com/watch?v=${shortestDelayStream.parameter}` : `https://www.twitch.tv/${shortestDelayStream.parameter}`
+    let delayString = streamOffset > 1 ? `Approximately ${streamOffset} minutes` : `Less than 1 minute`
+    return (<span className="footer-notes">Stream Delay: {delayString} - <a href={link} target="_blank">Watch Stream</a></span>)
+}
+
+function getVideoLink(video: Video) {
+    return video.provider == "youtube" ? `https://www.youtube.com/watch?v=${video.parameter}` : `https://www.twitch.tv/${video.parameter}`
 }

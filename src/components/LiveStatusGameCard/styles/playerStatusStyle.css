@@ -1,3 +1,7 @@
+a {
+  text-decoration: underline;
+}
+
 .mini-health-bar {
     display: flex;
     align-items: center;

@@ -32,9 +32,10 @@ type Props = {
     lastFrameDetails: FrameDetails,
     gameMetadata: GameMetadata,
     gameDetails: GameDetails,
+    videoLink: JSX.Element
 }
 
-export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetails, gameMetadata, gameDetails } : Props) {
+export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetails, gameMetadata, gameDetails, videoLink } : Props) {
     const [gameState, setGameState] = useState<GameState>(GameState[lastFrameWindow.gameState as keyof typeof GameState]);
 
     useEffect(() => {
@@ -348,33 +349,12 @@ export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetai
                 <span className="footer-notes">
                     Patch Version: {gameMetadata.patchVersion}
                 </span>
-                {getStreamOrVod(gameDetails)}
+                {videoLink}
             </div>
 
             <LiveAPIWatcher gameMetadata={gameMetadata} lastFrameWindow={lastFrameWindow} blueTeam={blueTeam} redTeam={redTeam}/>
         </div>
     );
-}
-
-function getStreamOrVod(gameDetails: GameDetails) {
-    let vods = gameDetails.data.event.match.games[gameDetails.data.event.match.games.length - 1].vods
-    if (vods.length) {
-        return (<span className="footer-notes"><a href={getVideoLink(vods[0])} target="_blank">Watch VOD</a></span>)
-    }
-
-
-    if (!gameDetails.data.event.streams.length) {
-        return `No streams available`
-    }
-    let shortestDelayStream = gameDetails.data.event.streams.reduce((a, b) => b.offset < 0 && b.offset > a.offset ? b : a)
-    let streamOffset = Math.round(shortestDelayStream.offset / 1000 / 60 * -1)
-    let link = shortestDelayStream.provider == "youtube" ? `https://www.youtube.com/watch?v=${shortestDelayStream.parameter}` : `https://www.twitch.tv/${shortestDelayStream.parameter}`
-    let delayString = streamOffset > 1 ? `Approximately ${streamOffset} minutes` : `Less than 1 minute`
-    return (<span className="footer-notes">{delayString} - <a href={link} target="_blank">Open Stream</a></span>)
-}
-
-function getVideoLink(video: Video) {
-    return video.provider == "youtube" ? `https://www.youtube.com/watch?v=${video.parameter}` : `https://www.twitch.tv/${video.parameter}`
 }
 
 function getInGameTime(startTime: string, currentTime: string) {
