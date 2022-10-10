@@ -11,6 +11,7 @@
   * Player stats & damage?
   * Current betting odds from top betting sites?
   * Historical matches?
+  * Spoiler free mode?
 
 
 ## 📦 Dependencies and programs used
