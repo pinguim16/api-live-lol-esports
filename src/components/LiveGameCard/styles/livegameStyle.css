@@ -48,11 +48,12 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    text-align: center;
 }
 
 .empty-games-galaxy{
-    margin: 5rem;
-    width: 50%;
+    margin: 2rem;
+    width: 30%;
 }
 
 .games-list-container {
