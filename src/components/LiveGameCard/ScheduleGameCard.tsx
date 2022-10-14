@@ -20,8 +20,8 @@ export function ScheduleGameCard({ game }: Props) {
                         <img className="live-game-card-team-image" src={game.match.teams[0].image}
                              alt={game.match.teams[0].name}/>
                         <span className="outcome">
-                            <p className={game.match.teams[0].result.outcome}>
-                                {game.match.teams[0].result.outcome}
+                            <p className={game.match.teams[0].result ? game.match.teams[0].result.outcome : ''}>
+                                {game.match.teams[0].result ? game.match.teams[0].result.outcome : null}
                             </p>
                         </span>
                         <span>
@@ -31,7 +31,7 @@ export function ScheduleGameCard({ game }: Props) {
                         </span>
                         <span>
                             <p>
-                                {game.match.teams[0].record.wins} - {game.match.teams[0].record.losses}
+                                {game.match.teams[0].record ? `${game.match.teams[0].record.wins} - ${game.match.teams[0].record.losses}` : null}
                             </p>
                         </span>
                     </div>
@@ -40,7 +40,7 @@ export function ScheduleGameCard({ game }: Props) {
                         <span>BEST OF {game.match.strategy.count}</span>
                         <span>
                             <p>
-                                {game.match.teams[0].result.gameWins} - {game.match.teams[1].result.gameWins}
+                                {game.match.teams[0].result ? `${game.match.teams[0].result.gameWins} - ${game.match.teams[1].result.gameWins}` : null}
                             </p>
                         </span>
                         <h1>VS</h1>
@@ -50,8 +50,8 @@ export function ScheduleGameCard({ game }: Props) {
                         <img className="live-game-card-team-image" src={game.match.teams[1].image}
                              alt={game.match.teams[1].name}/>
                         <span className="outcome">
-                            <p className={game.match.teams[1].result.outcome}>
-                                {game.match.teams[1].result.outcome}
+                            <p className={game.match.teams[1].result ? game.match.teams[1].result.outcome : ''}>
+                                {game.match.teams[1].result ? game.match.teams[1].result.outcome : null}
                             </p>
                         </span>
                         <span>
@@ -61,7 +61,7 @@ export function ScheduleGameCard({ game }: Props) {
                         </span>
                         <span>
                             <p>
-                                {game.match.teams[1].record.wins} - {game.match.teams[1].record.losses}
+                                {game.match.teams[1].record ? `${game.match.teams[1].record.wins} - ${game.match.teams[1].record.losses}` : null}
                             </p>
                         </span>
                     </div>
