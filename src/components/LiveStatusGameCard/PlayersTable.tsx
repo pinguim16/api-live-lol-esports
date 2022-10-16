@@ -421,7 +421,7 @@ function getFormattedChampionStats(championDetails: Participant) {
             <div className='footer-notes'>Armor: {championDetails.armor}</div>
             <div className='footer-notes'>Magic Resistance: {championDetails.magicResistance}</div>
             <div className='footer-notes'>Wards Destroyed: {championDetails.wardsDestroyed}</div>
-            <div className='footer-notes'>Wards Place: {championDetails.wardsPlaced}</div>
+            <div className='footer-notes'>Wards Placed: {championDetails.wardsPlaced}</div>
             <div className='footer-notes'>Damage Share: {Math.round(championDetails.championDamageShare * 10000) / 100}%</div>
             <div className='footer-notes'>Kill Participation: {Math.round(championDetails.killParticipation * 10000) / 100}%</div>
             <div className='footer-notes'>Skill Order: {championDetails.abilities.join('->')}</div>
