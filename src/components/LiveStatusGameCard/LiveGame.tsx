@@ -10,6 +10,7 @@ import {
 import {useEffect, useState} from "react";
 import {GameMetadata, Frame as FrameWindow} from "./types/windowLiveTypes";
 import Loading from '../../assets/images/loading.svg'
+import {ReactComponent as TeamTBDSVG} from '../../assets/images/team-tbd.svg';
 import {PlayersTable} from "./PlayersTable";
 import BigNumber from "bignumber.js";
 import {Frame as FrameDetails} from "./types/detailsLiveTypes";
@@ -132,54 +133,62 @@ export function LiveGame({ match }: any) {
                     <img className="loading-game-image" alt="game loading" src={Loading}/>
                     <div className="live-game-card-content">
                         <div className="live-game-card-team">
-                            <img className="live-game-card-team-image" src={gameData.data.event.match.teams[0].image}
-                                alt={gameData.data.event.match.teams[0].name}/>
+                            {gameData.data.event.match.teams[0].code == "TBD" ? (<TeamTBDSVG className="live-game-card-team-image"/>) : (<img className="live-game-card-team-image" src={gameData.data.event.match.teams[0].image} alt={gameData.data.event.match.teams[0].name}/>) }
                             <span className="live-game-card-title">
-                                <span className="outcome">
-                                    <p className={eventDetails.match.teams[0].result.outcome}>
-                                        {eventDetails.match.teams[0].result.outcome}
-                                    </p>
-                                </span>
+                                {eventDetails.match.teams[0].result ?
+                                    (<span className="outcome">
+                                        <p className={eventDetails.match.teams[0].result.outcome}>
+                                            {eventDetails.match.teams[0].result.outcome}
+                                        </p>
+                                    </span>)
+                                : null}
                                 <span>
                                     <h4>
                                         {eventDetails.match.teams[0].name}
                                     </h4>
                                 </span>
-                                <span>
-                                    <p>
-                                        {eventDetails.match.teams[0].record.wins} - {eventDetails.match.teams[0].record.losses}
-                                    </p>
-                                </span>
+                                {eventDetails.match.teams[0].result ?
+                                    (<span>
+                                        <p>
+                                            {eventDetails.match.teams[0].record.wins} - {eventDetails.match.teams[0].record.losses}
+                                        </p>
+                                    </span>)
+                                : null}
                             </span>
                         </div>
-
                     <div className="game-card-versus">
                         <span>BEST OF {gameData.data.event.match.strategy.count}</span>
-                        <span>
-                            <p>
-                                {gameData.data.event.match.teams[0].result.gameWins} - {gameData.data.event.match.teams[1].result.gameWins}
-                            </p>
-                        </span>
+                        {gameData.data.event.match.teams[0].result ?
+                            (<span>
+                                <p>
+                                    {gameData.data.event.match.teams[0].result.gameWins} - {gameData.data.event.match.teams[1].result.gameWins}
+                                </p>
+                            </span>)
+                        : null}
                         <h1>VS</h1>
                     </div>
-
                         <div className="live-game-card-team">
-                            <img className="live-game-card-team-image" src={gameData.data.event.match.teams[1].image}
-                                alt={gameData.data.event.match.teams[1].name}/>
-                            <span className="outcome">
-                                <p className={eventDetails.match.teams[1].result.outcome}>
-                                    {eventDetails.match.teams[1].result.outcome}
-                                </p>
-                            </span>
-                            <span>
-                                <h4>
-                                    {eventDetails.match.teams[1].name}
-                                </h4>
-                            </span>
-                            <span>
-                                <p>
-                                    {eventDetails.match.teams[1].record.wins} - {eventDetails.match.teams[1].record.losses}
-                                </p>
+                            {gameData.data.event.match.teams[1].code == "TBD" ? (<TeamTBDSVG className="live-game-card-team-image"/>) : (<img className="live-game-card-team-image" src={gameData.data.event.match.teams[1].image} alt={gameData.data.event.match.teams[1].name}/>) }
+                            <span className="live-game-card-title">
+                                {eventDetails.match.teams[1].result ?
+                                    (<span className="outcome">
+                                        <p className={eventDetails.match.teams[1].result.outcome}>
+                                            {eventDetails.match.teams[1].result.outcome}
+                                        </p>
+                                    </span>)
+                                : null}
+                                <span>
+                                    <h4>
+                                        {eventDetails.match.teams[1].name}
+                                    </h4>
+                                </span>
+                                {eventDetails.match.teams[1].result ?
+                                    (<span>
+                                        <p>
+                                            {eventDetails.match.teams[1].record.wins} - {eventDetails.match.teams[1].record.losses}
+                                        </p>
+                                    </span>)
+                                : null}
                             </span>
                         </div>
                     </div>
