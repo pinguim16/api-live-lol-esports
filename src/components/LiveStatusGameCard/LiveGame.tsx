@@ -192,7 +192,7 @@ export function LiveGame({ match }: any) {
                             </span>
                         </div>
                     </div>
-                    <h3>Game {gameData.data.event.match.games.length} out of {eventDetails.match.strategy.count} will start at {new Date(eventDetails.startTime).toLocaleTimeString([], {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit'})}</h3>
+                    <h3>Game {getNextUnstartedGameIndex(gameData)} out of {eventDetails.match.strategy.count} will start at {new Date(eventDetails.startTime).toLocaleTimeString([], {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit'})}</h3>
                     {getStreamOrVod(gameData)}
                 </div>
             </div>
@@ -206,6 +206,11 @@ export function LiveGame({ match }: any) {
             </div>
         )
     }
+}
+
+function getNextUnstartedGameIndex(gameDetails: GameDetails) {
+    let nextUnstartedGame = gameDetails.data.event.match.games.find(game => game.state == "unstarted")
+    return nextUnstartedGame ? nextUnstartedGame.number : gameDetails.data.event.match.games.length
 }
 
 function getStreamOrVod(gameDetails: GameDetails) {
