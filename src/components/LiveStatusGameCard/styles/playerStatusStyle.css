@@ -207,6 +207,7 @@ Status dragons
 
 .status-live-game-card-table-wrapper {
     overflow-x: auto;
+    overflow-y: clip;
 }
 
 .status-live-game-card-table {
