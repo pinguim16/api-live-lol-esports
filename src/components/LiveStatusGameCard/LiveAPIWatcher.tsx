@@ -1,6 +1,6 @@
 import './styles/playerStatusStyle.css'
 
-import {GameMetadata, Participant} from "./types/windowLiveTypes";
+import {GameMetadata, WindowParticipant} from "./types/windowLiveTypes";
 
 import React, {useEffect, useState} from "react";
 import {ToastContainer, toast} from 'react-toastify';
@@ -45,8 +45,8 @@ type StatusWatcher = {
         red: number
     }
     participants: {
-        blue: Participant[]
-        red: Participant[]
+        blue: WindowParticipant[]
+        red: WindowParticipant[]
     }
 }
 

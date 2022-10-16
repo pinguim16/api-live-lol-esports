@@ -245,6 +245,27 @@ Status dragons
     color: var(--text)
 }
 
+.champion-stats-row span {
+    display: none;
+}
+
+.champion-stats-row div {
+    display: inline-block;
+    padding: 0px 5px;
+    margin: 5px;
+}
+
+.chevron-down {
+    fill: var(--text);
+    width: 25px;
+    padding: 5px;
+    transition:all .4s;
+}
+
+.rotated {
+    transform: rotate(-180deg);
+}
+
 .table-top-row-champion{
     width: 12rem;
 }

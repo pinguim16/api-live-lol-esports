@@ -1,14 +1,14 @@
 import './styles/playerStatusStyle.css'
 import '../LiveGameCard/styles/livegameStyle.css'
 
-import { GameMetadata } from "./types/windowLiveTypes";
+import { GameMetadata, WindowParticipant } from "./types/windowLiveTypes";
 import {GameDetails, Stream as Video} from "./types/detailsPersistentTypes";
 
 import {MiniHealthBar} from "./MiniHealthBar";
 import React, {useEffect, useState} from "react";
 import {toast} from 'react-toastify';
-import {Frame as FrameDetails} from "./types/detailsLiveTypes";
-import {Frame as FrameWindow, Participant as ParticipantWindow} from "./types/windowLiveTypes";
+import {Frame as FrameDetails, Participant} from "./types/detailsLiveTypes";
+import {Frame as FrameWindow} from "./types/windowLiveTypes";
 import {Event as EventDetails} from "../LiveGameCard/types/scheduleType";
 
 import {ReactComponent as TowerSVG} from '../../assets/images/tower.svg';
@@ -56,6 +56,16 @@ export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetai
                 draggable: true,
             });
         }
+
+        var playerStatsRows = Array.from($('.player-stats-row'))
+        var championStatsRows = Array.from($('.champion-stats-row span'))
+        var chevrons = Array.from($('.player-stats-row .chevron-down'))
+        playerStatsRows.forEach((playerStatsRow, index) => {
+            $(playerStatsRow).on('click', () => {
+                $(championStatsRows[index]).slideToggle()
+                $(chevrons[index]).toggleClass('rotated')
+            })
+        })
     }, [lastFrameWindow.gameState, gameState]);
 
     let blueTeam = gameDetails.data.event.match.teams[0];
@@ -240,13 +250,14 @@ export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetai
                         </tr>
                         </thead>
                         <tbody>
-                        {lastFrameWindow.blueTeam.participants.map((player: ParticipantWindow) => {
+                        {lastFrameWindow.blueTeam.participants.map((player: WindowParticipant, index) => {
                             let goldDifference = getGoldDifference(player, "blue", gameMetadata, lastFrameWindow);
-
-                            return (
-                                <tr key={`${CHAMPIONS_URL}${gameMetadata.blueTeamMetadata.participantMetadata[player.participantId - 1].championId}`}>
+                            let championDetails = lastFrameDetails.participants[index]
+                            return [(
+                                <tr className="player-stats-row" key={`${CHAMPIONS_URL}${gameMetadata.blueTeamMetadata.participantMetadata[player.participantId - 1].championId}`}>
                                     <th>
                                         <div className="player-champion-info">
+                                            <svg className="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 429.3l22.6-22.6 192-192L493.3 192 448 146.7l-22.6 22.6L256 338.7 86.6 169.4 64 146.7 18.7 192l22.6 22.6 192 192L256 429.3z"/></svg>
                                             <img
                                                 src={`${CHAMPIONS_URL}${gameMetadata.blueTeamMetadata.participantMetadata[player.participantId - 1].championId}.png`}
                                                 className="player-champion"
@@ -285,7 +296,15 @@ export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetai
                                         <div className={`player-stats player-gold-${goldDifference?.style}`}>{goldDifference.goldDifference}</div>
                                     </td>
                                 </tr>
-                            )
+                            ), (
+                            <tr key={`${CHAMPIONS_URL}${gameMetadata.blueTeamMetadata.participantMetadata[player.participantId - 1].championId}_stats`} className='champion-stats-row'>
+                                <td colSpan={9}>
+                                    <span>
+                                        {getFormattedChampionStats(championDetails)}
+                                    </span>
+                                </td>
+                            </tr>
+                            )]
                         })}
                         </tbody>
                     </table>
@@ -323,13 +342,15 @@ export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetai
                         </tr>
                         </thead>
                         <tbody>
-                        {lastFrameWindow.redTeam.participants.map((player) => {
+                        {lastFrameWindow.redTeam.participants.map((player: WindowParticipant, index) => {
                             let goldDifference = getGoldDifference(player, "red", gameMetadata, lastFrameWindow);
+                            let championDetails = lastFrameDetails.participants[index]
 
-                            return(
-                                <tr key={`${CHAMPIONS_URL}${gameMetadata.redTeamMetadata.participantMetadata[player.participantId - 6].championId}`}>
+                            return [(
+                                <tr className="player-stats-row" key={`${CHAMPIONS_URL}${gameMetadata.redTeamMetadata.participantMetadata[player.participantId - 6].championId}`}>
                                     <th>
                                         <div className="player-champion-info">
+                                            <svg className="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 429.3l22.6-22.6 192-192L493.3 192 448 146.7l-22.6 22.6L256 338.7 86.6 169.4 64 146.7 18.7 192l22.6 22.6 192 192L256 429.3z"/></svg>
                                             <img
                                                 src={`${CHAMPIONS_URL}${gameMetadata.redTeamMetadata.participantMetadata[player.participantId - 6].championId}.png`}
                                                 className="player-champion"
@@ -366,7 +387,15 @@ export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetai
                                         <div className={`player-stats player-gold-${goldDifference?.style}`}>{goldDifference.goldDifference}</div>
                                     </td>
                                 </tr>
-                            )
+                            ), (
+                                <tr key={`${CHAMPIONS_URL}${gameMetadata.redTeamMetadata.participantMetadata[player.participantId - 6].championId}_stats`} className='champion-stats-row'>
+                                    <td colSpan={9}>
+                                        <span>
+                                            {getFormattedChampionStats(championDetails)}
+                                        </span>
+                                    </td>
+                                </tr>
+                                )]
                         })}
                         </tbody>
                     </table>
@@ -380,6 +409,24 @@ export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetai
             <LiveAPIWatcher gameMetadata={gameMetadata} lastFrameWindow={lastFrameWindow} blueTeam={blueTeam} redTeam={redTeam}/>
         </div>
     );
+}
+
+function getFormattedChampionStats(championDetails: Participant) {
+    return (
+        <div>
+            <div className='footer-notes'>Attack Damage: {championDetails.attackDamage}</div>
+            <div className='footer-notes'>Ability Power: {championDetails.abilityPower}</div>
+            <div className='footer-notes'>Attack Speed: {championDetails.attackSpeed}</div>
+            <div className='footer-notes'>Life Steal: {championDetails.lifeSteal}%</div>
+            <div className='footer-notes'>Armor: {championDetails.armor}</div>
+            <div className='footer-notes'>Magic Resistance: {championDetails.magicResistance}</div>
+            <div className='footer-notes'>Wards Destroyed: {championDetails.wardsDestroyed}</div>
+            <div className='footer-notes'>Wards Place: {championDetails.wardsPlaced}</div>
+            <div className='footer-notes'>Damage Share: {Math.round(championDetails.championDamageShare * 10000) / 100}%</div>
+            <div className='footer-notes'>Kill Participation: {Math.round(championDetails.killParticipation * 10000) / 100}%</div>
+            <div className='footer-notes'>Skill Order: {championDetails.abilities.join('->')}</div>
+        </div>
+    )
 }
 
 function getInGameTime(startTime: string, currentTime: string) {
@@ -398,7 +445,7 @@ function getInGameTime(startTime: string, currentTime: string) {
     return hours ? `${hours}:${minutes}:${secondsString}` : `${minutes}:${secondsString}`
 }
 
-function getGoldDifference(player: ParticipantWindow, side: string, gameMetadata: GameMetadata, frame: FrameWindow) {
+function getGoldDifference(player: WindowParticipant, side: string, gameMetadata: GameMetadata, frame: FrameWindow) {
     if(6 > player.participantId) { // blue side
         const redPlayer = frame.redTeam.participants[player.participantId - 1];
         const goldResult = player.totalGold - redPlayer.totalGold;

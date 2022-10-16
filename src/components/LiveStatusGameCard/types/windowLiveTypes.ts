@@ -22,7 +22,7 @@ export interface GameMetadata {
     redTeamMetadata: RedTeamMetadata;
 }
 
-export interface Participant {
+export interface WindowParticipant {
     participantId: number;
     totalGold: number;
     level: number;
@@ -41,7 +41,7 @@ export interface BlueTeam {
     barons: number;
     totalKills: number;
     dragons: string[];
-    participants: Participant[];
+    participants: WindowParticipant[];
 }
 
 export interface RedTeam {
@@ -51,7 +51,7 @@ export interface RedTeam {
     barons: number;
     totalKills: number;
     dragons: string[];
-    participants: Participant[];
+    participants: WindowParticipant[];
 }
 
 export interface Frame {
