@@ -206,170 +206,171 @@ export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetai
                         </div>
                     </div>
                 </div>
+                <div className="status-live-game-card-table-wrapper">
+                    <table className="status-live-game-card-table">
+                        <thead>
+                        <tr key={blueTeam.name.toUpperCase()}>
+                            <th className="table-top-row-champion" title="champion/team">
+                                <span>{blueTeam.name.toUpperCase()}</span>
+                            </th>
+                            <th className="table-top-row-vida" title="life">
+                                <span>Health</span>
+                            </th>
+                            <th className="table-top-row-items" title="items">
+                                <span>ITEMS</span>
+                            </th>
+                            <th className="table-top-row" title="creep score">
+                                <span>CS</span>
+                            </th>
+                            <th className="table-top-row player-stats-kda" title="kills">
+                                <span>K</span>
+                            </th>
+                            <th className="table-top-row player-stats-kda" title="kills">
+                                <span>D</span>
+                            </th>
+                            <th className="table-top-row player-stats-kda" title="kills">
+                                <span>A</span>
+                            </th>
+                            <th className="table-top-row" title="gold">
+                                <span>Gold</span>
+                            </th>
+                            <th className="table-top-row" title="gold difference">
+                                <span>+/-</span>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {lastFrameWindow.blueTeam.participants.map((player: ParticipantWindow) => {
+                            let goldDifference = getGoldDifference(player, "blue", gameMetadata, lastFrameWindow);
 
-                <table className="status-live-game-card-table">
-                    <thead>
-                    <tr key={blueTeam.name.toUpperCase()}>
-                        <th className="table-top-row-champion" title="champion/team">
-                            <span>{blueTeam.name.toUpperCase()}</span>
-                        </th>
-                        <th className="table-top-row-vida" title="life">
-                            <span>Health</span>
-                        </th>
-                        <th className="table-top-row-items" title="items">
-                            <span>ITEMS</span>
-                        </th>
-                        <th className="table-top-row" title="creep score">
-                            <span>CS</span>
-                        </th>
-                        <th className="table-top-row player-stats-kda" title="kills">
-                            <span>K</span>
-                        </th>
-                        <th className="table-top-row player-stats-kda" title="kills">
-                            <span>D</span>
-                        </th>
-                        <th className="table-top-row player-stats-kda" title="kills">
-                            <span>A</span>
-                        </th>
-                        <th className="table-top-row" title="gold">
-                            <span>Gold</span>
-                        </th>
-                        <th className="table-top-row" title="gold difference">
-                            <span>+/-</span>
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {lastFrameWindow.blueTeam.participants.map((player: ParticipantWindow) => {
-                        let goldDifference = getGoldDifference(player, "blue", gameMetadata, lastFrameWindow);
-
-                        return (
-                            <tr key={`${CHAMPIONS_URL}${gameMetadata.blueTeamMetadata.participantMetadata[player.participantId - 1].championId}`}>
-                                <th>
-                                    <div className="player-champion-info">
-                                        <img
-                                            src={`${CHAMPIONS_URL}${gameMetadata.blueTeamMetadata.participantMetadata[player.participantId - 1].championId}.png`}
-                                            className="player-champion"
-                                            alt="imagem do campeao"/>
-                                        <span className=" player-champion-info-level">{player.level}</span>
-                                        <div className=" player-champion-info-name">
-                                            <span>{gameMetadata.blueTeamMetadata.participantMetadata[player.participantId - 1].championId}</span>
-                                            <span
-                                                className=" player-card-player-name">{gameMetadata.blueTeamMetadata.participantMetadata[player.participantId - 1].summonerName}</span>
+                            return (
+                                <tr key={`${CHAMPIONS_URL}${gameMetadata.blueTeamMetadata.participantMetadata[player.participantId - 1].championId}`}>
+                                    <th>
+                                        <div className="player-champion-info">
+                                            <img
+                                                src={`${CHAMPIONS_URL}${gameMetadata.blueTeamMetadata.participantMetadata[player.participantId - 1].championId}.png`}
+                                                className="player-champion"
+                                                alt="imagem do campeao"/>
+                                            <span className=" player-champion-info-level">{player.level}</span>
+                                            <div className=" player-champion-info-name">
+                                                <span>{gameMetadata.blueTeamMetadata.participantMetadata[player.participantId - 1].championId}</span>
+                                                <span
+                                                    className=" player-card-player-name">{gameMetadata.blueTeamMetadata.participantMetadata[player.participantId - 1].summonerName}</span>
+                                            </div>
                                         </div>
-                                    </div>
-                                </th>
-                                <td>
-                                    <MiniHealthBar currentHealth={player.currentHealth} maxHealth={player.maxHealth}/>
-                                </td>
-                                <td>
-                                    <ItemsDisplay participantId={player.participantId - 1} lastFrame={lastFrameDetails}/>
-                                </td>
-                                <td>
-                                    <div className=" player-stats">{player.creepScore}</div>
-                                </td>
-                                <td>
-                                    <div className=" player-stats player-stats-kda">{player.kills}</div>
-                                </td>
-                                <td>
-                                    <div className=" player-stats player-stats-kda">{player.deaths}</div>
-                                </td>
-                                <td>
-                                    <div className=" player-stats player-stats-kda">{player.assists}</div>
-                                </td>
-                                <td>
-                                    <div
-                                        className=" player-stats">{Number(player.totalGold).toLocaleString('en-us')}</div>
-                                </td>
-                                <td>
-                                    <div className={`player-stats player-gold-${goldDifference?.style}`}>{goldDifference.goldDifference}</div>
-                                </td>
-                            </tr>
-                        )
-                    })}
-                    </tbody>
-                </table>
+                                    </th>
+                                    <td>
+                                        <MiniHealthBar currentHealth={player.currentHealth} maxHealth={player.maxHealth}/>
+                                    </td>
+                                    <td>
+                                        <ItemsDisplay participantId={player.participantId - 1} lastFrame={lastFrameDetails}/>
+                                    </td>
+                                    <td>
+                                        <div className=" player-stats">{player.creepScore}</div>
+                                    </td>
+                                    <td>
+                                        <div className=" player-stats player-stats-kda">{player.kills}</div>
+                                    </td>
+                                    <td>
+                                        <div className=" player-stats player-stats-kda">{player.deaths}</div>
+                                    </td>
+                                    <td>
+                                        <div className=" player-stats player-stats-kda">{player.assists}</div>
+                                    </td>
+                                    <td>
+                                        <div
+                                            className=" player-stats">{Number(player.totalGold).toLocaleString('en-us')}</div>
+                                    </td>
+                                    <td>
+                                        <div className={`player-stats player-gold-${goldDifference?.style}`}>{goldDifference.goldDifference}</div>
+                                    </td>
+                                </tr>
+                            )
+                        })}
+                        </tbody>
+                    </table>
 
-                <table className="status-live-game-card-table">
-                    <thead>
-                    <tr key={redTeam.name.toUpperCase()}>
-                        <th className="table-top-row-champion" title="champion/team">
-                            <span>{redTeam.name.toUpperCase()}</span>
-                        </th>
-                        <th className="table-top-row-vida" title="life">
-                            <span>HEALTH</span>
-                        </th>
-                        <th className="table-top-row-items" title="items">
-                            <span>ITEMS</span>
-                        </th>
-                        <th className="table-top-row" title="creep score">
-                            <span>CS</span>
-                        </th>
-                        <th className="table-top-row player-stats-kda" title="kills">
-                            <span>K</span>
-                        </th>
-                        <th className="table-top-row player-stats-kda" title="kills">
-                            <span>D</span>
-                        </th>
-                        <th className="table-top-row player-stats-kda" title="kills">
-                            <span>A</span>
-                        </th>
-                        <th className="table-top-row" title="gold">
-                            <span>GOLD</span>
-                        </th>
-                        <th className="table-top-row" title="gold difference">
-                            <span>+/-</span>
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {lastFrameWindow.redTeam.participants.map((player) => {
-                        let goldDifference = getGoldDifference(player, "red", gameMetadata, lastFrameWindow);
+                    <table className="status-live-game-card-table">
+                        <thead>
+                        <tr key={redTeam.name.toUpperCase()}>
+                            <th className="table-top-row-champion" title="champion/team">
+                                <span>{redTeam.name.toUpperCase()}</span>
+                            </th>
+                            <th className="table-top-row-vida" title="life">
+                                <span>HEALTH</span>
+                            </th>
+                            <th className="table-top-row-items" title="items">
+                                <span>ITEMS</span>
+                            </th>
+                            <th className="table-top-row" title="creep score">
+                                <span>CS</span>
+                            </th>
+                            <th className="table-top-row player-stats-kda" title="kills">
+                                <span>K</span>
+                            </th>
+                            <th className="table-top-row player-stats-kda" title="kills">
+                                <span>D</span>
+                            </th>
+                            <th className="table-top-row player-stats-kda" title="kills">
+                                <span>A</span>
+                            </th>
+                            <th className="table-top-row" title="gold">
+                                <span>GOLD</span>
+                            </th>
+                            <th className="table-top-row" title="gold difference">
+                                <span>+/-</span>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {lastFrameWindow.redTeam.participants.map((player) => {
+                            let goldDifference = getGoldDifference(player, "red", gameMetadata, lastFrameWindow);
 
-                        return(
-                            <tr key={`${CHAMPIONS_URL}${gameMetadata.redTeamMetadata.participantMetadata[player.participantId - 6].championId}`}>
-                                <th>
-                                    <div className="player-champion-info">
-                                        <img
-                                            src={`${CHAMPIONS_URL}${gameMetadata.redTeamMetadata.participantMetadata[player.participantId - 6].championId}.png`}
-                                            className="player-champion"
-                                            alt="imagem do campeao"/>
-                                        <span className=" player-champion-info-level">{player.level}</span>
-                                        <div className=" player-champion-info-name">
-                                            <span>{gameMetadata.redTeamMetadata.participantMetadata[player.participantId - 6].championId}</span>
-                                            <span className=" player-card-player-name">{gameMetadata.redTeamMetadata.participantMetadata[player.participantId - 6].summonerName}</span>
+                            return(
+                                <tr key={`${CHAMPIONS_URL}${gameMetadata.redTeamMetadata.participantMetadata[player.participantId - 6].championId}`}>
+                                    <th>
+                                        <div className="player-champion-info">
+                                            <img
+                                                src={`${CHAMPIONS_URL}${gameMetadata.redTeamMetadata.participantMetadata[player.participantId - 6].championId}.png`}
+                                                className="player-champion"
+                                                alt="imagem do campeao"/>
+                                            <span className=" player-champion-info-level">{player.level}</span>
+                                            <div className=" player-champion-info-name">
+                                                <span>{gameMetadata.redTeamMetadata.participantMetadata[player.participantId - 6].championId}</span>
+                                                <span className=" player-card-player-name">{gameMetadata.redTeamMetadata.participantMetadata[player.participantId - 6].summonerName}</span>
+                                            </div>
                                         </div>
-                                    </div>
-                                </th>
-                                <td>
-                                    <MiniHealthBar currentHealth={player.currentHealth} maxHealth={player.maxHealth}/>
-                                </td>
-                                <td>
-                                    <ItemsDisplay participantId={player.participantId - 1} lastFrame={lastFrameDetails}/>
-                                </td>
-                                <td>
-                                    <div className=" player-stats">{player.creepScore}</div>
-                                </td>
-                                <td>
-                                    <div className=" player-stats player-stats-kda">{player.kills}</div>
-                                </td>
-                                <td>
-                                    <div className=" player-stats player-stats-kda">{player.deaths}</div>
-                                </td>
-                                <td>
-                                    <div className=" player-stats player-stats-kda">{player.assists}</div>
-                                </td>
-                                <td>
-                                    <div className=" player-stats">{Number(player.totalGold).toLocaleString('en-us')}</div>
-                                </td>
-                                <td>
-                                    <div className={`player-stats player-gold-${goldDifference?.style}`}>{goldDifference.goldDifference}</div>
-                                </td>
-                            </tr>
-                        )
-                    })}
-                    </tbody>
-                </table>
+                                    </th>
+                                    <td>
+                                        <MiniHealthBar currentHealth={player.currentHealth} maxHealth={player.maxHealth}/>
+                                    </td>
+                                    <td>
+                                        <ItemsDisplay participantId={player.participantId - 1} lastFrame={lastFrameDetails}/>
+                                    </td>
+                                    <td>
+                                        <div className=" player-stats">{player.creepScore}</div>
+                                    </td>
+                                    <td>
+                                        <div className=" player-stats player-stats-kda">{player.kills}</div>
+                                    </td>
+                                    <td>
+                                        <div className=" player-stats player-stats-kda">{player.deaths}</div>
+                                    </td>
+                                    <td>
+                                        <div className=" player-stats player-stats-kda">{player.assists}</div>
+                                    </td>
+                                    <td>
+                                        <div className=" player-stats">{Number(player.totalGold).toLocaleString('en-us')}</div>
+                                    </td>
+                                    <td>
+                                        <div className={`player-stats player-gold-${goldDifference?.style}`}>{goldDifference.goldDifference}</div>
+                                    </td>
+                                </tr>
+                            )
+                        })}
+                        </tbody>
+                    </table>
+                </div>
                 <span className="footer-notes">
                     Patch Version: {gameMetadata.patchVersion}
                 </span>
