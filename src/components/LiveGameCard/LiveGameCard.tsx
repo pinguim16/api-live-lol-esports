@@ -19,11 +19,13 @@ export function LiveGameCard({ game }: Props) {
                     <div className="live-game-card-team">
                         <img className="live-game-card-team-image" src={game.match.teams[0].image}
                              alt={game.match.teams[0].name}/>
-                        <span>
-                            <p>
-                                {game.match.teams[0].result.outcome}
-                            </p>
-                        </span>
+                        {game.match.teams[1].result.outcome ?
+                            (<span className="outcome">
+                                <p className={game.match.teams[0].result.outcome}>
+                                    {game.match.teams[0].result.outcome}
+                                </p>
+                            </span>)
+                        : null}
                         <span>
                             <h4>
                                 {game.match.teams[0].name}
@@ -49,11 +51,13 @@ export function LiveGameCard({ game }: Props) {
                     <div className="live-game-card-team">
                         <img className="live-game-card-team-image" src={game.match.teams[1].image}
                              alt={game.match.teams[1].name}/>
-                        <span>
-                            <p>
-                                {game.match.teams[1].result.outcome}
-                            </p>
-                        </span>
+                        {game.match.teams[1].result.outcome ?
+                            (<span className="outcome">
+                                <p className={game.match.teams[1].result.outcome}>
+                                    {game.match.teams[1].result.outcome}
+                                </p>
+                            </span>)
+                        : null}
                         <span>
                             <h4>
                                 {game.match.teams[1].name}
