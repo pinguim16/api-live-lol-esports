@@ -1,5 +1,6 @@
 import {Link} from "react-router-dom";
 import {Event} from "./types/scheduleType";
+import {ReactComponent as TeamTBDSVG} from '../../assets/images/team-tbd.svg';
 
 type Props = {
     game: Event;
@@ -17,8 +18,7 @@ export function ScheduleGameCard({ game }: Props) {
                 </h4>
                 <div className="live-game-card-content">
                     <div className="live-game-card-team">
-                        <img className="live-game-card-team-image" src={game.match.teams[0].image}
-                             alt={game.match.teams[0].name}/>
+                        {game.match.teams[0].code == "TBD" ? (<TeamTBDSVG className="live-game-card-team-image"/>) : (<img className="live-game-card-team-image" src={game.match.teams[0].image} alt={game.match.teams[0].name}/>) }
                         <span className="outcome">
                             <p className={game.match.teams[0].result ? game.match.teams[0].result.outcome : ''}>
                                 {game.match.teams[0].result ? game.match.teams[0].result.outcome : null}
@@ -47,8 +47,7 @@ export function ScheduleGameCard({ game }: Props) {
                     </div>
 
                     <div className="live-game-card-team">
-                        <img className="live-game-card-team-image" src={game.match.teams[1].image}
-                             alt={game.match.teams[1].name}/>
+                        {game.match.teams[1].code == "TBD" ? (<TeamTBDSVG className="live-game-card-team-image"/>) : (<img className="live-game-card-team-image" src={game.match.teams[1].image} alt={game.match.teams[1].name}/>) }
                         <span className="outcome">
                             <p className={game.match.teams[1].result ? game.match.teams[1].result.outcome : ''}>
                                 {game.match.teams[1].result ? game.match.teams[1].result.outcome : null}
