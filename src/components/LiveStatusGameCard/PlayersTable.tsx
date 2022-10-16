@@ -217,7 +217,7 @@ export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetai
                                 <span>Health</span>
                             </th>
                             <th className="table-top-row-items" title="items">
-                                <span>ITEMS</span>
+                                <span>Items</span>
                             </th>
                             <th className="table-top-row" title="creep score">
                                 <span>CS</span>
@@ -297,10 +297,10 @@ export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetai
                                 <span>{redTeam.name.toUpperCase()}</span>
                             </th>
                             <th className="table-top-row-vida" title="life">
-                                <span>HEALTH</span>
+                                <span>Health</span>
                             </th>
                             <th className="table-top-row-items" title="items">
-                                <span>ITEMS</span>
+                                <span>Items</span>
                             </th>
                             <th className="table-top-row" title="creep score">
                                 <span>CS</span>
@@ -315,7 +315,7 @@ export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetai
                                 <span>A</span>
                             </th>
                             <th className="table-top-row" title="gold">
-                                <span>GOLD</span>
+                                <span>Gold</span>
                             </th>
                             <th className="table-top-row" title="gold difference">
                                 <span>+/-</span>
