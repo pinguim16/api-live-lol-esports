@@ -60,6 +60,18 @@ export function getGameDetails(gameId: string) {
     })
 }
 
+export function getStandings(tournamentId: string) {
+    return axios.get(`${API_URL_PERSISTED}/getStandings`, {
+        params: {
+            "hl": "en-US",
+            "tournamentId": tournamentId,
+        },
+        headers: {
+            "x-api-key": API_KEY,
+        },
+    })
+}
+
 
 export function getISODateMultiplyOf10() {
     const date = new Date();

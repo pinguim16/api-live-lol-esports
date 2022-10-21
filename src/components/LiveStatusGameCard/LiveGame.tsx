@@ -5,7 +5,8 @@ import {
     getISODateMultiplyOf10,
     getLiveDetailsGame,
     getLiveWindowGame,
-    getSchedule
+    getSchedule,
+    getStandings
 } from "../../utils/LoLEsportsAPI";
 import {useEffect, useState} from "react";
 import {GameMetadata, Frame as FrameWindow} from "./types/windowLiveTypes";
@@ -13,6 +14,7 @@ import Loading from '../../assets/images/loading.svg'
 import {ReactComponent as TeamTBDSVG} from '../../assets/images/team-tbd.svg';
 import {PlayersTable} from "./PlayersTable";
 import BigNumber from "bignumber.js";
+import { Team } from "../../components/LiveGameCard/types/liveGameTypes";
 import {Frame as FrameDetails} from "./types/detailsLiveTypes";
 import {GameDetails, Stream as Video} from "./types/detailsPersistentTypes";
 import {Event as EventDetails} from "../LiveGameCard/types/scheduleType";
@@ -22,13 +24,15 @@ export function LiveGame({ match }: any) {
     const [lastFrameWindow, setLastFrameWindow] = useState<FrameWindow>();
     const [lastFrameDetails, setLastFrameDetails] = useState<FrameDetails>();
     const [eventDetails, setEventDetails] = useState<EventDetails>();
+    const [rankings, setRankings] = useState<Team[]>();
     const [gameData, setGameData] = useState<GameDetails>();
     const [metadata, setMetadata] = useState<GameMetadata>();
 
     const matchId = match.params.gameid;
     const preGameId = new BigNumber(matchId);
-    let gameId = gameData?.data.event.match.games[gameData?.data.event.match.games.length - 1].id || BigNumber.sum(preGameId, 1).toString();
-    
+    let nextUnstartedGameIndex = gameData ? getNextUnstartedGameIndex(gameData) : 1
+    let gameId = BigNumber.sum(preGameId, nextUnstartedGameIndex).toString();
+
     useEffect(() => {
         getLiveGameDetails();
         /*getLiveWindow();
@@ -101,7 +105,7 @@ export function LiveGame({ match }: any) {
                 console.groupEnd()
                 if(gameData === undefined) return;
 
-                gameId = gameData.data.event.match.games[gameData?.data.event.match.games.length - 1].id
+                // gameId = gameData.data.event.match.games[gameData?.data.event.match.games.length - 1].id
 
                 for (const game of gameData.data.event.match.games) {
                     if(game.state === "inProgress"){
@@ -112,7 +116,34 @@ export function LiveGame({ match }: any) {
                 getEventDetails()
                 getFirstWindow()
                 setGameData(gameData);
+                getRankings(gameData)
             })
+        }
+
+        function getRankings(gameData: GameDetails) {
+            if(gameData === undefined) return;
+            getStandings(gameData.data.event.tournament.id).then(response => {
+                console.log(`rankings response`)
+                console.log(response.data)
+                let stage = response.data.data.standings[0].stages.find((stage: any) => {
+                    let stageSection = stage.sections.find((section: any) => {
+                        return section.matches.find((match: any) => match.id == matchId)
+                    })
+                    return stageSection
+                })
+                console.log(stage)
+                let section = stage.sections.find((section: any) => {
+                    return section.matches.find((match: any) => match.id == matchId)
+                })
+                if(section === undefined) return;
+                let rankings = section.rankings;
+                if(rankings === undefined) return;
+
+                setRankings(rankings)
+                console.groupCollapsed(`Rankings`)
+                console.log(rankings)
+                console.groupEnd()
+            });
         }
     }, [matchId]);
 
@@ -209,8 +240,9 @@ export function LiveGame({ match }: any) {
 }
 
 function getNextUnstartedGameIndex(gameDetails: GameDetails) {
+    let lastCompletedGame = gameDetails.data.event.match.games.slice().reverse().find(game => game.state == "completed")
     let nextUnstartedGame = gameDetails.data.event.match.games.find(game => game.state == "unstarted")
-    return nextUnstartedGame ? nextUnstartedGame.number : gameDetails.data.event.match.games.length
+    return nextUnstartedGame ? nextUnstartedGame.number : (lastCompletedGame ? lastCompletedGame.number : gameDetails.data.event.match.games.length)
 }
 
 function getStreamOrVod(gameDetails: GameDetails) {
