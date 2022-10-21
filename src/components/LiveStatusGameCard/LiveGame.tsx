@@ -102,6 +102,10 @@ export function LiveGame({ match }: any) {
                     getLiveWindow(gameId);
                     getLiveGameStatus(gameId);
                 }, 500);
+
+                return () => {
+                    clearInterval(windowIntervalID);
+                }
             })
         }
 
