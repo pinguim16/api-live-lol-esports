@@ -205,6 +205,10 @@ Status dragons
     margin: 1.5rem 1.5rem;
 }
 
+.status-live-game-card-content h3 {
+    text-align: center;
+}
+
 .status-live-game-card-table-wrapper {
     overflow-x: auto;
     overflow-y: clip;

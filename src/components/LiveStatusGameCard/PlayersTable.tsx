@@ -10,6 +10,7 @@ import {toast} from 'react-toastify';
 import {Frame as FrameDetails, Participant} from "./types/detailsLiveTypes";
 import {Frame as FrameWindow} from "./types/windowLiveTypes";
 import {Event as EventDetails} from "../LiveGameCard/types/scheduleType";
+import { Result as MatchResult } from "../../components/LiveGameCard/types/liveGameTypes";
 
 import {ReactComponent as TowerSVG} from '../../assets/images/tower.svg';
 import {ReactComponent as BaronSVG} from '../../assets/images/baron.svg';
@@ -34,11 +35,12 @@ type Props = {
     lastFrameDetails: FrameDetails,
     gameMetadata: GameMetadata,
     gameDetails: GameDetails,
-    eventDetails: EventDetails,
-    videoLink: JSX.Element
+    eventDetails?: EventDetails,
+    videoLink: JSX.Element,
+    results?: MatchResult[]
 }
 
-export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetails, gameMetadata, gameDetails, eventDetails, videoLink } : Props) {
+export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetails, gameMetadata, gameDetails, eventDetails, videoLink, results } : Props) {
     const [gameState, setGameState] = useState<GameState>(GameState[lastFrameWindow.gameState as keyof typeof GameState]);
 
     useEffect(() => {
@@ -87,6 +89,7 @@ export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetai
     const goldPercentage = getGoldPercentage(lastFrameWindow.blueTeam.totalGold, lastFrameWindow.redTeam.totalGold);
     let inGameTime = getInGameTime(firstFrameWindow.rfc460Timestamp, lastFrameWindow.rfc460Timestamp)
     document.title = `${blueTeam.name} VS ${redTeam.name}`;
+    let matchResults = eventDetails ? eventDetails.match.teams.map(team => team.result) : results
 
     return (
         <div className="status-live-game-card">
@@ -96,53 +99,54 @@ export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetai
             </Helmet>
 
             <div className="status-live-game-card-content">
+                {eventDetails ? (<h3>{eventDetails?.league.name} - {eventDetails?.blockName}</h3>) : null}
                 <div className="live-game-stats-header">
                     <div className="live-game-stats-header-team-images">
                         <h1>
                             <div className="live-game-card-team">
-                                <img className="live-game-card-team-image" src={eventDetails.match.teams[0].image}
-                                    alt={eventDetails.match.teams[0].name}/>
+                                <img className="live-game-card-team-image" src={gameDetails.data.event.match.teams[0].image}
+                                    alt={eventDetails && eventDetails.match.teams[0].name}/>
                                 <span className='outcome'>
-                                    <p className={eventDetails.match.teams[0].result.outcome}>
-                                        {eventDetails.match.teams[0].result.outcome}
-                                    </p>
+                                {matchResults ? (<p className={matchResults[0].outcome}>
+                                        {matchResults[0].outcome}
+                                    </p>) : null}
                                 </span>
                                 <span>
                                     <h4>
-                                        {eventDetails.match.teams[0].name}
+                                        {gameDetails.data.event.match.teams[0].name}
                                     </h4>
                                 </span>
                                 <span>
                                     <p>
-                                        {eventDetails.match.teams[0].record.wins} - {eventDetails.match.teams[0].record.losses}
+                                        {eventDetails?.match.teams[0].record.wins} - {eventDetails?.match.teams[0].record.losses}
                                     </p>
                                 </span>
                             </div>
                         </h1>
                         <h1>
                             <div>BEST OF {gameDetails.data.event.match.strategy.count}</div>
-                            <div>{eventDetails.match.teams[0].result.gameWins}-{eventDetails.match.teams[1].result.gameWins}</div>
+                            {matchResults ? (<div>{matchResults[0].gameWins}-{matchResults[1].gameWins}</div>) : null}
                             VS
                             <div>{gameState.toUpperCase()}</div>
                             <div>{inGameTime}</div>
                         </h1>
                         <h1>
                             <div className="live-game-card-team">
-                                <img className="live-game-card-team-image" src={eventDetails.match.teams[1].image}
-                                    alt={eventDetails.match.teams[1].name}/>
+                                <img className="live-game-card-team-image" src={gameDetails.data.event.match.teams[1].image}
+                                    alt={eventDetails?.match.teams[1].name}/>
                                 <span className='outcome'>
-                                    <p className={eventDetails.match.teams[1].result.outcome}>
-                                        {eventDetails.match.teams[1].result.outcome}
-                                    </p>
+                                    {matchResults ? (<p className={matchResults[1].outcome}>
+                                        {matchResults[1].outcome}
+                                    </p>) : null}
                                 </span>
                                 <span>
                                     <h4>
-                                        {eventDetails.match.teams[1].name}
+                                        {gameDetails.data.event.match.teams[1].name}
                                     </h4>
                                 </span>
                                 <span>
                                     <p>
-                                        {eventDetails.match.teams[1].record.wins} - {eventDetails.match.teams[1].record.losses}
+                                        {eventDetails?.match.teams[1].record.wins} - {eventDetails?.match.teams[1].record.losses}
                                     </p>
                                 </span>
                             </div>
