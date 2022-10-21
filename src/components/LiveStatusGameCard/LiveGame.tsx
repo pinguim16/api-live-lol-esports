@@ -27,21 +27,9 @@ export function LiveGame({ match }: any) {
 
     const matchId = match.params.gameid;
     const preGameId = new BigNumber(matchId);
-    let gameId = gameData?.data.event.match.games[gameData?.data.event.match.games.length - 1].id || BigNumber.sum(preGameId, 1).toString();
     
     useEffect(() => {
         getLiveGameDetails();
-        /*getLiveWindow();
-        getLiveGameStatus();*/
-
-        const windowIntervalID = setInterval(() => {
-            getLiveWindow();
-            getLiveGameStatus();
-        }, 500);
-
-        return () => {
-            clearInterval(windowIntervalID);
-        }
 
         function getEventDetails(){
             getSchedule().then(response => {
@@ -57,7 +45,7 @@ export function LiveGame({ match }: any) {
             )
         }
 
-        function getFirstWindow(){
+        function getFirstWindow(gameId: string){
             getLiveWindowGame(gameId).then(response => {
                 let frames = response.data.frames;
                 if(frames === undefined) return;
@@ -72,7 +60,7 @@ export function LiveGame({ match }: any) {
             });
         }
 
-        function getLiveWindow(){
+        function getLiveWindow(gameId: string){
             let date = getISODateMultiplyOf10();
             getLiveWindowGame(gameId, date).then(response => {
                 let frames = response.data.frames;
@@ -83,7 +71,7 @@ export function LiveGame({ match }: any) {
             });
         }
 
-        function getLiveGameStatus() {
+        function getLiveGameStatus(gameId: string) {
             let date = getISODateMultiplyOf10();
             getLiveDetailsGame(gameId, date).then(response => {
                 let frames = response.data.frames;
@@ -101,26 +89,18 @@ export function LiveGame({ match }: any) {
                 console.groupEnd()
                 if(gameData === undefined) return;
 
-                gameId = gameData.data.event.match.games[gameData?.data.event.match.games.length - 1].id
-
-                for (const game of gameData.data.event.match.games) {
-                    if(game.state === "inProgress"){
-                        console.log(gameData)
-                        gameId = gameData.data.event.match.games[gameData?.data.event.match.games.length - 1].id || BigNumber.sum(preGameId, game.number).toString();
-                    }
-                }
+                let nextUnstartedGameIndex = gameData ? getNextUnstartedGameIndex(gameData) : 1
+                let gameId = BigNumber.sum(preGameId, nextUnstartedGameIndex).toString();
                 getEventDetails()
-                getFirstWindow()
+                getFirstWindow(gameId)
                 setGameData(gameData);
+                const windowIntervalID = setInterval(() => {
+                    getLiveWindow(gameId);
+                    getLiveGameStatus(gameId);
+                }, 500);
             })
         }
     }, [matchId]);
-
-    /*if(gameId === "0") {
-        return (
-            <Redirect to="/"/>
-        )
-    }*/
 
     if(firstFrameWindow !== undefined && lastFrameWindow !== undefined && lastFrameDetails !== undefined && metadata !== undefined && gameData !== undefined && eventDetails !== undefined) {
         return (
@@ -209,8 +189,9 @@ export function LiveGame({ match }: any) {
 }
 
 function getNextUnstartedGameIndex(gameDetails: GameDetails) {
-    let nextUnstartedGame = gameDetails.data.event.match.games.find(game => game.state == "unstarted")
-    return nextUnstartedGame ? nextUnstartedGame.number : gameDetails.data.event.match.games.length
+    let lastCompletedGame = gameDetails.data.event.match.games.slice().reverse().find(game => game.state == "completed")
+    let nextUnstartedGame = gameDetails.data.event.match.games.find(game => game.state == "unstarted" || game.state == "inProgress")
+    return nextUnstartedGame ? nextUnstartedGame.number : (lastCompletedGame ? lastCompletedGame.number : gameDetails.data.event.match.games.length)
 }
 
 function getStreamOrVod(gameDetails: GameDetails) {
