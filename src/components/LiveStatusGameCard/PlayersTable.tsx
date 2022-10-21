@@ -348,7 +348,7 @@ export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetai
                         <tbody>
                         {lastFrameWindow.redTeam.participants.map((player: WindowParticipant, index) => {
                             let goldDifference = getGoldDifference(player, "red", gameMetadata, lastFrameWindow);
-                            let championDetails = lastFrameDetails.participants[index]
+                            let championDetails = lastFrameDetails.participants[index + 5]
 
                             return [(
                                 <tr className="player-stats-row" key={`${CHAMPIONS_URL}${gameMetadata.redTeamMetadata.participantMetadata[player.participantId - 6].championId}`}>
