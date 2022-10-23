@@ -1,5 +1,5 @@
 import './styles/playerStatusStyle.css'
-import '../LiveGameCard/styles/livegameStyle.css'
+import '../Schedule/styles/scheduleStyle.css'
 
 import { GameMetadata, WindowParticipant } from "./types/windowLiveTypes";
 import {GameDetails, Stream as Video} from "./types/detailsPersistentTypes";
@@ -9,8 +9,8 @@ import React, {useEffect, useState} from "react";
 import {toast} from 'react-toastify';
 import {Frame as FrameDetails, Participant} from "./types/detailsLiveTypes";
 import {Frame as FrameWindow} from "./types/windowLiveTypes";
-import {Event as EventDetails} from "../LiveGameCard/types/scheduleType";
-import { Result as MatchResult } from "../../components/LiveGameCard/types/liveGameTypes";
+import {Event as EventDetails} from "../Schedule/types/scheduleType";
+import { Result as MatchResult } from "../Schedule/types/liveGameTypes";
 
 import {ReactComponent as TowerSVG} from '../../assets/images/tower.svg';
 import {ReactComponent as BaronSVG} from '../../assets/images/baron.svg';
