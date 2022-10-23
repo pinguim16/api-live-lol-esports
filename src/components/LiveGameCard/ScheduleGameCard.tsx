@@ -40,7 +40,7 @@ export function ScheduleGameCard({ game }: Props) {
                         <span>BEST OF {game.match.strategy.count}</span>
                         <span>
                             <p>
-                                {game.match.teams[0].result ? `${game.match.teams[0].result.gameWins} - ${game.match.teams[1].result.gameWins}` : null}
+                                {game.match.teams[0].result && game.match.teams[1].result ? `${game.match.teams[0].result.gameWins} - ${game.match.teams[1].result.gameWins}` : null}
                             </p>
                         </span>
                         <h1>VS</h1>
