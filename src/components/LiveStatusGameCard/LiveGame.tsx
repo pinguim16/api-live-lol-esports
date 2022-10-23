@@ -169,7 +169,7 @@ export function LiveGame({ match }: any) {
                         </div>
                     <div className="game-card-versus">
                         <span>BEST OF {gameData.data.event.match.strategy.count}</span>
-                        {gameData.data.event.match.teams[0].result ?
+                        {gameData.data.event.match.teams[0].result && gameData.data.event.match.teams[1].result?
                             (<span>
                                 <p>
                                     {gameData.data.event.match.teams[0].result.gameWins} - {gameData.data.event.match.teams[1].result.gameWins}
