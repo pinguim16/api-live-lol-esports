@@ -14,12 +14,12 @@ import Loading from '../../assets/images/loading.svg'
 import {ReactComponent as TeamTBDSVG} from '../../assets/images/team-tbd.svg';
 import {PlayersTable} from "./PlayersTable";
 import BigNumber from "bignumber.js";
-import { Result } from "../Schedule/types/liveGameTypes";
+import { Result } from "../Schedule/types/matchTypes";
 import {Frame as FrameDetails} from "./types/detailsLiveTypes";
 import {GameDetails, Stream as Video} from "./types/detailsPersistentTypes";
-import {Event as EventDetails} from "../Schedule/types/scheduleType";
+import {Event as EventDetails} from "../Schedule/types/scheduleTypes";
 
-export function LiveGame({ match }: any) {
+export function Match({ match }: any) {
     const [firstFrameWindow, setFirstFrameWindow] = useState<FrameWindow>();
     const [lastFrameWindow, setLastFrameWindow] = useState<FrameWindow>();
     const [lastFrameDetails, setLastFrameDetails] = useState<FrameDetails>();

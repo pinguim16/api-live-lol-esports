@@ -4,7 +4,7 @@ import {getLiveGames, getSchedule} from "../../utils/LoLEsportsAPI";
 import {EventCard} from "./EventCard";
 import {useEffect, useState} from "react";
 
-import {Event} from "./types/liveGameTypes";
+import {Event} from "./types/matchTypes";
 
 type ScheduledEvent = {
     emptyMessage: string,

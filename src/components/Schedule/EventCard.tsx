@@ -1,5 +1,5 @@
 import {Link} from "react-router-dom";
-import {Event} from "./types/liveGameTypes";
+import {Event} from "./types/matchTypes";
 import {ReactComponent as TeamTBDSVG} from '../../assets/images/team-tbd.svg';
 
 type Props = {

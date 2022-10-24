@@ -1,16 +1,16 @@
 import './styles/playerStatusStyle.css'
 import '../Schedule/styles/scheduleStyle.css'
 
-import { GameMetadata, WindowParticipant } from "./types/windowLiveTypes";
-import {GameDetails, Stream as Video} from "./types/detailsPersistentTypes";
+import { GameMetadata, WindowParticipant, BlueTeam } from "./types/windowLiveTypes";
+import {GameDetails, Stream as Video, Team} from "./types/detailsPersistentTypes";
 
 import {MiniHealthBar} from "./MiniHealthBar";
 import React, {useEffect, useState} from "react";
 import {toast} from 'react-toastify';
 import {Frame as FrameDetails, Participant} from "./types/detailsLiveTypes";
 import {Frame as FrameWindow} from "./types/windowLiveTypes";
-import {Event as EventDetails} from "../Schedule/types/scheduleType";
-import { Result as MatchResult } from "../Schedule/types/liveGameTypes";
+import {Event as EventDetails} from "../Schedule/types/scheduleTypes";
+import { Result as MatchResult } from "../Schedule/types/matchTypes";
 
 import {ReactComponent as TowerSVG} from '../../assets/images/tower.svg';
 import {ReactComponent as BaronSVG} from '../../assets/images/baron.svg';
@@ -102,27 +102,7 @@ export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetai
                 {eventDetails ? (<h3>{eventDetails?.league.name} - {eventDetails?.blockName}</h3>) : null}
                 <div className="live-game-stats-header">
                     <div className="live-game-stats-header-team-images">
-                        <h1>
-                            <div className="live-game-card-team">
-                                <img className="live-game-card-team-image" src={gameDetails.data.event.match.teams[0].image}
-                                    alt={eventDetails && eventDetails.match.teams[0].name}/>
-                                <span className='outcome'>
-                                {matchResults ? (<p className={matchResults[0].outcome}>
-                                        {matchResults[0].outcome}
-                                    </p>) : null}
-                                </span>
-                                <span>
-                                    <h4>
-                                        {gameDetails.data.event.match.teams[0].name}
-                                    </h4>
-                                </span>
-                                <span>
-                                    <p>
-                                        {eventDetails?.match.teams[0].record.wins} - {eventDetails?.match.teams[0].record.losses}
-                                    </p>
-                                </span>
-                            </div>
-                        </h1>
+                        {TeamCard({eventDetails, gameDetails, index: 0, matchResults})}
                         <h1>
                             <div>BEST OF {gameDetails.data.event.match.strategy.count}</div>
                             {matchResults ? (<div>{matchResults[0].gameWins}-{matchResults[1].gameWins}</div>) : null}
@@ -130,77 +110,11 @@ export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetai
                             <div>{gameState.toUpperCase()}</div>
                             <div>{inGameTime}</div>
                         </h1>
-                        <h1>
-                            <div className="live-game-card-team">
-                                <img className="live-game-card-team-image" src={gameDetails.data.event.match.teams[1].image}
-                                    alt={eventDetails?.match.teams[1].name}/>
-                                <span className='outcome'>
-                                    {matchResults ? (<p className={matchResults[1].outcome}>
-                                        {matchResults[1].outcome}
-                                    </p>) : null}
-                                </span>
-                                <span>
-                                    <h4>
-                                        {gameDetails.data.event.match.teams[1].name}
-                                    </h4>
-                                </span>
-                                <span>
-                                    <p>
-                                        {eventDetails?.match.teams[1].record.wins} - {eventDetails?.match.teams[1].record.losses}
-                                    </p>
-                                </span>
-                            </div>
-                        </h1>
+                        {TeamCard({eventDetails, gameDetails, index: 1, matchResults})}
                     </div>
                     <div className="live-game-stats-header-status">
-                        <div className="blue-team">
-                            <div className="team-stats inhibitors">
-                                <InhibitorSVG/>
-                                {lastFrameWindow.blueTeam.inhibitors}
-                            </div>
-                            <div className="team-stats barons">
-                                <BaronSVG/>
-                                {lastFrameWindow.blueTeam.barons}
-                            </div>
-                            <div className="team-stats towers">
-                                <TowerSVG/>
-                                {lastFrameWindow.blueTeam.towers}
-                            </div>
-                            <div className="team-stats gold">
-                                <GoldSVG/>
-                                <span>
-                                    {Number(lastFrameWindow.blueTeam.totalGold).toLocaleString('en-us')}
-                                </span>
-                            </div>
-                            <div className="team-stats kills">
-                                <KillSVG/>
-                                {lastFrameWindow.blueTeam.totalKills}
-                            </div>
-                        </div>
-                        <div className="red-team">
-                            <div className="team-stats">
-                                <InhibitorSVG/>
-                                {lastFrameWindow.redTeam.inhibitors}
-                            </div>
-                            <div className="team-stats">
-                                <BaronSVG/>
-                                {lastFrameWindow.redTeam.barons}
-                            </div>
-                            <div className="team-stats">
-                                <TowerSVG/>
-                                {lastFrameWindow.redTeam.towers}
-                            </div>
-                            <div className="team-stats gold">
-                                <GoldSVG/>
-                                <span>
-                                    {Number(lastFrameWindow.redTeam.totalGold).toLocaleString('en-us')}
-                                </span>
-                            </div>
-                            <div className="team-stats">
-                                <KillSVG/>
-                                {lastFrameWindow.redTeam.totalKills}
-                            </div>
-                        </div>
+                        {HeaderStats(lastFrameWindow.blueTeam, 'blue-team')}
+                        {HeaderStats(lastFrameWindow.redTeam, 'red-team')}
                     </div>
                     <div className="live-game-stats-header-gold">
                         <div className="blue-team" style={{flex: goldPercentage.goldBluePercentage}}/>
@@ -413,6 +327,68 @@ export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetai
             <LiveAPIWatcher gameMetadata={gameMetadata} lastFrameWindow={lastFrameWindow} blueTeam={blueTeam} redTeam={redTeam}/>
         </div>
     );
+}
+
+type TeamCardProps = {
+    eventDetails?: EventDetails,
+    gameDetails: GameDetails,
+    index: number,
+    matchResults?: MatchResult[],
+}
+
+function TeamCard({eventDetails, gameDetails, index, matchResults}: TeamCardProps) {
+    return (
+        <h1>
+            <div className="live-game-card-team">
+                <img className="live-game-card-team-image" src={gameDetails.data.event.match.teams[index].image}
+                    alt={eventDetails?.match.teams[index].name}/>
+                <span className='outcome'>
+                    {matchResults ? (<p className={matchResults[index].outcome}>
+                        {matchResults[index].outcome}
+                    </p>) : null}
+                </span>
+                <span>
+                    <h4>
+                        {gameDetails.data.event.match.teams[index].name}
+                    </h4>
+                </span>
+                <span>
+                    <p>
+                        {eventDetails?.match.teams[index].record.wins} - {eventDetails?.match.teams[index].record.losses}
+                    </p>
+                </span>
+            </div>
+        </h1>
+    )
+}
+
+function HeaderStats(team: BlueTeam, teamColor: string) {
+    return (
+        <div className={teamColor}>
+            <div className="team-stats inhibitors">
+                <InhibitorSVG/>
+                {team.inhibitors}
+            </div>
+            <div className="team-stats barons">
+                <BaronSVG/>
+                {team.barons}
+            </div>
+            <div className="team-stats towers">
+                <TowerSVG/>
+                {team.towers}
+            </div>
+            <div className="team-stats gold">
+                <GoldSVG/>
+                <span>
+                    {Number(team.totalGold).toLocaleString('en-us')}
+                </span>
+            </div>
+            <div className="team-stats kills">
+                <KillSVG/>
+                {team.totalKills}
+            </div>
+        </div>
+    )
 }
 
 function getFormattedChampionStats(championDetails: Participant) {

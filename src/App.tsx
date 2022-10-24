@@ -1,7 +1,7 @@
 import './styles/global.css'
 import 'react-toastify/dist/ReactToastify.min.css';
 
-import {LiveGame} from "./components/LiveStatusGameCard/LiveGame";
+import {Match} from "./components/Match/Match";
 import {HashRouter, Switch, Route, Redirect} from "react-router-dom";
 import {Footer} from "./components/Footer/Footer";
 import {EventsSchedule} from "./components/Schedule/EventsSchedule";
@@ -19,7 +19,7 @@ function App() {
                 <div className="container">
                     <Switch>
                         <Route path="/" exact component={EventsSchedule}/>
-                        <Route path="/live/:gameid" component={LiveGame}/>
+                        <Route path="/live/:gameid" component={Match}/>
                         <Redirect to="/"/>
                     </Switch>
                 </div>
