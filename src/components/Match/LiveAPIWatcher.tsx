@@ -1,13 +1,10 @@
 import './styles/playerStatusStyle.css'
 
-import {GameMetadata, WindowParticipant} from "./types/windowLiveTypes";
+import {GameMetadata, Team, WindowFrame, WindowParticipant } from "../types/baseTypes";
 
 import React, {useEffect, useState} from "react";
 import {ToastContainer, toast} from 'react-toastify';
-import {Frame as FrameWindow} from "./types/windowLiveTypes";
-
 import useSound from "use-sound";
-import {Team} from "./types/detailsPersistentTypes";
 
 const firstblood = require("../../assets/audios/first_blood.ogg");
 const kill = require("../../assets/audios/champion_slain.ogg");
@@ -21,7 +18,7 @@ const inib_blue = require("../../assets/audios/blue_inhibitor_destroyed.ogg");
 const inib_red = require("../../assets/audios/red_inhibitor_destroyed.ogg");
 
 type Props = {
-    lastFrameWindow: FrameWindow,
+    lastWindowFrame: WindowFrame,
     gameMetadata: GameMetadata,
     blueTeam: Team,
     redTeam: Team,
@@ -50,13 +47,13 @@ type StatusWatcher = {
     }
 }
 
-export function LiveAPIWatcher({ lastFrameWindow, gameMetadata, blueTeam, redTeam } : Props) {
+export function LiveAPIWatcher({ lastWindowFrame, gameMetadata, blueTeam, redTeam } : Props) {
     const [status, setStatus] = useState<StatusWatcher>({
-        dragons: {blue: lastFrameWindow.blueTeam.dragons.length, red: lastFrameWindow.redTeam.dragons.length},
-        inhibitors: {blue: lastFrameWindow.blueTeam.inhibitors, red: lastFrameWindow.redTeam.inhibitors},
-        towers: {blue: lastFrameWindow.blueTeam.towers, red: lastFrameWindow.redTeam.towers},
-        barons: {blue: lastFrameWindow.blueTeam.barons, red: lastFrameWindow.redTeam.barons},
-        participants: {blue: lastFrameWindow.blueTeam.participants, red: lastFrameWindow.redTeam.participants}
+        dragons: {blue: lastWindowFrame.blueTeam.dragons.length, red: lastWindowFrame.redTeam.dragons.length},
+        inhibitors: {blue: lastWindowFrame.blueTeam.inhibitors, red: lastWindowFrame.redTeam.inhibitors},
+        towers: {blue: lastWindowFrame.blueTeam.towers, red: lastWindowFrame.redTeam.towers},
+        barons: {blue: lastWindowFrame.blueTeam.barons, red: lastWindowFrame.redTeam.barons},
+        participants: {blue: lastWindowFrame.blueTeam.participants, red: lastWindowFrame.redTeam.participants}
     })
 
     const [firstBloodPlay] = useSound(firstblood);
@@ -75,68 +72,68 @@ export function LiveAPIWatcher({ lastFrameWindow, gameMetadata, blueTeam, redTea
         // Topo = prioridade para o som
         let isPlaying = isMuted;
 
-        if(status.inhibitors.blue !== lastFrameWindow.blueTeam.inhibitors){
+        if(status.inhibitors.blue !== lastWindowFrame.blueTeam.inhibitors){
             createToast(true, isPlaying, inib_red.default, "Destroyed an inhibitor", blueTeam.image);
             isPlaying = true
         }
 
-        if(status.inhibitors.red !== lastFrameWindow.redTeam.inhibitors){
+        if(status.inhibitors.red !== lastWindowFrame.redTeam.inhibitors){
             createToast(false, isPlaying, inib_blue.default, "Destroyed an inhibitor", redTeam.image);
             isPlaying = true
         }
 
-        if(status.barons.blue !== lastFrameWindow.blueTeam.barons){
+        if(status.barons.blue !== lastWindowFrame.blueTeam.barons){
             createToast(true, isPlaying, baron_blue.default, "Defeated the baron", blueTeam.image);
             isPlaying = true
         }
 
-        if(status.barons.red !== lastFrameWindow.redTeam.barons){
+        if(status.barons.red !== lastWindowFrame.redTeam.barons){
             createToast(false, isPlaying, baron_red.default, "Defeated the baron", redTeam.image);
             isPlaying = true
         }
 
-        if(status.dragons.blue !== lastFrameWindow.blueTeam.dragons.length){
+        if(status.dragons.blue !== lastWindowFrame.blueTeam.dragons.length){
             createToast(true, isPlaying, dragon_blue.default, "Defeated the dragon", blueTeam.image);
             isPlaying = true
         }
 
-        if(status.dragons.red !== lastFrameWindow.redTeam.dragons.length){
+        if(status.dragons.red !== lastWindowFrame.redTeam.dragons.length){
             createToast(false, isPlaying, dragon_red.default, "Defeated the dragon", redTeam.image);
             isPlaying = true
         }
 
-        if(status.towers.blue !== lastFrameWindow.blueTeam.towers){
+        if(status.towers.blue !== lastWindowFrame.blueTeam.towers){
             createToast(true, isPlaying, tower_red.default, "Destroyed a turret", blueTeam.image);
             isPlaying = true
         }
 
-        if(status.towers.red !== lastFrameWindow.redTeam.towers){
+        if(status.towers.red !== lastWindowFrame.redTeam.towers){
             createToast(false, isPlaying, tower_blue.default, "Destroyed a turret", redTeam.image);
             isPlaying = true
         }
 
         for (let i = 0; i < status.participants.blue.length; i++) {
-            if(status.participants.blue[i].kills !== lastFrameWindow.blueTeam.participants[i].kills){
+            if(status.participants.blue[i].kills !== lastWindowFrame.blueTeam.participants[i].kills){
                 createToast(true, isPlaying, kill.default, "Killed an enemy", `http://ddragon.leagueoflegends.com/cdn/11.4.1/img/champion/${gameMetadata.blueTeamMetadata.participantMetadata[status.participants.blue[i].participantId - 1].championId}.png`)
                 isPlaying = true
             }
         }
 
         for (let i = 0; i < status.participants.red.length; i++) {
-            if(status.participants.red[i].kills !== lastFrameWindow.redTeam.participants[i].kills){
+            if(status.participants.red[i].kills !== lastWindowFrame.redTeam.participants[i].kills){
                 createToast(false, isPlaying, kill.default, "Killed an enemy", `http://ddragon.leagueoflegends.com/cdn/11.4.1/img/champion/${gameMetadata.redTeamMetadata.participantMetadata[status.participants.red[i].participantId - 6].championId}.png`)
                 isPlaying = true
             }
         }
 
         setStatus({
-            dragons: {blue: lastFrameWindow.blueTeam.dragons.length, red: lastFrameWindow.redTeam.dragons.length},
-            inhibitors: {blue: lastFrameWindow.blueTeam.inhibitors, red: lastFrameWindow.redTeam.inhibitors},
-            towers: {blue: lastFrameWindow.blueTeam.towers, red: lastFrameWindow.redTeam.towers},
-            barons: {blue: lastFrameWindow.blueTeam.barons, red: lastFrameWindow.redTeam.barons},
-            participants: {blue: lastFrameWindow.blueTeam.participants, red: lastFrameWindow.redTeam.participants},
+            dragons: {blue: lastWindowFrame.blueTeam.dragons.length, red: lastWindowFrame.redTeam.dragons.length},
+            inhibitors: {blue: lastWindowFrame.blueTeam.inhibitors, red: lastWindowFrame.redTeam.inhibitors},
+            towers: {blue: lastWindowFrame.blueTeam.towers, red: lastWindowFrame.redTeam.towers},
+            barons: {blue: lastWindowFrame.blueTeam.barons, red: lastWindowFrame.redTeam.barons},
+            participants: {blue: lastWindowFrame.blueTeam.participants, red: lastWindowFrame.redTeam.participants},
         })
-    }, [lastFrameWindow.blueTeam.totalKills, lastFrameWindow.blueTeam.dragons.length, lastFrameWindow.blueTeam.inhibitors, lastFrameWindow.redTeam.totalKills, lastFrameWindow.redTeam.dragons.length, lastFrameWindow.redTeam.inhibitors, firstBloodPlay, status.dragons.blue, status.dragons.red, status.barons.blue, status.barons.red, status.inhibitors.blue, status.inhibitors.red, status.towers.blue, status.towers.red, status.participants.blue, status.participants.red, lastFrameWindow.blueTeam.barons, lastFrameWindow.blueTeam.towers, lastFrameWindow.blueTeam.participants, lastFrameWindow.redTeam.barons, lastFrameWindow.redTeam.towers, lastFrameWindow.redTeam.participants, gameMetadata.blueTeamMetadata.participantMetadata, gameMetadata.redTeamMetadata.participantMetadata, blueTeam.image, redTeam.image]);
+    }, [lastWindowFrame.blueTeam.totalKills, lastWindowFrame.blueTeam.dragons.length, lastWindowFrame.blueTeam.inhibitors, lastWindowFrame.redTeam.totalKills, lastWindowFrame.redTeam.dragons.length, lastWindowFrame.redTeam.inhibitors, firstBloodPlay, status.dragons.blue, status.dragons.red, status.barons.blue, status.barons.red, status.inhibitors.blue, status.inhibitors.red, status.towers.blue, status.towers.red, status.participants.blue, status.participants.red, lastWindowFrame.blueTeam.barons, lastWindowFrame.blueTeam.towers, lastWindowFrame.blueTeam.participants, lastWindowFrame.redTeam.barons, lastWindowFrame.redTeam.towers, lastWindowFrame.redTeam.participants, gameMetadata.blueTeamMetadata.participantMetadata, gameMetadata.redTeamMetadata.participantMetadata, blueTeam.image, redTeam.image]);
 
     return (
         <ToastContainer/>

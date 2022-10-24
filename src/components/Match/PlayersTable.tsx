@@ -1,16 +1,10 @@
 import './styles/playerStatusStyle.css'
 import '../Schedule/styles/scheduleStyle.css'
 
-import { GameMetadata, WindowParticipant, BlueTeam } from "./types/windowLiveTypes";
-import {GameDetails, Stream as Video, Team} from "./types/detailsPersistentTypes";
-
 import {MiniHealthBar} from "./MiniHealthBar";
 import React, {useEffect, useState} from "react";
 import {toast} from 'react-toastify';
-import {Frame as FrameDetails, Participant} from "./types/detailsLiveTypes";
-import {Frame as FrameWindow} from "./types/windowLiveTypes";
-import {Event as EventDetails} from "../Schedule/types/scheduleTypes";
-import { Result as MatchResult } from "../Schedule/types/matchTypes";
+import {DetailsFrame, EventDetails, GameMetadata, Participant, Record, Result, TeamStats, WindowFrame, WindowParticipant } from "../types/baseTypes";
 
 import {ReactComponent as TowerSVG} from '../../assets/images/tower.svg';
 import {ReactComponent as BaronSVG} from '../../assets/images/baron.svg';
@@ -30,21 +24,21 @@ import {LiveAPIWatcher} from "./LiveAPIWatcher";
 import { CHAMPIONS_URL } from '../../utils/LoLEsportsAPI';
 
 type Props = {
-    firstFrameWindow: FrameWindow,
-    lastFrameWindow: FrameWindow,
-    lastFrameDetails: FrameDetails,
+    firstWindowFrame: WindowFrame,
+    lastWindowFrame: WindowFrame,
+    lastDetailsFrame: DetailsFrame,
     gameMetadata: GameMetadata,
-    gameDetails: GameDetails,
-    eventDetails?: EventDetails,
+    eventDetails: EventDetails,
     videoLink: JSX.Element,
-    results?: MatchResult[]
+    records?: Record[],
+    results?: Result[]
 }
 
-export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetails, gameMetadata, gameDetails, eventDetails, videoLink, results } : Props) {
-    const [gameState, setGameState] = useState<GameState>(GameState[lastFrameWindow.gameState as keyof typeof GameState]);
+export function PlayersTable({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, gameMetadata, eventDetails, videoLink, records, results } : Props) {
+    const [gameState, setGameState] = useState<GameState>(GameState[lastWindowFrame.gameState as keyof typeof GameState]);
 
     useEffect(() => {
-        let currentGameState: GameState = GameState[lastFrameWindow.gameState as keyof typeof GameState]
+        let currentGameState: GameState = GameState[lastWindowFrame.gameState as keyof typeof GameState]
 
         if(currentGameState !== gameState){
             setGameState(currentGameState);
@@ -68,10 +62,10 @@ export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetai
                 $(chevrons[index]).toggleClass('rotated')
             })
         })
-    }, [lastFrameWindow.gameState, gameState]);
+    }, [lastWindowFrame.gameState, gameState]);
 
-    let blueTeam = gameDetails.data.event.match.teams[0];
-    let redTeam = gameDetails.data.event.match.teams[1];
+    let blueTeam = eventDetails.match.teams[0];
+    let redTeam = eventDetails.match.teams[1];
 
     const auxBlueTeam = blueTeam
 
@@ -86,10 +80,10 @@ export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetai
         redTeam = auxBlueTeam;
     }
 
-    const goldPercentage = getGoldPercentage(lastFrameWindow.blueTeam.totalGold, lastFrameWindow.redTeam.totalGold);
-    let inGameTime = getInGameTime(firstFrameWindow.rfc460Timestamp, lastFrameWindow.rfc460Timestamp)
+    const goldPercentage = getGoldPercentage(lastWindowFrame.blueTeam.totalGold, lastWindowFrame.redTeam.totalGold);
+    let inGameTime = getInGameTime(firstWindowFrame.rfc460Timestamp, lastWindowFrame.rfc460Timestamp)
     document.title = `${blueTeam.name} VS ${redTeam.name}`;
-    let matchResults = eventDetails ? eventDetails.match.teams.map(team => team.result) : results
+    let matchResults = results || eventDetails.match.teams.map(team=> team.result)
 
     return (
         <div className="status-live-game-card">
@@ -99,22 +93,22 @@ export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetai
             </Helmet>
 
             <div className="status-live-game-card-content">
-                {eventDetails ? (<h3>{eventDetails?.league.name} - {eventDetails?.blockName}</h3>) : null}
+                {eventDetails ? (<h3>{eventDetails?.league.name}</h3>) : null}
                 <div className="live-game-stats-header">
                     <div className="live-game-stats-header-team-images">
-                        {TeamCard({eventDetails, gameDetails, index: 0, matchResults})}
+                        {TeamCard({eventDetails, index: 0, matchResults, record: records? records[0] : undefined})}
                         <h1>
-                            <div>BEST OF {gameDetails.data.event.match.strategy.count}</div>
+                            <div>BEST OF {eventDetails.match.strategy.count}</div>
                             {matchResults ? (<div>{matchResults[0].gameWins}-{matchResults[1].gameWins}</div>) : null}
                             VS
                             <div>{gameState.toUpperCase()}</div>
                             <div>{inGameTime}</div>
                         </h1>
-                        {TeamCard({eventDetails, gameDetails, index: 1, matchResults})}
+                        {TeamCard({eventDetails, index: 1, matchResults, record: records? records[1] : undefined})}
                     </div>
                     <div className="live-game-stats-header-status">
-                        {HeaderStats(lastFrameWindow.blueTeam, 'blue-team')}
-                        {HeaderStats(lastFrameWindow.redTeam, 'red-team')}
+                        {HeaderStats(lastWindowFrame.blueTeam, 'blue-team')}
+                        {HeaderStats(lastWindowFrame.redTeam, 'red-team')}
                     </div>
                     <div className="live-game-stats-header-gold">
                         <div className="blue-team" style={{flex: goldPercentage.goldBluePercentage}}/>
@@ -122,13 +116,13 @@ export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetai
                     </div>
                     <div className="live-game-stats-header-dragons">
                         <div className="blue-team">
-                            {lastFrameWindow.blueTeam.dragons.map((dragon, i) => (
+                            {lastWindowFrame.blueTeam.dragons.map((dragon, i) => (
                                 getDragonSVG(dragon, 'blue', i)
                             ))}
                         </div>
                         <div className="red-team">
 
-                            {lastFrameWindow.redTeam.dragons.slice().reverse().map((dragon, i) => (
+                            {lastWindowFrame.redTeam.dragons.slice().reverse().map((dragon, i) => (
                                 getDragonSVG(dragon, 'red', i)
                             ))}
                         </div>
@@ -168,9 +162,9 @@ export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetai
                         </tr>
                         </thead>
                         <tbody>
-                        {lastFrameWindow.blueTeam.participants.map((player: WindowParticipant, index) => {
-                            let goldDifference = getGoldDifference(player, "blue", gameMetadata, lastFrameWindow);
-                            let championDetails = lastFrameDetails.participants[index]
+                        {lastWindowFrame.blueTeam.participants.map((player: WindowParticipant, index) => {
+                            let goldDifference = getGoldDifference(player, "blue", gameMetadata, lastWindowFrame);
+                            let championDetails = lastDetailsFrame.participants[index]
                             return [(
                                 <tr className="player-stats-row" key={`${CHAMPIONS_URL}${gameMetadata.blueTeamMetadata.participantMetadata[player.participantId - 1].championId}`}>
                                     <th>
@@ -192,7 +186,7 @@ export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetai
                                         <MiniHealthBar currentHealth={player.currentHealth} maxHealth={player.maxHealth}/>
                                     </td>
                                     <td>
-                                        <ItemsDisplay participantId={player.participantId - 1} lastFrame={lastFrameDetails}/>
+                                        <ItemsDisplay participantId={player.participantId - 1} lastFrame={lastDetailsFrame}/>
                                     </td>
                                     <td>
                                         <div className=" player-stats">{player.creepScore}</div>
@@ -260,9 +254,9 @@ export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetai
                         </tr>
                         </thead>
                         <tbody>
-                        {lastFrameWindow.redTeam.participants.map((player: WindowParticipant, index) => {
-                            let goldDifference = getGoldDifference(player, "red", gameMetadata, lastFrameWindow);
-                            let championDetails = lastFrameDetails.participants[index + 5]
+                        {lastWindowFrame.redTeam.participants.map((player: WindowParticipant, index) => {
+                            let goldDifference = getGoldDifference(player, "red", gameMetadata, lastWindowFrame);
+                            let championDetails = lastDetailsFrame.participants[index + 5]
 
                             return [(
                                 <tr className="player-stats-row" key={`${CHAMPIONS_URL}${gameMetadata.redTeamMetadata.participantMetadata[player.participantId - 6].championId}`}>
@@ -284,7 +278,7 @@ export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetai
                                         <MiniHealthBar currentHealth={player.currentHealth} maxHealth={player.maxHealth}/>
                                     </td>
                                     <td>
-                                        <ItemsDisplay participantId={player.participantId - 1} lastFrame={lastFrameDetails}/>
+                                        <ItemsDisplay participantId={player.participantId - 1} lastFrame={lastDetailsFrame}/>
                                     </td>
                                     <td>
                                         <div className=" player-stats">{player.creepScore}</div>
@@ -324,23 +318,23 @@ export function PlayersTable({ firstFrameWindow, lastFrameWindow, lastFrameDetai
                 {videoLink}
             </div>
 
-            <LiveAPIWatcher gameMetadata={gameMetadata} lastFrameWindow={lastFrameWindow} blueTeam={blueTeam} redTeam={redTeam}/>
+            <LiveAPIWatcher gameMetadata={gameMetadata} lastWindowFrame={lastWindowFrame} blueTeam={blueTeam} redTeam={redTeam}/>
         </div>
     );
 }
 
 type TeamCardProps = {
-    eventDetails?: EventDetails,
-    gameDetails: GameDetails,
+    eventDetails: EventDetails,
     index: number,
-    matchResults?: MatchResult[],
+    matchResults?: Result[],
+    record?: Record,
 }
 
-function TeamCard({eventDetails, gameDetails, index, matchResults}: TeamCardProps) {
+function TeamCard({eventDetails, index, matchResults, record}: TeamCardProps) {
     return (
         <h1>
             <div className="live-game-card-team">
-                <img className="live-game-card-team-image" src={gameDetails.data.event.match.teams[index].image}
+                <img className="live-game-card-team-image" src={eventDetails.match.teams[index].image}
                     alt={eventDetails?.match.teams[index].name}/>
                 <span className='outcome'>
                     {matchResults ? (<p className={matchResults[index].outcome}>
@@ -349,43 +343,45 @@ function TeamCard({eventDetails, gameDetails, index, matchResults}: TeamCardProp
                 </span>
                 <span>
                     <h4>
-                        {gameDetails.data.event.match.teams[index].name}
+                        {eventDetails.match.teams[index].name}
                     </h4>
                 </span>
-                <span>
-                    <p>
-                        {eventDetails?.match.teams[index].record.wins} - {eventDetails?.match.teams[index].record.losses}
-                    </p>
-                </span>
+                {record ?
+                    (<span>
+                        <p>
+                            {record.wins} - {record.losses}
+                        </p>
+                    </span>)
+                : null}
             </div>
         </h1>
     )
 }
 
-function HeaderStats(team: BlueTeam, teamColor: string) {
+function HeaderStats(teamStats: TeamStats, teamColor: string) {
     return (
         <div className={teamColor}>
             <div className="team-stats inhibitors">
                 <InhibitorSVG/>
-                {team.inhibitors}
+                {teamStats.inhibitors}
             </div>
             <div className="team-stats barons">
                 <BaronSVG/>
-                {team.barons}
+                {teamStats.barons}
             </div>
             <div className="team-stats towers">
                 <TowerSVG/>
-                {team.towers}
+                {teamStats.towers}
             </div>
             <div className="team-stats gold">
                 <GoldSVG/>
                 <span>
-                    {Number(team.totalGold).toLocaleString('en-us')}
+                    {Number(teamStats.totalGold).toLocaleString('en-us')}
                 </span>
             </div>
             <div className="team-stats kills">
                 <KillSVG/>
-                {team.totalKills}
+                {teamStats.totalKills}
             </div>
         </div>
     )
@@ -425,7 +421,7 @@ function getInGameTime(startTime: string, currentTime: string) {
     return hours ? `${hours}:${minutes}:${secondsString}` : `${minutes}:${secondsString}`
 }
 
-function getGoldDifference(player: WindowParticipant, side: string, gameMetadata: GameMetadata, frame: FrameWindow) {
+function getGoldDifference(player: WindowParticipant, side: string, gameMetadata: GameMetadata, frame: WindowFrame) {
     if(6 > player.participantId) { // blue side
         const redPlayer = frame.redTeam.participants[player.participantId - 1];
         const goldResult = player.totalGold - redPlayer.totalGold;

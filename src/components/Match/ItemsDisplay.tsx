@@ -1,10 +1,10 @@
-import {Frame} from "./types/detailsLiveTypes";
+import {DetailsFrame} from "../types/baseTypes"
 
 import {ITEMS_URL} from "../../utils/LoLEsportsAPI"
 
 type Props = {
     participantId: number,
-    lastFrame: Frame
+    lastFrame: DetailsFrame
 }
 
 export function ItemsDisplay({ participantId, lastFrame }: Props) {

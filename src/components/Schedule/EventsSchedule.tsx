@@ -1,40 +1,27 @@
 import './styles/scheduleStyle.css'
 
-import {getLiveGames, getSchedule} from "../../utils/LoLEsportsAPI";
+import {getScheduleResponse} from "../../utils/LoLEsportsAPI";
 import {EventCard} from "./EventCard";
 import {useEffect, useState} from "react";
 
-import {Event} from "./types/matchTypes";
-
-type ScheduledEvent = {
-    emptyMessage: string,
-    eventTitle: string,
-    events: Event[],
-}
+import {Schedule, ScheduleEvent} from "../types/baseTypes";
 
 export function EventsSchedule() {
-    const [liveEvents, setLiveEvents] = useState<Event[]>([])
-    const [last24HoursEvents, setLast24HoursEvents] = useState<Event[]>([])
-    const [next24HoursEvents, setNext24HoursEvents] = useState<Event[]>([])
-    const [next7DaysEvents, setNext7DaysEvents] = useState<Event[]>([])
+    const [liveEvents, setLiveEvents] = useState<ScheduleEvent[]>([])
+    const [last24HoursEvents, setLast24HoursEvents] = useState<ScheduleEvent[]>([])
+    const [next24HoursEvents, setNext24HoursEvents] = useState<ScheduleEvent[]>([])
+    const [next7DaysEvents, setNext7DaysEvents] = useState<ScheduleEvent[]>([])
 
     useEffect(() => {
-        getLiveGames().then(response => {
-            console.groupCollapsed(`Live Matches: ${response.data.data.schedule.events.length}`)
-            console.table(response.data.data.schedule.events)
+        getScheduleResponse().then(response => {
+            let schedule: Schedule = response.data.data.schedule
+            console.groupCollapsed(`Scheduled Matches: ${schedule.events.length}`)
+            console.table(schedule.events)
             console.groupEnd()
-            setLiveEvents(response.data.data.schedule.events.filter(filterLiveEvents))
-        }).catch(error =>
-            console.error(error)
-        )
-
-        getSchedule().then(response => {
-            console.groupCollapsed(`Scheduled Matches: ${response.data.data.schedule.events.length}`)
-            console.table(response.data.data.schedule.events)
-            console.groupEnd()
-            setLast24HoursEvents(response.data.data.schedule.events.filter(filterByLast24Hours))
-            setNext24HoursEvents(response.data.data.schedule.events.filter(filterByNext24Hours))
-            setNext7DaysEvents(response.data.data.schedule.events.filter(filterByNext7Days))
+            setLiveEvents(schedule.events.filter(filterLiveEvents))
+            setLast24HoursEvents(schedule.events.filter(filterByLast24Hours))
+            setNext24HoursEvents(schedule.events.filter(filterByNext24Hours))
+            setNext7DaysEvents(schedule.events.filter(filterByNext7Days))
         }).catch(error =>
             console.error(error)
         )
@@ -45,51 +32,53 @@ export function EventsSchedule() {
     let scheduledEvents = [
         {
             emptyMessage: 'No Live Matches',
-            eventTitle: 'Live Matches',
-            events: liveEvents
+            scheduleEvents: liveEvents,
+            title: 'Live Matches',
         },
         {
             emptyMessage: '',
-            eventTitle: 'Last 24 Hours',
-            events: last24HoursEvents
+            scheduleEvents: last24HoursEvents,
+            title: 'Last 24 Hours',
         },
         {
 
             emptyMessage: '',
-            eventTitle: 'Next 24 Hours',
-            events: next24HoursEvents
+            scheduleEvents: next24HoursEvents,
+            title: 'Next 24 Hours',
         },
         {
             emptyMessage: 'No Upcoming Matches',
-            eventTitle: 'Next 7 Days',
-            events: next7DaysEvents
+            scheduleEvents: next7DaysEvents,
+            title: 'Next 7 Days',
         }
     ]
 
     return (
         <div className="orders-container">
             {scheduledEvents.map(scheduledEvent => (
-                <EventCards key={scheduledEvent.eventTitle} scheduledEvent={scheduledEvent} />
+                <EventCards key={scheduledEvent.title} emptyMessage={scheduledEvent.emptyMessage} scheduleEvents={scheduledEvent.scheduleEvents} title={scheduledEvent.title}/>
             ))}
         </div>
     );
 }
 
 type EventCardProps = {
-    scheduledEvent: ScheduledEvent
+    emptyMessage: string;
+    scheduleEvents: ScheduleEvent[];
+    title: string;
 }
 
-function EventCards({scheduledEvent}: EventCardProps) {
-    if (scheduledEvent !== undefined && scheduledEvent.events.length !== 0) {
+function EventCards({emptyMessage, scheduleEvents, title}: EventCardProps) {
+    if (scheduleEvents !== undefined && scheduleEvents.length !== 0) {
         return (
             <div>
-                <h2 className="games-of-day">{scheduledEvent.eventTitle}</h2>
+                <h2 className="games-of-day">{title}</h2>
                 <div className="games-list-container">
                     <div className="games-list-items">
-                        {scheduledEvent.events.map(event => (
+                        {scheduleEvents.map(scheduleEvent => (
                             <EventCard
-                                key={`${event.id}_${event.startTime}`}
-                                event={event}
+                                key={`${scheduleEvent.match.id}_${scheduleEvent.startTime}`}
+                                scheduleEvent={scheduleEvent}
                             />
                         ))}
                     </div>
@@ -98,29 +87,29 @@ function EventCards({scheduledEvent}: EventCardProps) {
         );
     }else {
         return (
-            <h2 className="games-of-day">{scheduledEvent.emptyMessage}</h2>
+            <h2 className="games-of-day">{emptyMessage}</h2>
         );
     }
 }
 
-function filterLiveEvents(event: Event) {
-    return event.match !== undefined && event.state === "inProgress";
+function filterLiveEvents(scheduleEvent: ScheduleEvent) {
+    return scheduleEvent.match !== undefined && scheduleEvent.state === "inProgress";
 }
 
-function filterByLast24Hours(event: Event) {
-    if (event.state !== 'completed') {
+function filterByLast24Hours(scheduleEvent: ScheduleEvent) {
+    if (scheduleEvent.state !== 'completed') {
         return false
     }
     let minDate = new Date();
     let maxDate = new Date()
     minDate.setDate(minDate.getDate() - 1)
     maxDate.setHours(maxDate.getHours() - 1)
-    let eventDate = new Date(event.startTime)
+    let eventDate = new Date(scheduleEvent.startTime)
 
     if(eventDate.valueOf() > minDate.valueOf() && eventDate.valueOf() < maxDate.valueOf()){
 
-        if(event.match === undefined) return false
-        if(event.match.id === undefined) return false
+        if(scheduleEvent.match === undefined) return false
+        if(scheduleEvent.match.id === undefined) return false
 
         return true;
     }else{
@@ -128,20 +117,20 @@ function filterByLast24Hours(event: Event) {
     }
 }
 
-function filterByNext24Hours(event: Event) {
-    if (event.state !== 'unstarted') {
+function filterByNext24Hours(scheduleEvent: ScheduleEvent) {
+    if (scheduleEvent.state !== 'unstarted') {
         return false
     }
     let minDate = new Date();
     let maxDate = new Date()
     minDate.setHours(minDate.getHours() - 1)
     maxDate.setDate(maxDate.getDate() + 1)
-    let eventDate = new Date(event.startTime)
+    let eventDate = new Date(scheduleEvent.startTime)
 
     if(eventDate.valueOf() > minDate.valueOf() && eventDate.valueOf() < maxDate.valueOf()){
 
-        if(event.match === undefined) return false
-        if(event.match.id === undefined) return false
+        if(scheduleEvent.match === undefined) return false
+        if(scheduleEvent.match.id === undefined) return false
 
         return true;
     }else{
@@ -149,20 +138,20 @@ function filterByNext24Hours(event: Event) {
     }
 }
 
-function filterByNext7Days(event: Event) {
-    if (event.state !== 'unstarted') {
+function filterByNext7Days(scheduleEvent: ScheduleEvent) {
+    if (scheduleEvent.state !== 'unstarted') {
         return false
     }
     let minDate = new Date();
     let maxDate = new Date()
     minDate.setDate(minDate.getDate() + 1)
     maxDate.setDate(maxDate.getDate() + 7)
-    let eventDate = new Date(event.startTime)
+    let eventDate = new Date(scheduleEvent.startTime)
 
     if(eventDate.valueOf() > minDate.valueOf() && eventDate.valueOf() < maxDate.valueOf()){
 
-        if(event.match === undefined) return false
-        if(event.match.id === undefined) return false
+        if(scheduleEvent.match === undefined) return false
+        if(scheduleEvent.match.id === undefined) return false
 
         return true;
     }else{
