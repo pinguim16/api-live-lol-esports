@@ -68,12 +68,14 @@ function EventCards({emptyMessage, scheduleEvents, title}: EventCardProps) {
                 <h2 className="games-of-day">{title}</h2>
                 <div className="games-list-container">
                     <div className="games-list-items">
-                        {scheduleEvents.map(scheduleEvent => (
-                            <EventCard
-                                key={`${scheduleEvent.match.id}_${scheduleEvent.startTime}`}
-                                scheduleEvent={scheduleEvent}
-                            />
-                        ))}
+                        {scheduleEvents.map(scheduleEvent => {
+                            return scheduleEvent.league.slug != "tft_esports" ? (
+                                <EventCard
+                                    key={`${scheduleEvent.match.id}_${scheduleEvent.startTime}`}
+                                    scheduleEvent={scheduleEvent}
+                                />
+                            ): null})
+                        }
                     </div>
                 </div>
             </div>
