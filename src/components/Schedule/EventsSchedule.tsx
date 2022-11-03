@@ -8,7 +8,7 @@ import {Schedule, ScheduleEvent} from "../types/baseTypes";
 
 export function EventsSchedule() {
     const [liveEvents, setLiveEvents] = useState<ScheduleEvent[]>([])
-    const [last24HoursEvents, setLast24HoursEvents] = useState<ScheduleEvent[]>([])
+    const [last7DaysEvents, setlast7DaysEvents] = useState<ScheduleEvent[]>([])
     const [next24HoursEvents, setNext24HoursEvents] = useState<ScheduleEvent[]>([])
     const [next7DaysEvents, setNext7DaysEvents] = useState<ScheduleEvent[]>([])
 
@@ -19,8 +19,7 @@ export function EventsSchedule() {
             console.table(schedule.events)
             console.groupEnd()
             setLiveEvents(schedule.events.filter(filterLiveEvents))
-            setLast24HoursEvents(schedule.events.filter(filterByLast24Hours))
-            setNext24HoursEvents(schedule.events.filter(filterByNext24Hours))
+            setlast7DaysEvents(schedule.events.filter(filterByLast7Days))
             setNext7DaysEvents(schedule.events.filter(filterByNext7Days))
         }).catch(error =>
             console.error(error)
@@ -36,15 +35,9 @@ export function EventsSchedule() {
             title: 'Live Matches',
         },
         {
-            emptyMessage: '',
-            scheduleEvents: last24HoursEvents,
-            title: 'Last 24 Hours',
-        },
-        {
-
-            emptyMessage: '',
-            scheduleEvents: next24HoursEvents,
-            title: 'Next 24 Hours',
+            emptyMessage: 'No Recent Matches',
+            scheduleEvents: last7DaysEvents,
+            title: 'Last 7 Days',
         },
         {
             emptyMessage: 'No Upcoming Matches',
@@ -96,35 +89,14 @@ function filterLiveEvents(scheduleEvent: ScheduleEvent) {
     return scheduleEvent.match !== undefined && scheduleEvent.state === "inProgress";
 }
 
-function filterByLast24Hours(scheduleEvent: ScheduleEvent) {
+function filterByLast7Days(scheduleEvent: ScheduleEvent) {
     if (scheduleEvent.state !== 'completed') {
         return false
     }
     let minDate = new Date();
     let maxDate = new Date()
-    minDate.setDate(minDate.getDate() - 1)
+    minDate.setDate(minDate.getDate() - 7)
     maxDate.setHours(maxDate.getHours() - 1)
-    let eventDate = new Date(scheduleEvent.startTime)
-
-    if(eventDate.valueOf() > minDate.valueOf() && eventDate.valueOf() < maxDate.valueOf()){
-
-        if(scheduleEvent.match === undefined) return false
-        if(scheduleEvent.match.id === undefined) return false
-
-        return true;
-    }else{
-        return false;
-    }
-}
-
-function filterByNext24Hours(scheduleEvent: ScheduleEvent) {
-    if (scheduleEvent.state !== 'unstarted') {
-        return false
-    }
-    let minDate = new Date();
-    let maxDate = new Date()
-    minDate.setHours(minDate.getHours() - 1)
-    maxDate.setDate(maxDate.getDate() + 1)
     let eventDate = new Date(scheduleEvent.startTime)
 
     if(eventDate.valueOf() > minDate.valueOf() && eventDate.valueOf() < maxDate.valueOf()){
