@@ -2,7 +2,6 @@ import React from "react";
 import './styles/footerStyle.css'
 
 import {ReactComponent as GitHubLogoSVG} from '../../assets/images/github.svg';
-import {ReactComponent as TwitterLogoSVG} from '../../assets/images/twitter.svg';
 
 export function Footer() {
 

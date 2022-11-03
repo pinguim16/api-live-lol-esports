@@ -19,7 +19,7 @@ export function ThemeToggler() {
                 setToggled(true)
             }
         }
-    });
+    }, [setCurrentTheme])
 
     const handleClick = () => {
         if(toggled) {

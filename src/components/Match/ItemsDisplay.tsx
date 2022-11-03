@@ -42,7 +42,7 @@ export function ItemsDisplay({ participantId, lastFrame }: Props) {
                 if(itemsID[i] !== undefined) {
                     return (
                         <div className="player-stats-item" key={`${participantId}_${i}_${itemsID[i]}`}>
-                            <img src={`${ITEMS_URL}${itemsID[i]}.png`}/>
+                            <img alt="" src={`${ITEMS_URL}${itemsID[i]}.png`}/>
                         </div>
                     )
                 }else{
@@ -58,7 +58,7 @@ export function ItemsDisplay({ participantId, lastFrame }: Props) {
             {trinket !== -1 ?
                 (
                     <div className="player-stats-item">
-                        <img src={`${ITEMS_URL}${trinket}.png`}/>
+                        <img alt="" src={`${ITEMS_URL}${trinket}.png`}/>
                     </div>
                 )
                 :

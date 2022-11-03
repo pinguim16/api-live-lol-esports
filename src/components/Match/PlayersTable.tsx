@@ -34,6 +34,12 @@ type Props = {
     results?: Result[]
 }
 
+enum GameState {
+    in_game = "in game",
+    paused = "paused",
+    finished = "match ended"
+}
+
 export function PlayersTable({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, gameMetadata, eventDetails, videoLink, records, results } : Props) {
     const [gameState, setGameState] = useState<GameState>(GameState[lastWindowFrame.gameState as keyof typeof GameState]);
 
@@ -458,10 +464,4 @@ function getGoldPercentage(goldBlue: number, goldRed: number){
         goldBluePercentage: ((goldBlue/ 100) * total),
         goldRedPercentage: ((goldRed/ 100) * total),
     }
-}
-
-enum GameState {
-    in_game = "in game",
-    paused = "paused",
-    finished = "match ended"
 }

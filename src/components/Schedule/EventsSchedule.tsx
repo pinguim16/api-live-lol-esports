@@ -9,7 +9,6 @@ import {Schedule, ScheduleEvent} from "../types/baseTypes";
 export function EventsSchedule() {
     const [liveEvents, setLiveEvents] = useState<ScheduleEvent[]>([])
     const [last7DaysEvents, setlast7DaysEvents] = useState<ScheduleEvent[]>([])
-    const [next24HoursEvents, setNext24HoursEvents] = useState<ScheduleEvent[]>([])
     const [next7DaysEvents, setNext7DaysEvents] = useState<ScheduleEvent[]>([])
 
     useEffect(() => {
@@ -69,7 +68,7 @@ function EventCards({emptyMessage, scheduleEvents, title}: EventCardProps) {
                 <div className="games-list-container">
                     <div className="games-list-items">
                         {scheduleEvents.map(scheduleEvent => {
-                            return scheduleEvent.league.slug != "tft_esports" ? (
+                            return scheduleEvent.league.slug !== "tft_esports" ? (
                                 <EventCard
                                     key={`${scheduleEvent.match.id}_${scheduleEvent.startTime}`}
                                     scheduleEvent={scheduleEvent}

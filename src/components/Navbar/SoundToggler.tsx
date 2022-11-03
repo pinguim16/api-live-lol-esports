@@ -15,7 +15,7 @@ export function SoundToggler() {
                 setToggled(true)
             }
         }
-    });
+    }, [])
 
     const handleClick = () => {
         if(toggled) {

@@ -59,7 +59,7 @@ export function Match({ match }: any) {
             getScheduleResponse().then(response => {
                 let scheduleEvents: ScheduleEvent[] = response.data.data.schedule.events
                 let scheduleEvent = scheduleEvents.find((scheduleEvent: ScheduleEvent) => {
-                    return scheduleEvent.match ? (scheduleEvent.match.id == matchId) : false
+                    return scheduleEvent.match ? (scheduleEvent.match.id === matchId) : false
                 })
                 if (scheduleEvent === undefined) return
                 let records = scheduleEvent.match.teams[0].record && scheduleEvent.match.teams[1].record? [scheduleEvent.match.teams[0].record, scheduleEvent.match.teams[1].record] : undefined
@@ -117,16 +117,16 @@ export function Match({ match }: any) {
                 let standings: Standing[] = response.data.data.standings
                 let stage = standings[0].stages.find((stage) => {
                     let stageSection = stage.sections.find((section) => {
-                        return section.matches.find((match) => match.id == matchId)
+                        return section.matches.find((match) => match.id === matchId)
                     })
                     return stageSection
                 })
                 if(stage === undefined) return;
                 let section = stage.sections.find((section) => {
-                    return section.matches.find((match) => match.id == matchId)
+                    return section.matches.find((match) => match.id === matchId)
                 })
                 if(section === undefined) return;
-                let match = section.matches.find((match) => match.id == matchId)
+                let match = section.matches.find((match) => match.id === matchId)
                 if(match === undefined) return;
                 let teams = match.teams
                 let results = teams.map((team) => team.result)
@@ -150,7 +150,7 @@ export function Match({ match }: any) {
                     {eventDetails ? (<h3>{eventDetails?.league.name}</h3>) : null}
                     <div className="live-game-card-content">
                         <div className="live-game-card-team">
-                            {eventDetails.match.teams[0].code == "TBD" ? (<TeamTBDSVG className="live-game-card-team-image"/>) : (<img className="live-game-card-team-image" src={eventDetails.match.teams[0].image} alt={eventDetails.match.teams[0].name}/>) }
+                            {eventDetails.match.teams[0].code === "TBD" ? (<TeamTBDSVG className="live-game-card-team-image"/>) : (<img className="live-game-card-team-image" src={eventDetails.match.teams[0].image} alt={eventDetails.match.teams[0].name}/>) }
                             <span className="live-game-card-title">
                                 {eventDetails?.match.teams[0].result ?
                                     (<span className="outcome">
@@ -185,7 +185,7 @@ export function Match({ match }: any) {
                         <h1>VS</h1>
                     </div>
                         <div className="live-game-card-team">
-                            {eventDetails.match.teams[1].code == "TBD" ? (<TeamTBDSVG className="live-game-card-team-image"/>) : (<img className="live-game-card-team-image" src={eventDetails.match.teams[1].image} alt={eventDetails.match.teams[1].name}/>) }
+                            {eventDetails.match.teams[1].code === "TBD" ? (<TeamTBDSVG className="live-game-card-team-image"/>) : (<img className="live-game-card-team-image" src={eventDetails.match.teams[1].image} alt={eventDetails.match.teams[1].name}/>) }
                             <span className="live-game-card-title">
                                 {eventDetails?.match.teams[1].result ?
                                     (<span className="outcome">
@@ -228,15 +228,15 @@ export function Match({ match }: any) {
 }
 
 function getNextUnstartedGameIndex(eventDetails: EventDetails) {
-    let lastCompletedGame = eventDetails.match.games.slice().reverse().find(game => game.state == "completed")
-    let nextUnstartedGame = eventDetails.match.games.find(game => game.state == "unstarted" || game.state == "inProgress")
+    let lastCompletedGame = eventDetails.match.games.slice().reverse().find(game => game.state === "completed")
+    let nextUnstartedGame = eventDetails.match.games.find(game => game.state === "unstarted" || game.state === "inProgress")
     return nextUnstartedGame ? nextUnstartedGame.number : (lastCompletedGame ? lastCompletedGame.number : eventDetails.match.games.length)
 }
 
 function getStreamOrVod(eventDetails: EventDetails) {
     let vods = eventDetails.match.games[getNextUnstartedGameIndex(eventDetails) - 1].vods
     if (vods.length) {
-        return (<span className="footer-notes"><a href={getExtendedVodLink(vods[0])} target="_blank">VOD Link</a></span>)
+        return (<span className="footer-notes"><a href={getExtendedVodLink(vods[0])} target="_blank" rel="noreferrer">VOD Link</a></span>)
     }
 
     if (!eventDetails.streams || !eventDetails.streams.length) {
@@ -245,11 +245,11 @@ function getStreamOrVod(eventDetails: EventDetails) {
     let shortestDelayStream = eventDetails.streams.reduce((previousVod, currentVod) => currentVod.offset < 0 && currentVod.offset > previousVod.offset ? currentVod : previousVod, eventDetails.streams[0])
     
     let streamOffset = Math.round(shortestDelayStream.offset / 1000 / 60 * -1)
-    let link = shortestDelayStream.provider == "youtube" ? `https://www.youtube.com/watch?v=${shortestDelayStream.parameter}` : `https://www.twitch.tv/${shortestDelayStream.parameter}`
+    let link = shortestDelayStream.provider === "youtube" ? `https://www.youtube.com/watch?v=${shortestDelayStream.parameter}` : `https://www.twitch.tv/${shortestDelayStream.parameter}`
     let delayString = streamOffset > 1 ? `Approximately ${streamOffset} minutes` : `Less than 1 minute`
-    return (<span className="footer-notes">Stream Delay: {delayString} - <a href={link} target="_blank">Watch Stream</a></span>)
+    return (<span className="footer-notes">Stream Delay: {delayString} - <a href={link} target="_blank" rel="noreferrer">Watch Stream</a></span>)
 }
 
 function getExtendedVodLink(extendedVod: ExtendedVod) {
-    return extendedVod.provider == "youtube" ? `https://www.youtube.com/watch?v=${extendedVod.parameter}` : `https://www.twitch.tv/${extendedVod.parameter}`
+    return extendedVod.provider === "youtube" ? `https://www.youtube.com/watch?v=${extendedVod.parameter}` : `https://www.twitch.tv/${extendedVod.parameter}`
 }
