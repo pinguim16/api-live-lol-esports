@@ -203,6 +203,7 @@ Status dragons
 
 .status-live-game-card-content {
     margin: 1.5rem 1.5rem;
+    padding: 20px 0px;
 }
 
 .status-live-game-card-content h3 {
@@ -387,4 +388,48 @@ Status dragons
     height: 2rem;
 
     margin-right: 1rem;
+}
+
+.game-selector {
+    margin-top: 2rem;
+    display: flex;
+    place-content: center;
+    background: var(--background);
+}
+
+.game-selector-item {
+    text-align: center;
+    padding: 0.5rem;
+    background: var(--background);
+    border: 1px solid;
+    border-color: var(--card-color);
+    flex-grow: 1;
+    flex-basis: 0;
+    border-radius: 5px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+
+.game-selector-item.selected {
+    background: var(--card-color);
+}
+
+.game-selector-item:not(.selected) {
+    box-shadow: inset 0 1px 3px 1px rgb(0 0 0 / 50%);
+}
+
+/* .game-selector-item.completed {
+    background-color: var(--green);
+}*/
+
+.game-selector-item.unneeded {
+    /* background-color: var(--red); */
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.game-selector-item:hover {
+    transform: scale(1.1);
+    box-shadow: 0 2px 4px -1px var(--title);
+    z-index: 12;
 }

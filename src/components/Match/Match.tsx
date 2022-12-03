@@ -11,7 +11,10 @@ import {
 import {useEffect, useState} from "react";
 import Loading from '../../assets/images/loading.svg'
 import {ReactComponent as TeamTBDSVG} from '../../assets/images/team-tbd.svg';
-import {PlayersTable} from "./PlayersTable";
+import {GameDetails} from "./GameDetails"
+import {LiveAPIWatcher} from "./LiveAPIWatcher";
+import {MatchDetails} from "./MatchDetails"
+import {Game} from "./Game";
 import {EventDetails, DetailsFrame, GameMetadata, Record, Result, ScheduleEvent, Standing, WindowFrame, ExtendedVod} from "../types/baseTypes"
 
 export function Match({ match }: any) {
@@ -23,28 +26,31 @@ export function Match({ match }: any) {
     const [records, setRecords] = useState<Record[]>();
     const [results, setResults] = useState<Result[]>();
     const [scheduleEvent, setScheduleEvent] = useState<ScheduleEvent>();
+    const [gameIndex, setGameIndex] = useState<number>();
 
     const matchId = match.params.gameid;
-    
-    useEffect(() => {
-        getEventDetails();
 
-        function getEventDetails() {
+    useEffect(() => {
+        getEventDetails(getInitialGameIndex());
+
+        function getEventDetails(gameIndex: number) {
             getEventDetailsResponse(matchId).then(response => {
                 let eventDetails: EventDetails = response.data.data.event;
                 if(eventDetails === undefined) return;
-
-                let nextUnstartedGameIndex = getNextUnstartedGameIndex(eventDetails)
-                let gameId = eventDetails.match.games[nextUnstartedGameIndex - 1].id
+                let newGameIndex = getGameIndex(eventDetails)
+                let gameId = eventDetails.match.games[newGameIndex - 1].id
                 console.log(`Current Game ID: ${gameId}`)
                 console.groupCollapsed(`Event Details`)
                 console.log(eventDetails)
                 console.groupEnd()
-                setEventDetails(eventDetails);
+                setEventDetails(eventDetails)
+                setGameIndex(gameIndex)
                 getFirstWindow(gameId)
                 getScheduleEvent(eventDetails)
                 getResults(eventDetails)
                 const windowIntervalID = setInterval(() => {
+                    let currentGameIndex = getGameIndex(eventDetails)
+                    let gameId = eventDetails.match.games[currentGameIndex - 1].id
                     getLiveWindow(gameId);
                     getLastDetailsFrame(gameId);
                 }, 500);
@@ -53,6 +59,21 @@ export function Match({ match }: any) {
                     clearInterval(windowIntervalID);
                 }
             })
+        }
+
+        function getInitialGameIndex(): number {
+            let gameIndexMatch = window.location.href.match(/game-index\/(\d+)/)
+            let initialGameIndex = gameIndexMatch ? parseInt(gameIndexMatch[1]) : 0
+            console.log(`Initial Game Index: ${initialGameIndex}`)
+            setGameIndex(initialGameIndex)
+            return initialGameIndex
+        }
+
+        function getGameIndex(eventDetails: EventDetails): number {
+            let gameIndexMatch = window.location.href.match(/game-index\/(\d+)/)
+            let newGameIndex = gameIndexMatch ? parseInt(gameIndexMatch[1]) : getNextUnstartedGameIndex(eventDetails)
+            setGameIndex(newGameIndex)
+            return newGameIndex
         }
 
         function getScheduleEvent(eventDetails: EventDetails) {
@@ -106,12 +127,11 @@ export function Match({ match }: any) {
             getGameDetailsResponse(gameId, date).then(response => {
                 let frames: DetailsFrame[] = response.data.frames;
                 if(frames === undefined) return;
-
                 setLastDetailsFrame(frames[frames.length - 1])
             });
         }
 
-        function getResults(eventDetails:  EventDetails) {
+        function getResults(eventDetails: EventDetails) {
             if(eventDetails === undefined) return;
             getStandingsResponse(eventDetails.tournament.id).then(response => {
                 let standings: Standing[] = response.data.data.standings
@@ -138,9 +158,13 @@ export function Match({ match }: any) {
         }
     }, [matchId]);
 
-    if(firstWindowFrame !== undefined && lastWindowFrame !== undefined && lastDetailsFrame !== undefined && metadata !== undefined && eventDetails !== undefined) {
+    if(firstWindowFrame !== undefined && lastWindowFrame !== undefined && lastDetailsFrame !== undefined && metadata !== undefined && eventDetails !== undefined && scheduleEvent !== undefined && gameIndex !== undefined) {
         return (
-            <PlayersTable eventDetails={eventDetails} gameMetadata={metadata} firstWindowFrame={firstWindowFrame} lastDetailsFrame={lastDetailsFrame} lastWindowFrame={lastWindowFrame} records={records} results={results} videoLink={getStreamOrVod(eventDetails)} />
+            <div className='match-container'>
+                <MatchDetails eventDetails={eventDetails} gameMetadata={metadata} records={records} results={results} scheduleEvent={scheduleEvent} />
+                <Game eventDetails={eventDetails} gameIndex={gameIndex} gameMetadata={metadata} firstWindowFrame={firstWindowFrame} lastDetailsFrame={lastDetailsFrame} lastWindowFrame={lastWindowFrame} records={records} results={results} videoLink={getStreamOrVod(eventDetails)} />
+                <LiveAPIWatcher gameIndex={gameIndex} gameMetadata={metadata} lastWindowFrame={lastWindowFrame} blueTeam={eventDetails.match.teams[0]} redTeam={eventDetails.match.teams[1]}/>
+            </div>
         );
     }else if (eventDetails !== undefined) {
         return(

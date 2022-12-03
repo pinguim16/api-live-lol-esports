@@ -1,6 +1,7 @@
 import './styles/playerStatusStyle.css'
 import '../Schedule/styles/scheduleStyle.css'
 
+import {GameDetails} from "./GameDetails"
 import {MiniHealthBar} from "./MiniHealthBar";
 import React, {useEffect, useState} from "react";
 import {toast} from 'react-toastify';
@@ -27,6 +28,7 @@ type Props = {
     firstWindowFrame: WindowFrame,
     lastWindowFrame: WindowFrame,
     lastDetailsFrame: DetailsFrame,
+    gameIndex: number,
     gameMetadata: GameMetadata,
     eventDetails: EventDetails,
     videoLink: JSX.Element,
@@ -36,11 +38,11 @@ type Props = {
 
 enum GameState {
     in_game = "in game",
-    paused = "paused",
-    finished = "match ended"
+    paused = "game paused",
+    finished = "game ended"
 }
 
-export function PlayersTable({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, gameMetadata, eventDetails, videoLink, records, results } : Props) {
+export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, gameMetadata, gameIndex, eventDetails, videoLink, records, results } : Props) {
     const [gameState, setGameState] = useState<GameState>(GameState[lastWindowFrame.gameState as keyof typeof GameState]);
 
     useEffect(() => {
@@ -93,24 +95,18 @@ export function PlayersTable({ firstWindowFrame, lastWindowFrame, lastDetailsFra
 
     return (
         <div className="status-live-game-card">
-
             <Helmet>
                 <script src="../../utils/LoLAPIWatcher.js"/>
             </Helmet>
-
+            <GameDetails eventDetails={eventDetails} gameIndex={gameIndex}/>
             <div className="status-live-game-card-content">
-                {eventDetails ? (<h3>{eventDetails?.league.name}</h3>) : null}
+                {/* {eventDetails ? (<h3>{eventDetails?.league.name}</h3>) : null} */}
                 <div className="live-game-stats-header">
                     <div className="live-game-stats-header-team-images">
-                        {TeamCard({eventDetails, index: 0, matchResults, record: records? records[0] : undefined})}
                         <h1>
-                            <div>BEST OF {eventDetails.match.strategy.count}</div>
-                            {matchResults ? (<div>{matchResults[0].gameWins}-{matchResults[1].gameWins}</div>) : null}
-                            VS
                             <div>{gameState.toUpperCase()}</div>
                             <div>{inGameTime}</div>
                         </h1>
-                        {TeamCard({eventDetails, index: 1, matchResults, record: records? records[1] : undefined})}
                     </div>
                     <div className="live-game-stats-header-status">
                         {HeaderStats(lastWindowFrame.blueTeam, 'blue-team')}
@@ -323,8 +319,7 @@ export function PlayersTable({ firstWindowFrame, lastWindowFrame, lastDetailsFra
                 </span>
                 {videoLink}
             </div>
-
-            <LiveAPIWatcher gameMetadata={gameMetadata} lastWindowFrame={lastWindowFrame} blueTeam={blueTeam} redTeam={redTeam}/>
+            <LiveAPIWatcher gameIndex={gameIndex} gameMetadata={gameMetadata} lastWindowFrame={lastWindowFrame} blueTeam={eventDetails.match.teams[0]} redTeam={eventDetails.match.teams[1]}/>
         </div>
     );
 }
