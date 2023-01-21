@@ -163,7 +163,6 @@ export function Match({ match }: any) {
             <div className='match-container'>
                 <MatchDetails eventDetails={eventDetails} gameMetadata={metadata} records={records} results={results} scheduleEvent={scheduleEvent} />
                 <Game eventDetails={eventDetails} gameIndex={gameIndex} gameMetadata={metadata} firstWindowFrame={firstWindowFrame} lastDetailsFrame={lastDetailsFrame} lastWindowFrame={lastWindowFrame} records={records} results={results} videoLink={getStreamOrVod(eventDetails)} />
-                <LiveAPIWatcher gameIndex={gameIndex} gameMetadata={metadata} lastWindowFrame={lastWindowFrame} blueTeam={eventDetails.match.teams[0]} redTeam={eventDetails.match.teams[1]}/>
             </div>
         );
     }else if (eventDetails !== undefined) {
