@@ -14,6 +14,8 @@ import {ReactComponent as GoldSVG} from '../../assets/images/gold.svg';
 import {ReactComponent as InhibitorSVG} from '../../assets/images/inhibitor.svg';
 
 import {ReactComponent as OceanDragonSVG} from '../../assets/images/dragon-ocean.svg';
+import {ReactComponent as ChemtechDragonSVG} from '../../assets/images/dragon-chemtech.svg';
+import {ReactComponent as HextechDragonSVG} from '../../assets/images/dragon-hextech.svg';
 import {ReactComponent as InfernalDragonSVG} from '../../assets/images/dragon-infernal.svg';
 import {ReactComponent as CloudDragonSVG} from '../../assets/images/dragon-cloud.svg';
 import {ReactComponent as MountainDragonSVG} from '../../assets/images/dragon-mountain.svg';
@@ -446,6 +448,8 @@ function getDragonSVG(dragonName: string, teamColor: string, index: number){
     let key = `${teamColor}_${index}_${dragonName}`
     switch (dragonName) {
         case "ocean": return <OceanDragonSVG className="dragon" key={key}/>;
+        case "hextech": return <HextechDragonSVG className="dragon" key={key}/>;
+        case "chemtech": return <ChemtechDragonSVG className="dragon" key={key}/>;
         case "infernal": return <InfernalDragonSVG className="dragon" key={key}/>
         case "cloud": return <CloudDragonSVG className="dragon" key={key}/>
         case "mountain": return <MountainDragonSVG className="dragon" key={key}/>
