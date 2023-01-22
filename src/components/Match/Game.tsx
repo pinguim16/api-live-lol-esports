@@ -106,7 +106,7 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
                 <div className="live-game-stats-header">
                     <div className="live-game-stats-header-team-images">
                         <h1>
-                            <div>{gameState.toUpperCase()}</div>
+                            <div className={`gamestate-bg-${gameState.split(` `).join(`-`)}`}>{gameState.toUpperCase()}</div>
                             <div>{inGameTime}</div>
                         </h1>
                     </div>

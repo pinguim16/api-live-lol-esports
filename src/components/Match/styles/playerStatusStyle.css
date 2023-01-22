@@ -149,6 +149,65 @@ span.mini-current-health {
     justify-content: center;
 }
 
+.gamestate-bg-in-game {
+    background-color: var(--green);
+    animation: pulse 2s infinite;
+}
+
+.gamestate-bg-game-ended {
+    background-color: var(--red);
+}
+
+.gamestate-bg-in-game,.gamestate-bg-paused, .gamestate-bg-game-ended {
+    color: white;
+    margin: 0px auto 10px auto;
+    padding: 2.5px 10px;
+    border-radius: 9999px;
+    display: inline-block;
+}
+
+.gamestate-bg-paused {
+    width: 6.5rem;
+    background-color: var(--gray-line);
+    animation: pulse-paused 7s infinite
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(40, 102, 25,.6)
+    }
+
+    40% {
+        box-shadow: 0 0 0 5px rgba(40, 102, 25,.4)
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba(255,44,44,0)
+    }
+
+    to {
+        box-shadow: 0 0 0 0 rgba(255,44,44,0)
+    }
+}
+
+@keyframes pulse-paused {
+    0% {
+        box-shadow: 0 0 0 0 rgba(43,43,43,.7)
+    }
+
+    40% {
+        box-shadow: 0 0 0 5px rgba(43,43,43,.5)
+    }
+
+    70% {
+        box-shadow: 0 0 0 12px rgba(43,43,43,0)
+    }
+
+    to {
+        box-shadow: 0 0 0 0 rgba(43,43,43,0)
+    }
+}
+
 /*
 Gold bar
 */
