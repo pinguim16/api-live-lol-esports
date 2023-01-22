@@ -120,3 +120,7 @@
 .outcome .loss {
     background: var(--red);
 }
+
+.orders-container > div {
+    margin-bottom: 1rem;
+}
