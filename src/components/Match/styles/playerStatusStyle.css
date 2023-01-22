@@ -158,7 +158,7 @@ span.mini-current-health {
     background-color: var(--red);
 }
 
-.gamestate-bg-in-game,.gamestate-bg-paused, .gamestate-bg-game-ended {
+.gamestate-bg-in-game,.gamestate-bg-game-paused, .gamestate-bg-game-ended {
     color: white;
     margin: 0px auto 10px auto;
     padding: 2.5px 10px;
@@ -166,8 +166,7 @@ span.mini-current-health {
     display: inline-block;
 }
 
-.gamestate-bg-paused {
-    width: 6.5rem;
+.gamestate-bg-game-paused {
     background-color: var(--gray-line);
     animation: pulse-paused 7s infinite
 }
