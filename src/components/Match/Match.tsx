@@ -51,6 +51,11 @@ export function Match({ match }: any) {
                 const windowIntervalID = setInterval(() => {
                     let currentGameIndex = getGameIndex(eventDetails)
                     let gameId = eventDetails.match.games[currentGameIndex - 1].id
+                    if (gameIndex != currentGameIndex) {
+                        getFirstWindow(gameId)
+                        setGameIndex(currentGameIndex)
+                        gameIndex = currentGameIndex
+                    }
                     getLiveWindow(gameId);
                     getLastDetailsFrame(gameId);
                 }, 500);
