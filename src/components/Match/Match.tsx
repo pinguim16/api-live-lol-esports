@@ -29,14 +29,32 @@ export function Match({ match }: any) {
     const [gameIndex, setGameIndex] = useState<number>();
 
     const matchId = match.params.gameid;
-
+    let matchEventDetails = eventDetails
+    let currentGameIndex = 1
     useEffect(() => {
         getEventDetails(getInitialGameIndex());
+
+        const windowIntervalID = setInterval(() => {
+            if (!matchEventDetails) return
+            let newGameIndex = getGameIndex(matchEventDetails)
+            let gameId = matchEventDetails.match.games[newGameIndex - 1].id
+            if (currentGameIndex != newGameIndex) {
+                getFirstWindow(gameId)
+                setGameIndex(newGameIndex)
+                currentGameIndex = newGameIndex
+            }
+            getLiveWindow(gameId);
+            getLastDetailsFrame(gameId);
+        }, 500);
+
+        return () => {
+            clearInterval(windowIntervalID);
+        }
 
         function getEventDetails(gameIndex: number) {
             getEventDetailsResponse(matchId).then(response => {
                 let eventDetails: EventDetails = response.data.data.event;
-                if(eventDetails === undefined) return;
+                if(eventDetails === undefined) return undefined;
                 let newGameIndex = getGameIndex(eventDetails)
                 let gameId = eventDetails.match.games[newGameIndex - 1].id
                 console.log(`Current Game ID: ${gameId}`)
@@ -48,21 +66,7 @@ export function Match({ match }: any) {
                 getFirstWindow(gameId)
                 getScheduleEvent(eventDetails)
                 getResults(eventDetails)
-                const windowIntervalID = setInterval(() => {
-                    let currentGameIndex = getGameIndex(eventDetails)
-                    let gameId = eventDetails.match.games[currentGameIndex - 1].id
-                    if (gameIndex != currentGameIndex) {
-                        getFirstWindow(gameId)
-                        setGameIndex(currentGameIndex)
-                        gameIndex = currentGameIndex
-                    }
-                    getLiveWindow(gameId);
-                    getLastDetailsFrame(gameId);
-                }, 500);
-
-                return () => {
-                    clearInterval(windowIntervalID);
-                }
+                matchEventDetails = eventDetails
             })
         }
 
