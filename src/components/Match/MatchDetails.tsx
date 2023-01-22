@@ -70,7 +70,7 @@ export function MatchDetails({ gameMetadata, eventDetails, records, results, sch
                     <div className="live-game-stats-header-team-images">
                         {TeamCard({ eventDetails, index: 0, matchResults, record: records ? records[0] : undefined })}
                         <h1>
-                            <div>Match {scheduleEvent.state}</div>
+                            <div>Match {formatMatchState(eventDetails, scheduleEvent)}</div>
                             {matchResults ? (<div>{matchResults[0].gameWins}-{matchResults[1].gameWins}</div>) : null}
                             VS
                         </h1>
@@ -87,6 +87,11 @@ type TeamCardProps = {
     index: number,
     matchResults?: Result[],
     record?: Record,
+}
+
+function formatMatchState(eventDetails: EventDetails, scheduleEvent: ScheduleEvent): string {
+    let gamesFinished = eventDetails.match.games.filter(game => game.state == `completed` || game.state == `unneeded`)
+    return gamesFinished.length >= eventDetails.match.games.length ? `completed` : scheduleEvent.state
 }
 
 function TeamCard({ eventDetails, index, matchResults, record }: TeamCardProps) {

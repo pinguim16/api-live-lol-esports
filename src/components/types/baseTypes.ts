@@ -38,7 +38,7 @@ export interface EventDetails {
 export interface ExtendedGame {
     id: string;
     number: 1 | 2 | 3 |4 |5;
-    state: "completed" | "unstarted" | "inProgress";
+    state: "completed" | "unstarted" | "inProgress" | "unneeded";
     teams: CustomTeam[];
     vods: ExtendedVod[];
 }
