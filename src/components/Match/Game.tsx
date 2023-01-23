@@ -22,7 +22,6 @@ import {ReactComponent as MountainDragonSVG} from '../../assets/images/dragon-mo
 import {ReactComponent as ElderDragonSVG} from '../../assets/images/dragon-elder.svg';
 import {ItemsDisplay} from "./ItemsDisplay";
 
-import {Helmet} from "react-helmet";
 import {LiveAPIWatcher} from "./LiveAPIWatcher";
 import { CHAMPIONS_URL } from '../../utils/LoLEsportsAPI';
 
@@ -97,9 +96,6 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
 
     return (
         <div className="status-live-game-card">
-            <Helmet>
-                <script src="../../utils/LoLAPIWatcher.js"/>
-            </Helmet>
             <GameDetails eventDetails={eventDetails} gameIndex={gameIndex}/>
             <div className="status-live-game-card-content">
                 {/* {eventDetails ? (<h3>{eventDetails?.league.name}</h3>) : null} */}
