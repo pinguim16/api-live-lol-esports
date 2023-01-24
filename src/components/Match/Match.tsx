@@ -167,14 +167,6 @@ export function Match({ match }: any) {
         }
     }, [matchId]);
 
-
-    console.log(`metadata: ${metadata}`)
-    console.log(`scheduleEvent: ${scheduleEvent}`)
-    console.log(`gameIndex: ${gameIndex}`)
-    console.log(`firstWindowFrame: ${firstWindowFrame}`)
-    console.log(`lastDetailsFrame: ${lastDetailsFrame}`)
-    console.log(`lastWindowFrame: ${lastWindowFrame}`)
-
     if(firstWindowFrame !== undefined && lastWindowFrame !== undefined && lastDetailsFrame !== undefined && metadata !== undefined && eventDetails !== undefined && scheduleEvent !== undefined && gameIndex !== undefined) {
         return (
             <div className='match-container'>
