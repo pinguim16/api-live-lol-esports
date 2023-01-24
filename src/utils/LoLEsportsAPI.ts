@@ -22,7 +22,6 @@ export function getWindowResponse(gameId: string, date?: string) {
             "startingTime": date,
         },
         headers: {
-            "x-api-key": API_KEY,
         },
     })
 }
@@ -33,7 +32,6 @@ export function getGameDetailsResponse(gameId: string, date: string) {
             "startingTime": date,
         },
         headers: {
-            "x-api-key": API_KEY,
         },
     })
 }
