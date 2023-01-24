@@ -19,7 +19,6 @@ export function getScheduleResponse() {
 export function getWindowResponse(gameId: string, date?: string) {
     return axios.get(`${API_URL_LIVE}/window/${gameId}`, {
         params: {
-            "hl": "en-US",
             "startingTime": date,
         },
         headers: {
@@ -31,7 +30,6 @@ export function getWindowResponse(gameId: string, date?: string) {
 export function getGameDetailsResponse(gameId: string, date: string) {
     return axios.get(`${API_URL_LIVE}/details/${gameId}`, {
         params: {
-            "hl": "en-US",
             "startingTime": date,
         },
         headers: {
