@@ -107,6 +107,7 @@ export function Match({ match }: any) {
 
         function getFirstWindow(gameId: string){
             getWindowResponse(gameId).then(response => {
+                console.log(response)
                 let frames: WindowFrame[] = response.data.frames;
                 if(frames === undefined) return;
                 
@@ -123,6 +124,7 @@ export function Match({ match }: any) {
         function getLiveWindow(gameId: string){
             let date = getISODateMultiplyOf10();
             getWindowResponse(gameId, date).then(response => {
+                console.log(response)
                 let frames: WindowFrame[] = response.data.frames;
                 if(frames === undefined) return;
 
