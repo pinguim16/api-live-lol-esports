@@ -107,7 +107,7 @@ export function Match({ match }: any) {
 
         function getFirstWindow(gameId: string){
             getWindowResponse(gameId).then(response => {
-                console.log(response)
+                if (response === undefined) return
                 let frames: WindowFrame[] = response.data.frames;
                 if(frames === undefined) return;
                 
@@ -124,7 +124,7 @@ export function Match({ match }: any) {
         function getLiveWindow(gameId: string){
             let date = getISODateMultiplyOf10();
             getWindowResponse(gameId, date).then(response => {
-                console.log(response)
+                if (response === undefined) return
                 let frames: WindowFrame[] = response.data.frames;
                 if(frames === undefined) return;
 
@@ -136,6 +136,7 @@ export function Match({ match }: any) {
         function getLastDetailsFrame(gameId: string) {
             let date = getISODateMultiplyOf10();
             getGameDetailsResponse(gameId, date).then(response => {
+                if (response === undefined) return
                 let frames: DetailsFrame[] = response.data.frames;
                 if(frames === undefined) return;
                 setLastDetailsFrame(frames[frames.length - 1])
