@@ -10,6 +10,7 @@ const API_KEY = "0TvQnueqKa5mxJntVWt0w4LpLfEkrV1Ta8rQBb9Z"
 
 let secondDelay = 60
 let count = 0
+let failureCount = 0
 
 export function getScheduleResponse() {
     return axios.get(`${API_URL_PERSISTED}/getSchedule?hl=en-US`, {
@@ -43,6 +44,7 @@ export function getWindowResponse(gameId: string, date?: string) {
 
 export function getGameDetailsResponse(gameId: string, date: string) {
     if (count++ % 10 == 0) {
+        failureCount = 0
         secondDelay -= 10
     }
     return axios.get(`${API_URL_LIVE}/details/${gameId}`, {
@@ -55,7 +57,8 @@ export function getGameDetailsResponse(gameId: string, date: string) {
         if (error.response) {
             // Request made and server responded
             console.error(error.response.data);
-            if (!error.response.data.message.includes(`window with end time less than 45 sec old`)) return
+            if (!error.response.data.message.includes(`window with end time less than 45 sec old`) && failureCount++ < 6) return
+            failureCount = 0
             secondDelay += 10
         } else if (error.request) {
             // The request was made but no response was received
