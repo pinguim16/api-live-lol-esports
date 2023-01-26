@@ -42,10 +42,15 @@ export function getWindowResponse(gameId: string, date?: string) {
     })
 }
 
-export function getGameDetailsResponse(gameId: string, date: string) {
+export function getGameDetailsResponse(gameId: string, date: string, lastFrameSuccess: boolean) {
     if (count++ % 10 == 0) {
         failureCount = 0
         secondDelay -= 10
+    }
+    if (lastFrameSuccess) {
+        failureCount = 0
+    } else {
+        failureCount++
     }
     return axios.get(`${API_URL_LIVE}/details/${gameId}`, {
         params: {
@@ -57,7 +62,7 @@ export function getGameDetailsResponse(gameId: string, date: string) {
         if (error.response) {
             // Request made and server responded
             console.error(error.response.data);
-            if (!error.response.data.message.includes(`window with end time less than 45 sec old`) && failureCount++ < 6) return
+            if (!error.response.data.message.includes(`window with end time less than 45 sec old`) || failureCount < 6) return
             failureCount = 0
             secondDelay += 10
         } else if (error.request) {

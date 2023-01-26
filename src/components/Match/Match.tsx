@@ -31,6 +31,7 @@ export function Match({ match }: any) {
     const matchId = match.params.gameid;
     let matchEventDetails = eventDetails
     let currentGameIndex = 1
+    let lastFrameSuccess = false
     useEffect(() => {
         getEventDetails(getInitialGameIndex());
 
@@ -135,10 +136,12 @@ export function Match({ match }: any) {
 
         function getLastDetailsFrame(gameId: string) {
             let date = getISODateMultiplyOf10();
-            getGameDetailsResponse(gameId, date).then(response => {
+            getGameDetailsResponse(gameId, date, lastFrameSuccess).then(response => {
+                lastFrameSuccess = false
                 if (response === undefined) return
                 let frames: DetailsFrame[] = response.data.frames;
                 if(frames === undefined) return;
+                lastFrameSuccess = true
                 setLastDetailsFrame(frames[frames.length - 1])
             });
         }
