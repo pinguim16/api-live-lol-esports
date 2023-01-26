@@ -211,6 +211,7 @@ export interface Team {
     image: string;
     name: string;
     result: Result;
+    id: string;
 }
 
 export interface TeamMetadata {
