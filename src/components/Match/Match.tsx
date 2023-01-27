@@ -32,6 +32,7 @@ export function Match({ match }: any) {
     let matchEventDetails = eventDetails
     let currentGameIndex = 1
     let lastFrameSuccess = false
+    let currentTimestamp = ``
     useEffect(() => {
         getEventDetails(getInitialGameIndex());
 
@@ -127,7 +128,8 @@ export function Match({ match }: any) {
             getWindowResponse(gameId, date).then(response => {
                 if (response === undefined) return
                 let frames: WindowFrame[] = response.data.frames;
-                if(frames === undefined) return;
+                if(frames === undefined || currentTimestamp > frames[frames.length - 1].rfc460Timestamp) return;
+                currentTimestamp = frames[frames.length - 1].rfc460Timestamp
 
                 setLastWindowFrame(frames[frames.length - 1])
                 setMetadata(response.data.gameMetadata)
