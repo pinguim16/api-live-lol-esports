@@ -83,59 +83,59 @@ export function LiveAPIWatcher({ lastWindowFrame, gameIndex, gameMetadata, blueT
 
         // Topo = prioridade para o som
         let isPlaying = isMuted;
+        let toastArray = []
 
         if (status.gameIndex == gameIndex) {
-
             if (status.inhibitors.blue !== lastWindowFrame.blueTeam.inhibitors) {
-                createToast(true, isPlaying, inib_red.default, "Destroyed an inhibitor", trueBlueTeam.image);
+                toastArray.push(() => { createToast(true, isPlaying, inib_red.default, "Destroyed an inhibitor", trueBlueTeam.image) })
                 isPlaying = true
             }
 
             if (status.inhibitors.red !== lastWindowFrame.redTeam.inhibitors) {
-                createToast(false, isPlaying, inib_blue.default, "Destroyed an inhibitor", trueRedTeam.image);
+                toastArray.push(() => { createToast(false, isPlaying, inib_blue.default, "Destroyed an inhibitor", trueRedTeam.image) })
                 isPlaying = true
             }
 
             if (status.barons.blue !== lastWindowFrame.blueTeam.barons) {
-                createToast(true, isPlaying, baron_blue.default, "Defeated the baron", trueBlueTeam.image);
+                toastArray.push(() => { createToast(true, isPlaying, baron_blue.default, "Defeated the baron", trueBlueTeam.image) })
                 isPlaying = true
             }
 
             if (status.barons.red !== lastWindowFrame.redTeam.barons) {
-                createToast(false, isPlaying, baron_red.default, "Defeated the baron", trueRedTeam.image);
+                toastArray.push(() => { createToast(false, isPlaying, baron_red.default, "Defeated the baron", trueRedTeam.image) })
                 isPlaying = true
             }
 
             if (status.dragons.blue !== lastWindowFrame.blueTeam.dragons.length) {
-                createToast(true, isPlaying, dragon_blue.default, "Defeated the dragon", trueBlueTeam.image);
+                toastArray.push(() => { createToast(true, isPlaying, dragon_blue.default, "Defeated the dragon", trueBlueTeam.image) })
                 isPlaying = true
             }
 
             if (status.dragons.red !== lastWindowFrame.redTeam.dragons.length) {
-                createToast(false, isPlaying, dragon_red.default, "Defeated the dragon", trueRedTeam.image);
+                toastArray.push(() => { createToast(false, isPlaying, dragon_red.default, "Defeated the dragon", trueRedTeam.image) })
                 isPlaying = true
             }
 
             if (status.towers.blue !== lastWindowFrame.blueTeam.towers) {
-                createToast(true, isPlaying, tower_red.default, "Destroyed a turret", trueBlueTeam.image);
+                toastArray.push(() => { createToast(true, isPlaying, tower_red.default, "Destroyed a turret", trueBlueTeam.image) })
                 isPlaying = true
             }
 
             if (status.towers.red !== lastWindowFrame.redTeam.towers) {
-                createToast(false, isPlaying, tower_blue.default, "Destroyed a turret", trueRedTeam.image);
+                toastArray.push(() => { createToast(false, isPlaying, tower_blue.default, "Destroyed a turret", trueRedTeam.image) })
                 isPlaying = true
             }
 
             for (let i = 0; i < status.participants.blue.length; i++) {
                 if (status.participants.blue[i].kills !== lastWindowFrame.blueTeam.participants[i].kills) {
-                    createToast(true, isPlaying, kill.default, "Killed an enemy", `http://ddragon.leagueoflegends.com/cdn/13.1.1/img/champion/${gameMetadata.blueTeamMetadata.participantMetadata[status.participants.blue[i].participantId - 1].championId}.png`)
+                    toastArray.push(() => { createToast(true, isPlaying, kill.default, "Killed an enemy", `http://ddragon.leagueoflegends.com/cdn/13.1.1/img/champion/${gameMetadata.blueTeamMetadata.participantMetadata[status.participants.blue[i].participantId - 1].championId}.png`) })
                     isPlaying = true
                 }
             }
 
             for (let i = 0; i < status.participants.red.length; i++) {
                 if (status.participants.red[i].kills !== lastWindowFrame.redTeam.participants[i].kills) {
-                    createToast(false, isPlaying, kill.default, "Killed an enemy", `http://ddragon.leagueoflegends.com/cdn/13.1.1/img/champion/${gameMetadata.redTeamMetadata.participantMetadata[status.participants.red[i].participantId - 6].championId}.png`)
+                    toastArray.push(() => { createToast(false, isPlaying, kill.default, "Killed an enemy", `http://ddragon.leagueoflegends.com/cdn/13.1.1/img/champion/${gameMetadata.redTeamMetadata.participantMetadata[status.participants.red[i].participantId - 6].championId}.png`) })
                     isPlaying = true
                 }
             }
@@ -149,6 +149,9 @@ export function LiveAPIWatcher({ lastWindowFrame, gameIndex, gameMetadata, blueT
             barons: { blue: lastWindowFrame.blueTeam.barons, red: lastWindowFrame.redTeam.barons },
             participants: { blue: lastWindowFrame.blueTeam.participants, red: lastWindowFrame.redTeam.participants },
         })
+
+        toastArray.forEach(toastFunction => toastFunction())
+
     }, [lastWindowFrame.blueTeam.totalKills, lastWindowFrame.blueTeam.dragons.length, lastWindowFrame.blueTeam.inhibitors, lastWindowFrame.redTeam.totalKills, lastWindowFrame.redTeam.dragons.length, lastWindowFrame.redTeam.inhibitors, firstBloodPlay, status.dragons.blue, status.dragons.red, status.barons.blue, status.barons.red, status.inhibitors.blue, status.inhibitors.red, status.towers.blue, status.towers.red, status.participants.blue, status.participants.red, lastWindowFrame.blueTeam.barons, lastWindowFrame.blueTeam.towers, lastWindowFrame.blueTeam.participants, lastWindowFrame.redTeam.barons, lastWindowFrame.redTeam.towers, lastWindowFrame.redTeam.participants, gameMetadata.blueTeamMetadata.participantMetadata, gameMetadata.redTeamMetadata.participantMetadata, trueBlueTeam.image, trueRedTeam.image]);
 
     return (
