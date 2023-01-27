@@ -128,14 +128,14 @@ export function LiveAPIWatcher({ lastWindowFrame, gameIndex, gameMetadata, blueT
 
             for (let i = 0; i < status.participants.blue.length; i++) {
                 if (status.participants.blue[i].kills !== lastWindowFrame.blueTeam.participants[i].kills) {
-                    toastArray.push(() => { createToast(true, isPlaying, kill.default, "Killed an enemy", `http://ddragon.leagueoflegends.com/cdn/13.1.1/img/champion/${gameMetadata.blueTeamMetadata.participantMetadata[status.participants.blue[i].participantId - 1].championId}.png`) })
+                    toastArray.push(() => { createToast(true, isPlaying, kill.default, "Killed an enemy", `http://ddragon.leagueoflegends.com/cdn/13.1.1/img/champion/${gameMetadata.blueTeamMetadata.participantMetadata[status.participants.blue[i].participantId - 1].championId}.png`, lastWindowFrame.blueTeam.participants[i].kills - status.participants.blue[i].kills) })
                     isPlaying = true
                 }
             }
 
             for (let i = 0; i < status.participants.red.length; i++) {
                 if (status.participants.red[i].kills !== lastWindowFrame.redTeam.participants[i].kills) {
-                    toastArray.push(() => { createToast(false, isPlaying, kill.default, "Killed an enemy", `http://ddragon.leagueoflegends.com/cdn/13.1.1/img/champion/${gameMetadata.redTeamMetadata.participantMetadata[status.participants.red[i].participantId - 6].championId}.png`) })
+                    toastArray.push(() => { createToast(false, isPlaying, kill.default, "Killed an enemy", `http://ddragon.leagueoflegends.com/cdn/13.1.1/img/champion/${gameMetadata.redTeamMetadata.participantMetadata[status.participants.red[i].participantId - 6].championId}.png`, lastWindowFrame.redTeam.participants[i].kills - status.participants.red[i].kills) })
                     isPlaying = true
                 }
             }
@@ -159,7 +159,7 @@ export function LiveAPIWatcher({ lastWindowFrame, gameIndex, gameMetadata, blueT
     );
 }
 
-function createToast(blueTeam: boolean, soundIsPlaying: boolean, sound: string, message: string, image: string) {
+function createToast(blueTeam: boolean, soundIsPlaying: boolean, sound: string, message: string, image: string, diff?: number) {
     if (!soundIsPlaying) {
         let audio = new Audio(sound);
         audio.load();
@@ -167,6 +167,7 @@ function createToast(blueTeam: boolean, soundIsPlaying: boolean, sound: string, 
         audio.play();
     }
 
+    let toastId = `${blueTeam}_${image}_${message}_${diff}`;
     if (blueTeam) {
         toast.info(
             <div className="toast-watcher">
@@ -177,7 +178,8 @@ function createToast(blueTeam: boolean, soundIsPlaying: boolean, sound: string, 
             </div>
             , {
                 pauseOnFocusLoss: false,
-                position: toast.POSITION.TOP_LEFT
+                position: toast.POSITION.TOP_LEFT,
+                toastId: toastId
             }
         )
     } else {
@@ -188,7 +190,8 @@ function createToast(blueTeam: boolean, soundIsPlaying: boolean, sound: string, 
             </div>
             , {
                 pauseOnFocusLoss: false,
-                position: toast.POSITION.TOP_RIGHT
+                position: toast.POSITION.TOP_RIGHT,
+                toastId: toastId
             }
         )
     }
