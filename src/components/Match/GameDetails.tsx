@@ -28,12 +28,6 @@ type Props = {
     gameIndex: number
 }
 
-enum GameState {
-    in_game = "in game",
-    paused = "paused",
-    finished = "match ended"
-}
-
 export function GameDetails({ eventDetails, gameIndex }: Props) {
     useEffect(() => {
 
@@ -44,10 +38,14 @@ export function GameDetails({ eventDetails, gameIndex }: Props) {
             <div className='game-selector'>
                 {eventDetails.match.games.map((game) => {
                     return <a className={`game-selector-item ${game.state} ${gameIndex == game.number ? `selected` : ``}`} href={`/live-lol-esports/#/live/${eventDetails.id}/game-index/${game.number}`} key={`game-selector-${game.id}`}>
-                        <span className={`#/live/${game.state}`}>Game {game.number} - {game.state}</span>
+                        <span className={`#/live/${game.state}`}>Game {game.number} - {capitalizeFirstLetter(game.state)}</span>
                     </a>
                 })}
 
             </div>) : null
     )
+}
+
+function capitalizeFirstLetter(string: string): string {
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }

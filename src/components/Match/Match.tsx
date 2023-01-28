@@ -8,14 +8,14 @@ import {
     getScheduleResponse,
     getStandingsResponse
 } from "../../utils/LoLEsportsAPI";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import Loading from '../../assets/images/loading.svg'
-import {ReactComponent as TeamTBDSVG} from '../../assets/images/team-tbd.svg';
-import {GameDetails} from "./GameDetails"
-import {LiveAPIWatcher} from "./LiveAPIWatcher";
-import {MatchDetails} from "./MatchDetails"
-import {Game} from "./Game";
-import {EventDetails, DetailsFrame, GameMetadata, Record, Result, ScheduleEvent, Standing, WindowFrame, ExtendedVod} from "../types/baseTypes"
+import { ReactComponent as TeamTBDSVG } from '../../assets/images/team-tbd.svg';
+import { GameDetails } from "./GameDetails"
+import { LiveAPIWatcher } from "./LiveAPIWatcher";
+import { MatchDetails } from "./MatchDetails"
+import { Game } from "./Game";
+import { EventDetails, DetailsFrame, GameMetadata, Record, Result, ScheduleEvent, Standing, WindowFrame, ExtendedVod } from "../types/baseTypes"
 
 export function Match({ match }: any) {
     const [eventDetails, setEventDetails] = useState<EventDetails>();
@@ -58,7 +58,7 @@ export function Match({ match }: any) {
         function getEventDetails(gameIndex: number) {
             getEventDetailsResponse(matchId).then(response => {
                 let eventDetails: EventDetails = response.data.data.event;
-                if(eventDetails === undefined) return undefined;
+                if (eventDetails === undefined) return undefined;
                 let newGameIndex = getGameIndex(eventDetails)
                 let gameId = eventDetails.match.games[newGameIndex - 1].id
                 console.log(`Current Game ID: ${gameId}`)
@@ -96,7 +96,7 @@ export function Match({ match }: any) {
                     return scheduleEvent.match ? (scheduleEvent.match.id === matchId) : false
                 })
                 if (scheduleEvent === undefined) return
-                let records = scheduleEvent.match.teams[0].record && scheduleEvent.match.teams[1].record? [scheduleEvent.match.teams[0].record, scheduleEvent.match.teams[1].record] : undefined
+                let records = scheduleEvent.match.teams[0].record && scheduleEvent.match.teams[1].record ? [scheduleEvent.match.teams[0].record, scheduleEvent.match.teams[1].record] : undefined
                 if (records === undefined) return
 
                 console.groupCollapsed(`Schedule Event`)
@@ -109,12 +109,12 @@ export function Match({ match }: any) {
             )
         }
 
-        function getFirstWindow(gameId: string){
+        function getFirstWindow(gameId: string) {
             getWindowResponse(gameId).then(response => {
                 if (response === undefined) return
                 let frames: WindowFrame[] = response.data.frames;
-                if(frames === undefined) return;
-                
+                if (frames === undefined) return;
+
                 console.groupCollapsed(`Meta Data`)
                 console.log(response.data.gameMetadata)
                 console.groupEnd()
@@ -126,12 +126,12 @@ export function Match({ match }: any) {
             });
         }
 
-        function getLiveWindow(gameId: string){
+        function getLiveWindow(gameId: string) {
             let date = getISODateMultiplyOf10();
             getWindowResponse(gameId, date).then(response => {
                 if (response === undefined) return
                 let frames: WindowFrame[] = response.data.frames;
-                if(frames === undefined || currentTimestamp > frames[frames.length - 1].rfc460Timestamp) return;
+                if (frames === undefined || currentTimestamp > frames[frames.length - 1].rfc460Timestamp) return;
                 currentTimestamp = frames[frames.length - 1].rfc460Timestamp
 
                 setLastWindowFrame(frames[frames.length - 1])
@@ -145,14 +145,14 @@ export function Match({ match }: any) {
                 lastFrameSuccess = false
                 if (response === undefined) return
                 let frames: DetailsFrame[] = response.data.frames;
-                if(frames === undefined) return;
+                if (frames === undefined) return;
                 lastFrameSuccess = true
                 setLastDetailsFrame(frames[frames.length - 1])
             });
         }
 
         function getResults(eventDetails: EventDetails) {
-            if(eventDetails === undefined) return;
+            if (eventDetails === undefined) return;
             getStandingsResponse(eventDetails.tournament.id).then(response => {
                 let standings: Standing[] = response.data.data.standings
                 let stage = standings[0].stages.find((stage) => {
@@ -161,13 +161,13 @@ export function Match({ match }: any) {
                     })
                     return stageSection
                 })
-                if(stage === undefined) return;
+                if (stage === undefined) return;
                 let section = stage.sections.find((section) => {
                     return section.matches.find((match) => match.id === matchId)
                 })
-                if(section === undefined) return;
+                if (section === undefined) return;
                 let match = section.matches.find((match) => match.id === matchId)
-                if(match === undefined) return;
+                if (match === undefined) return;
                 let teams = match.teams
                 let results = teams.map((team) => team.result)
                 setResults(teams.map((team) => team.result))
@@ -178,22 +178,22 @@ export function Match({ match }: any) {
         }
     }, [matchId]);
 
-    if(firstWindowFrame !== undefined && lastWindowFrame !== undefined && lastDetailsFrame !== undefined && metadata !== undefined && eventDetails !== undefined && scheduleEvent !== undefined && gameIndex !== undefined) {
+    if (firstWindowFrame !== undefined && lastWindowFrame !== undefined && lastDetailsFrame !== undefined && metadata !== undefined && eventDetails !== undefined && scheduleEvent !== undefined && gameIndex !== undefined) {
         return (
             <div className='match-container'>
-                <MatchDetails eventDetails={eventDetails} gameMetadata={metadata} records={records} results={results} scheduleEvent={scheduleEvent} />
+                <MatchDetails eventDetails={eventDetails} gameMetadata={metadata} matchState={formatMatchState(eventDetails, lastWindowFrame, scheduleEvent)} records={records} results={results} scheduleEvent={scheduleEvent} />
                 <Game eventDetails={eventDetails} gameIndex={gameIndex} gameMetadata={metadata} firstWindowFrame={firstWindowFrame} lastDetailsFrame={lastDetailsFrame} lastWindowFrame={lastWindowFrame} records={records} results={results} videoLink={getStreamOrVod(eventDetails)} />
             </div>
         );
-    }else if (eventDetails !== undefined) {
-        return(
+    } else if (eventDetails !== undefined) {
+        return (
             <div className="loading-game-container">
                 <div>
-                    <img className="loading-game-image" alt="game loading" src={Loading}/>
+                    <img className="loading-game-image" alt="game loading" src={Loading} />
                     {eventDetails ? (<h3>{eventDetails?.league.name}</h3>) : null}
                     <div className="live-game-card-content">
                         <div className="live-game-card-team">
-                            {eventDetails.match.teams[0].code === "TBD" ? (<TeamTBDSVG className="live-game-card-team-image"/>) : (<img className="live-game-card-team-image" src={eventDetails.match.teams[0].image} alt={eventDetails.match.teams[0].name}/>) }
+                            {eventDetails.match.teams[0].code === "TBD" ? (<TeamTBDSVG className="live-game-card-team-image" />) : (<img className="live-game-card-team-image" src={eventDetails.match.teams[0].image} alt={eventDetails.match.teams[0].name} />)}
                             <span className="live-game-card-title">
                                 {eventDetails?.match.teams[0].result ?
                                     (<span className="outcome">
@@ -201,7 +201,7 @@ export function Match({ match }: any) {
                                             {eventDetails.match.teams[0].result.outcome}
                                         </p>
                                     </span>)
-                                : null}
+                                    : null}
                                 <span>
                                     <h4>
                                         {eventDetails?.match.teams[0].name}
@@ -213,22 +213,22 @@ export function Match({ match }: any) {
                                             {records[0].wins} - {records[0].losses}
                                         </p>
                                     </span>)
-                                : null}
+                                    : null}
                             </span>
                         </div>
-                    <div className="game-card-versus">
-                        <span>BEST OF {eventDetails.match.strategy.count}</span>
-                        {eventDetails.match.teams[0].result && eventDetails.match.teams[1].result?
-                            (<span>
-                                <p>
-                                    {eventDetails.match.teams[0].result.gameWins} - {eventDetails.match.teams[1].result.gameWins}
-                                </p>
-                            </span>)
-                        : null}
-                        <h1>VS</h1>
-                    </div>
+                        <div className="game-card-versus">
+                            <span>BEST OF {eventDetails.match.strategy.count}</span>
+                            {eventDetails.match.teams[0].result && eventDetails.match.teams[1].result ?
+                                (<span>
+                                    <p>
+                                        {eventDetails.match.teams[0].result.gameWins} - {eventDetails.match.teams[1].result.gameWins}
+                                    </p>
+                                </span>)
+                                : null}
+                            <h1>VS</h1>
+                        </div>
                         <div className="live-game-card-team">
-                            {eventDetails.match.teams[1].code === "TBD" ? (<TeamTBDSVG className="live-game-card-team-image"/>) : (<img className="live-game-card-team-image" src={eventDetails.match.teams[1].image} alt={eventDetails.match.teams[1].name}/>) }
+                            {eventDetails.match.teams[1].code === "TBD" ? (<TeamTBDSVG className="live-game-card-team-image" />) : (<img className="live-game-card-team-image" src={eventDetails.match.teams[1].image} alt={eventDetails.match.teams[1].name} />)}
                             <span className="live-game-card-title">
                                 {eventDetails?.match.teams[1].result ?
                                     (<span className="outcome">
@@ -236,7 +236,7 @@ export function Match({ match }: any) {
                                             {eventDetails?.match.teams[1].result.outcome}
                                         </p>
                                     </span>)
-                                : null}
+                                    : null}
                                 <span>
                                     <h4>
                                         {eventDetails?.match.teams[1].name}
@@ -248,22 +248,22 @@ export function Match({ match }: any) {
                                             {records[1].wins} - {records[1].losses}
                                         </p>
                                     </span>)
-                                : null}
+                                    : null}
                             </span>
                         </div>
                     </div>
                     {scheduleEvent && eventDetails ?
-                        (<h3>Game {getNextUnstartedGameIndex(eventDetails)} out of {eventDetails.match.strategy.count} will start at {new Date(scheduleEvent.startTime).toLocaleTimeString([], {year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit'})}</h3>)
-                    : null
+                        (<h3>Game {getNextUnstartedGameIndex(eventDetails)} out of {eventDetails.match.strategy.count} will start at {new Date(scheduleEvent.startTime).toLocaleTimeString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit' })}</h3>)
+                        : null
                     }
                 </div>
             </div>
         )
     } else {
-        return(
+        return (
             <div className="loading-game-container">
                 <div>
-                    <img className="loading-game-image" alt="game loading" src={Loading}/>
+                    <img className="loading-game-image" alt="game loading" src={Loading} />
                 </div>
             </div>
         )
@@ -286,7 +286,7 @@ function getStreamOrVod(eventDetails: EventDetails) {
         return (<span>No streams currently available</span>)
     }
     let shortestDelayStream = eventDetails.streams.reduce((previousVod, currentVod) => currentVod.offset < 0 && currentVod.offset > previousVod.offset ? currentVod : previousVod, eventDetails.streams[0])
-    
+
     let streamOffset = Math.round(shortestDelayStream.offset / 1000 / 60 * -1)
     let link = shortestDelayStream.provider === "youtube" ? `https://www.youtube.com/watch?v=${shortestDelayStream.parameter}` : `https://www.twitch.tv/${shortestDelayStream.parameter}`
     let delayString = streamOffset > 1 ? `Approximately ${streamOffset} minutes` : `Less than 1 minute`
@@ -295,4 +295,19 @@ function getStreamOrVod(eventDetails: EventDetails) {
 
 function getExtendedVodLink(extendedVod: ExtendedVod) {
     return extendedVod.provider === "youtube" ? `https://www.youtube.com/watch?v=${extendedVod.parameter}` : `https://www.twitch.tv/${extendedVod.parameter}`
+}
+
+function formatMatchState(eventDetails: EventDetails, lastWindowFrame: WindowFrame, scheduleEvent: ScheduleEvent): string {
+    let gameStates = {
+        "in_game": "In Progress",
+        "paused": "Paused",
+        "finished": "Finished",
+        "completed": "Finished",
+        "unstarted": "Unstarted",
+        "inProgress": "In Progress"
+    }
+
+    if (eventDetails.match.games.length == 1) return gameStates[lastWindowFrame.gameState]
+    let gamesFinished = eventDetails.match.games.filter(game => game.state == `completed` || game.state == `unneeded`)
+    return gameStates[gamesFinished.length >= eventDetails.match.games.length ? `completed` : scheduleEvent.state]
 }

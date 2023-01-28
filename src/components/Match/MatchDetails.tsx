@@ -26,18 +26,13 @@ import { CHAMPIONS_URL } from '../../utils/LoLEsportsAPI';
 type Props = {
     gameMetadata: GameMetadata,
     eventDetails: EventDetails,
+    matchState: string,
     records?: Record[],
     results?: Result[],
-    scheduleEvent: ScheduleEvent
+    scheduleEvent: ScheduleEvent,
 }
 
-enum GameState {
-    in_game = "in game",
-    paused = "paused",
-    finished = "match ended"
-}
-
-export function MatchDetails({ gameMetadata, eventDetails, records, results, scheduleEvent }: Props) {
+export function MatchDetails({ gameMetadata, eventDetails, matchState, records, results, scheduleEvent }: Props) {
 
     useEffect(() => {
 
@@ -70,7 +65,7 @@ export function MatchDetails({ gameMetadata, eventDetails, records, results, sch
                     <div className="live-game-stats-header-team-images">
                         {TeamCard({ eventDetails, index: 0, matchResults, record: records ? records[0] : undefined })}
                         <h1>
-                            <div>Match {formatMatchState(eventDetails, scheduleEvent)}</div>
+                            <div>Match {matchState}</div>
                             {matchResults ? (<div>{matchResults[0].gameWins}-{matchResults[1].gameWins}</div>) : null}
                             VS
                         </h1>
@@ -87,11 +82,6 @@ type TeamCardProps = {
     index: number,
     matchResults?: Result[],
     record?: Record,
-}
-
-function formatMatchState(eventDetails: EventDetails, scheduleEvent: ScheduleEvent): string {
-    let gamesFinished = eventDetails.match.games.filter(game => game.state == `completed` || game.state == `unneeded`)
-    return gamesFinished.length >= eventDetails.match.games.length ? `completed` : scheduleEvent.state
 }
 
 function TeamCard({ eventDetails, index, matchResults, record }: TeamCardProps) {
