@@ -33,6 +33,7 @@ export function Match({ match }: any) {
     let currentGameIndex = 1
     let lastFrameSuccess = false
     let currentTimestamp = ``
+    let firstWindowReceived = false
     useEffect(() => {
         getEventDetails(getInitialGameIndex());
 
@@ -40,7 +41,7 @@ export function Match({ match }: any) {
             if (!matchEventDetails) return
             let newGameIndex = getGameIndex(matchEventDetails)
             let gameId = matchEventDetails.match.games[newGameIndex - 1].id
-            if (currentGameIndex != newGameIndex) {
+            if (currentGameIndex != newGameIndex || !firstWindowReceived) {
                 currentTimestamp = ``
                 getFirstWindow(gameId)
                 setGameIndex(newGameIndex)
@@ -120,6 +121,7 @@ export function Match({ match }: any) {
                 console.groupCollapsed(`First Frame`)
                 console.log(frames[0])
                 console.groupEnd()
+                firstWindowReceived = true
                 setFirstWindowFrame(frames[0])
             });
         }
