@@ -41,6 +41,7 @@ export function Match({ match }: any) {
             let newGameIndex = getGameIndex(matchEventDetails)
             let gameId = matchEventDetails.match.games[newGameIndex - 1].id
             if (currentGameIndex != newGameIndex) {
+                currentTimestamp = ``
                 getFirstWindow(gameId)
                 setGameIndex(newGameIndex)
                 currentGameIndex = newGameIndex
