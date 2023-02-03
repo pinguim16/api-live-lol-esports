@@ -34,14 +34,14 @@ export function EventsSchedule() {
             title: 'Live Matches',
         },
         {
-            emptyMessage: 'No Recent Matches',
-            scheduleEvents: last7DaysEvents,
-            title: 'Last 7 Days',
-        },
-        {
             emptyMessage: 'No Upcoming Matches',
             scheduleEvents: next7DaysEvents,
-            title: 'Next 7 Days',
+            title: 'Upcoming Matches',
+        },
+        {
+            emptyMessage: 'No Recent Matches',
+            scheduleEvents: last7DaysEvents,
+            title: 'Recent Matches',
         }
     ]
 
@@ -112,12 +112,9 @@ function filterByLast7Days(scheduleEvent: ScheduleEvent) {
 }
 
 function filterByNext7Days(scheduleEvent: ScheduleEvent) {
-    if (scheduleEvent.state !== 'unstarted') {
-        return false
-    }
     let minDate = new Date();
     let maxDate = new Date()
-    minDate.setDate(minDate.getDate() + 1)
+    minDate.setDate(minDate.getDate())
     maxDate.setDate(maxDate.getDate() + 7)
     let eventDate = new Date(scheduleEvent.startTime)
 
