@@ -298,6 +298,21 @@ Status dragons
     font-size: 10px;
 }
 
+.player-champion-wrapper {
+    display: flex;
+    width: 32px;
+    height: 32px;
+}
+
+img.player-champion {
+    z-index: 2;
+}
+
+svg.player-champion {
+    z-index: 1;
+    position: absolute;
+}
+
 .player-champion {
     width: 32px;
     border-radius: 50%;
