@@ -7,7 +7,6 @@ import React, {useEffect, useState} from "react";
 import {toast} from 'react-toastify';
 import {DetailsFrame, EventDetails, GameMetadata, Participant, Record, Result, TeamStats, WindowFrame, WindowParticipant } from "../types/baseTypes";
 
-import {ReactComponent as TBDSVG} from '../../assets/images/team-tbd.svg';
 import {ReactComponent as TowerSVG} from '../../assets/images/tower.svg';
 import {ReactComponent as BaronSVG} from '../../assets/images/baron.svg';
 import {ReactComponent as KillSVG} from '../../assets/images/kill.svg';
@@ -188,13 +187,9 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
                                     <th>
                                         <div className="player-champion-info">
                                             <svg className="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 429.3l22.6-22.6 192-192L493.3 192 448 146.7l-22.6 22.6L256 338.7 86.6 169.4 64 146.7 18.7 192l22.6 22.6 192 192L256 429.3z"/></svg>
-                                            <img
-                                                src={`${CHAMPIONS_URL}${gameMetadata.blueTeamMetadata.participantMetadata[player.participantId - 1].championId}.png`}
-                                                className="player-champion"
-                                                alt="champ icon" onError={({ currentTarget }) => {
-                                                    currentTarget.onerror = null; // prevents looping
-                                                    currentTarget.src="../../assets/images/team-tbd.svg";
-                                                  }}/>
+                                            <object data={`${CHAMPIONS_URL}${gameMetadata.blueTeamMetadata.participantMetadata[player.participantId - 1].championId}.png`} className="player-champion">
+                                                <TeamTBDSVG className='player-champion' />
+                                            </object>
                                             <span className=" player-champion-info-level">{player.level}</span>
                                             <div className=" player-champion-info-name">
                                                 <span>{gameMetadata.blueTeamMetadata.participantMetadata[player.participantId - 1].championId}</span>
@@ -284,13 +279,9 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
                                     <th>
                                         <div className="player-champion-info">
                                             <svg className="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 429.3l22.6-22.6 192-192L493.3 192 448 146.7l-22.6 22.6L256 338.7 86.6 169.4 64 146.7 18.7 192l22.6 22.6 192 192L256 429.3z"/></svg>
-                                            <img
-                                                src={`${CHAMPIONS_URL}${gameMetadata.redTeamMetadata.participantMetadata[player.participantId - 6].championId}.png`}
-                                                className="player-champion"
-                                                alt="champ icon" onError={({ currentTarget }) => {
-                                                    currentTarget.onerror = null; // prevents looping
-                                                    currentTarget.src="../../assets/images/team-tbd.svg";
-                                                  }}/>
+                                            <object data={`${CHAMPIONS_URL}${gameMetadata.redTeamMetadata.participantMetadata[player.participantId - 6].championId}.png`} className="player-champion">
+                                                <TeamTBDSVG className='player-champion' />
+                                            </object>
                                             <span className=" player-champion-info-level">{player.level}</span>
                                             <div className=" player-champion-info-name">
                                                 <span>{gameMetadata.redTeamMetadata.participantMetadata[player.participantId - 6].championId}</span>

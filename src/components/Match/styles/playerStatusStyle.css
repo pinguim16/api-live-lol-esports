@@ -283,10 +283,6 @@ Status dragons
     align-items: center;
 }
 
-.player-champion-info img {
-    background: url('../../../assets/images/team-tbd.svg') no-repeat;
-}
-
 .player-champion-info-level{
     transform: translate(-50%, 100%);
     font-size: 12px;
@@ -305,7 +301,7 @@ Status dragons
 .player-champion {
     width: 32px;
     border-radius: 50%;
-    background: var(--gray-line);
+    height: auto;
 }
 
 .player-stats {
