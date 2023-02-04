@@ -301,7 +301,7 @@ Status dragons
 .player-champion {
     width: 32px;
     border-radius: 50%;
-    height: auto;
+    height: 32px;
 }
 
 .player-stats {

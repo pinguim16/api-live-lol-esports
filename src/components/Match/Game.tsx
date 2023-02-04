@@ -187,7 +187,7 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
                                     <th>
                                         <div className="player-champion-info">
                                             <svg className="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 429.3l22.6-22.6 192-192L493.3 192 448 146.7l-22.6 22.6L256 338.7 86.6 169.4 64 146.7 18.7 192l22.6 22.6 192 192L256 429.3z"/></svg>
-                                            <object data={`${CHAMPIONS_URL}${gameMetadata.blueTeamMetadata.participantMetadata[player.participantId - 1].championId}.png`} className="player-champion">
+                                            <object type="image/png" data={`${CHAMPIONS_URL}${gameMetadata.blueTeamMetadata.participantMetadata[player.participantId - 1].championId}.png`} className="player-champion">
                                                 <TeamTBDSVG className='player-champion' />
                                             </object>
                                             <span className=" player-champion-info-level">{player.level}</span>
@@ -279,7 +279,7 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
                                     <th>
                                         <div className="player-champion-info">
                                             <svg className="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 429.3l22.6-22.6 192-192L493.3 192 448 146.7l-22.6 22.6L256 338.7 86.6 169.4 64 146.7 18.7 192l22.6 22.6 192 192L256 429.3z"/></svg>
-                                            <object data={`${CHAMPIONS_URL}${gameMetadata.redTeamMetadata.participantMetadata[player.participantId - 6].championId}.png`} className="player-champion">
+                                            <object type="image/png" data={`${CHAMPIONS_URL}${gameMetadata.redTeamMetadata.participantMetadata[player.participantId - 6].championId}.png`} className="player-champion">
                                                 <TeamTBDSVG className='player-champion' />
                                             </object>
                                             <span className=" player-champion-info-level">{player.level}</span>
