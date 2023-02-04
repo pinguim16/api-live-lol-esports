@@ -7,6 +7,7 @@ import React, {useEffect, useState} from "react";
 import {toast} from 'react-toastify';
 import {DetailsFrame, EventDetails, GameMetadata, Participant, Record, Result, TeamStats, WindowFrame, WindowParticipant } from "../types/baseTypes";
 
+import {ReactComponent as TBDSVG} from '../../assets/images/team-tbd.svg';
 import {ReactComponent as TowerSVG} from '../../assets/images/tower.svg';
 import {ReactComponent as BaronSVG} from '../../assets/images/baron.svg';
 import {ReactComponent as KillSVG} from '../../assets/images/kill.svg';
@@ -173,7 +174,10 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
                                             <img
                                                 src={`${CHAMPIONS_URL}${gameMetadata.blueTeamMetadata.participantMetadata[player.participantId - 1].championId}.png`}
                                                 className="player-champion"
-                                                alt="imagem do campeao"/>
+                                                alt="champ icon" onError={({ currentTarget }) => {
+                                                    currentTarget.onerror = null; // prevents looping
+                                                    currentTarget.src="../../assets/images/team-tbd.svg";
+                                                  }}/>
                                             <span className=" player-champion-info-level">{player.level}</span>
                                             <div className=" player-champion-info-name">
                                                 <span>{gameMetadata.blueTeamMetadata.participantMetadata[player.participantId - 1].championId}</span>
@@ -266,7 +270,10 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
                                             <img
                                                 src={`${CHAMPIONS_URL}${gameMetadata.redTeamMetadata.participantMetadata[player.participantId - 6].championId}.png`}
                                                 className="player-champion"
-                                                alt="imagem do campeao"/>
+                                                alt="champ icon" onError={({ currentTarget }) => {
+                                                    currentTarget.onerror = null; // prevents looping
+                                                    currentTarget.src="../../assets/images/team-tbd.svg";
+                                                  }}/>
                                             <span className=" player-champion-info-level">{player.level}</span>
                                             <div className=" player-champion-info-name">
                                                 <span>{gameMetadata.redTeamMetadata.participantMetadata[player.participantId - 6].championId}</span>
