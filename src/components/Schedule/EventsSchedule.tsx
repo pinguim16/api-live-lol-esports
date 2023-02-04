@@ -112,9 +112,12 @@ function filterByLast7Days(scheduleEvent: ScheduleEvent) {
 }
 
 function filterByNext7Days(scheduleEvent: ScheduleEvent) {
+    if (scheduleEvent.state === "inProgress" || scheduleEvent.state === "completed") {
+        return
+    }
     let minDate = new Date();
     let maxDate = new Date()
-    minDate.setDate(minDate.getDate())
+    minDate.setHours(minDate.getHours() - 1)
     maxDate.setDate(maxDate.getDate() + 7)
     let eventDate = new Date(scheduleEvent.startTime)
 
