@@ -195,6 +195,11 @@ export function Match({ match }: any) {
                         <div className="live-game-card-team">
                             {eventDetails.match.teams[0].code === "TBD" ? (<TeamTBDSVG className="live-game-card-team-image" />) : (<img className="live-game-card-team-image" src={eventDetails.match.teams[0].image} alt={eventDetails.match.teams[0].name} />)}
                             <span className="live-game-card-title">
+                                <span>
+                                    <h4>
+                                        {eventDetails?.match.teams[0].name}
+                                    </h4>
+                                </span>
                                 {eventDetails?.match.teams[0].result ?
                                     (<span className="outcome">
                                         <p className={eventDetails.match.teams[0].result.outcome}>
@@ -202,11 +207,6 @@ export function Match({ match }: any) {
                                         </p>
                                     </span>)
                                     : null}
-                                <span>
-                                    <h4>
-                                        {eventDetails?.match.teams[0].name}
-                                    </h4>
-                                </span>
                                 {records ?
                                     (<span>
                                         <p>
@@ -230,6 +230,11 @@ export function Match({ match }: any) {
                         <div className="live-game-card-team">
                             {eventDetails.match.teams[1].code === "TBD" ? (<TeamTBDSVG className="live-game-card-team-image" />) : (<img className="live-game-card-team-image" src={eventDetails.match.teams[1].image} alt={eventDetails.match.teams[1].name} />)}
                             <span className="live-game-card-title">
+                                <span>
+                                    <h4>
+                                        {eventDetails?.match.teams[1].name}
+                                    </h4>
+                                </span>
                                 {eventDetails?.match.teams[1].result ?
                                     (<span className="outcome">
                                         <p className={eventDetails?.match.teams[1].result.outcome}>
@@ -237,11 +242,6 @@ export function Match({ match }: any) {
                                         </p>
                                     </span>)
                                     : null}
-                                <span>
-                                    <h4>
-                                        {eventDetails?.match.teams[1].name}
-                                    </h4>
-                                </span>
                                 {records ?
                                     (<span>
                                         <p>

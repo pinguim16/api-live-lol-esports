@@ -90,15 +90,15 @@ function TeamCard({ eventDetails, index, matchResults, record }: TeamCardProps) 
             <div className="live-game-card-team">
                 <img className="live-game-card-team-image" src={eventDetails.match.teams[index].image}
                     alt={eventDetails?.match.teams[index].name} />
-                <span className='outcome'>
-                    {matchResults ? (<p className={matchResults[index].outcome}>
-                        {matchResults[index].outcome}
-                    </p>) : null}
-                </span>
                 <span>
                     <h4>
                         {eventDetails.match.teams[index].name}
                     </h4>
+                </span>
+                <span className='outcome'>
+                    {matchResults ? (<p className={matchResults[index].outcome}>
+                        {matchResults[index].outcome}
+                    </p>) : null}
                 </span>
                 {record ?
                     (<span>

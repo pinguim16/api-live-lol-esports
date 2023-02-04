@@ -20,15 +20,15 @@ export function EventCard({ scheduleEvent }: Props) {
                 <div className="live-game-card-content">
                     <div className="live-game-card-team">
                         {scheduleEvent.match.teams[0].code === "TBD" ? (<TeamTBDSVG className="live-game-card-team-image"/>) : (<img className="live-game-card-team-image" src={scheduleEvent.match.teams[0].image} alt={scheduleEvent.match.teams[0].name}/>) }
-                        <span className="outcome">
-                            <p className={scheduleEvent.match.teams[0].result ? scheduleEvent.match.teams[0].result.outcome : ''}>
-                                {scheduleEvent.match.teams[0].result ? scheduleEvent.match.teams[0].result.outcome : null}
-                            </p>
-                        </span>
                         <span>
                             <h4>
                                 {scheduleEvent.match.teams[0].name}
                             </h4>
+                        </span>
+                        <span className="outcome">
+                            <p className={scheduleEvent.match.teams[0].result ? scheduleEvent.match.teams[0].result.outcome : ''}>
+                                {scheduleEvent.match.teams[0].result ? scheduleEvent.match.teams[0].result.outcome : null}
+                            </p>
                         </span>
                         <span>
                             <p>
@@ -49,15 +49,15 @@ export function EventCard({ scheduleEvent }: Props) {
 
                     <div className="live-game-card-team">
                         {scheduleEvent.match.teams[1].code === "TBD" ? (<TeamTBDSVG className="live-game-card-team-image"/>) : (<img className="live-game-card-team-image" src={scheduleEvent.match.teams[1].image} alt={scheduleEvent.match.teams[1].name}/>) }
-                        <span className="outcome">
-                            <p className={scheduleEvent.match.teams[1].result ? scheduleEvent.match.teams[1].result.outcome : ''}>
-                                {scheduleEvent.match.teams[1].result ? scheduleEvent.match.teams[1].result.outcome : null}
-                            </p>
-                        </span>
                         <span>
                             <h4>
                                 {scheduleEvent.match.teams[1].name}
                             </h4>
+                        </span>
+                        <span className="outcome">
+                            <p className={scheduleEvent.match.teams[1].result ? scheduleEvent.match.teams[1].result.outcome : ''}>
+                                {scheduleEvent.match.teams[1].result ? scheduleEvent.match.teams[1].result.outcome : null}
+                            </p>
                         </span>
                         <span>
                             <p>

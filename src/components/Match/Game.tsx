@@ -13,6 +13,7 @@ import {ReactComponent as BaronSVG} from '../../assets/images/baron.svg';
 import {ReactComponent as KillSVG} from '../../assets/images/kill.svg';
 import {ReactComponent as GoldSVG} from '../../assets/images/gold.svg';
 import {ReactComponent as InhibitorSVG} from '../../assets/images/inhibitor.svg';
+import { ReactComponent as TeamTBDSVG } from '../../assets/images/team-tbd.svg';
 
 import {ReactComponent as OceanDragonSVG} from '../../assets/images/dragon-ocean.svg';
 import {ReactComponent as ChemtechDragonSVG} from '../../assets/images/dragon-chemtech.svg';
@@ -102,10 +103,26 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
                 {/* {eventDetails ? (<h3>{eventDetails?.league.name}</h3>) : null} */}
                 <div className="live-game-stats-header">
                     <div className="live-game-stats-header-team-images">
+                        <div className="live-game-card-team">
+                            {blueTeam.code === "TBD" ? (<TeamTBDSVG className="live-game-card-team-image" />) : (<img className="live-game-card-team-image" src={blueTeam.image} alt={blueTeam.name} />)}
+                            <span>
+                                <h4>
+                                    {blueTeam.name}
+                                </h4>
+                            </span>
+                        </div>
                         <h1>
                             <div className={`gamestate-bg-${gameState.split(` `).join(`-`)}`}>{gameState.toUpperCase()}</div>
                             <div>{inGameTime}</div>
                         </h1>
+                        <div className="live-game-card-team">
+                            {redTeam.code === "TBD" ? (<TeamTBDSVG className="live-game-card-team-image" />) : (<img className="live-game-card-team-image" src={redTeam.image} alt={redTeam.name} />)}
+                            <span>
+                                <h4>
+                                    {redTeam.name}
+                                </h4>
+                            </span>
+                        </div>
                     </div>
                     <div className="live-game-stats-header-status">
                         {HeaderStats(lastWindowFrame.blueTeam, 'blue-team')}
