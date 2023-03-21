@@ -23,7 +23,7 @@
     margin: 0 1rem;
 }
 
-.footer-img > path {
+.footer-img path {
     fill: var(--logo-color);
 }
 
