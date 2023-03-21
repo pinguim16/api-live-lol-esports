@@ -67,6 +67,7 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
         var championStatsRows = Array.from($('.champion-stats-row span'))
         var chevrons = Array.from($('.player-stats-row .chevron-down'))
         playerStatsRows.forEach((playerStatsRow, index) => {
+            $(playerStatsRow).prop("onclick", null).off("click");
             $(playerStatsRow).on('click', () => {
                 $(championStatsRows[index]).slideToggle()
                 $(chevrons[index]).toggleClass('rotated')
@@ -183,7 +184,7 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
                             let goldDifference = getGoldDifference(player, "blue", gameMetadata, lastWindowFrame);
                             let championDetails = lastDetailsFrame.participants[index]
                             return [(
-                                <tr className="player-stats-row" key={`${CHAMPIONS_URL}${gameMetadata.blueTeamMetadata.participantMetadata[player.participantId - 1].championId}`}>
+                                <tr className="player-stats-row" key={`${gameIndex}_${CHAMPIONS_URL}${gameMetadata.blueTeamMetadata.participantMetadata[player.participantId - 1].championId}`}>
                                     <th>
                                         <div className="player-champion-info">
                                             <svg className="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 429.3l22.6-22.6 192-192L493.3 192 448 146.7l-22.6 22.6L256 338.7 86.6 169.4 64 146.7 18.7 192l22.6 22.6 192 192L256 429.3z"/></svg>
@@ -226,7 +227,7 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
                                     </td>
                                 </tr>
                             ), (
-                            <tr key={`${CHAMPIONS_URL}${gameMetadata.blueTeamMetadata.participantMetadata[player.participantId - 1].championId}_stats`} className='champion-stats-row'>
+                            <tr key={`${gameIndex}_${CHAMPIONS_URL}${gameMetadata.blueTeamMetadata.participantMetadata[player.participantId - 1].championId}_stats`} className='champion-stats-row'>
                                 <td colSpan={9}>
                                     <span>
                                         {getFormattedChampionStats(championDetails)}
@@ -276,7 +277,7 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
                             let championDetails = lastDetailsFrame.participants[index + 5]
 
                             return [(
-                                <tr className="player-stats-row" key={`${CHAMPIONS_URL}${gameMetadata.redTeamMetadata.participantMetadata[player.participantId - 6].championId}`}>
+                                <tr className="player-stats-row" key={`${gameIndex}_${CHAMPIONS_URL}${gameMetadata.redTeamMetadata.participantMetadata[player.participantId - 6].championId}`}>
                                     <th>
                                         <div className="player-champion-info">
                                             <svg className="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 429.3l22.6-22.6 192-192L493.3 192 448 146.7l-22.6 22.6L256 338.7 86.6 169.4 64 146.7 18.7 192l22.6 22.6 192 192L256 429.3z"/></svg>
@@ -317,7 +318,7 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
                                     </td>
                                 </tr>
                             ), (
-                                <tr key={`${CHAMPIONS_URL}${gameMetadata.redTeamMetadata.participantMetadata[player.participantId - 6].championId}_stats`} className='champion-stats-row'>
+                                <tr key={`${gameIndex}_${CHAMPIONS_URL}${gameMetadata.redTeamMetadata.participantMetadata[player.participantId - 6].championId}_stats`} className='champion-stats-row'>
                                     <td colSpan={9}>
                                         <span>
                                             {getFormattedChampionStats(championDetails)}
