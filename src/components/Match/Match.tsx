@@ -6,7 +6,8 @@ import {
     getGameDetailsResponse,
     getWindowResponse,
     getScheduleResponse,
-    getStandingsResponse
+    getStandingsResponse,
+    getItemsResponse
 } from "../../utils/LoLEsportsAPI";
 import { useEffect, useState } from "react";
 import Loading from '../../assets/images/loading.svg'
@@ -15,7 +16,7 @@ import { GameDetails } from "./GameDetails"
 import { LiveAPIWatcher } from "./LiveAPIWatcher";
 import { MatchDetails } from "./MatchDetails"
 import { Game } from "./Game";
-import { EventDetails, DetailsFrame, GameMetadata, Record, Result, ScheduleEvent, Standing, WindowFrame, ExtendedVod } from "../types/baseTypes"
+import { EventDetails, DetailsFrame, GameMetadata, Item, Record, Result, ScheduleEvent, Standing, WindowFrame, ExtendedVod } from "../types/baseTypes"
 
 export function Match({ match }: any) {
     const [eventDetails, setEventDetails] = useState<EventDetails>();
@@ -27,6 +28,7 @@ export function Match({ match }: any) {
     const [results, setResults] = useState<Result[]>();
     const [scheduleEvent, setScheduleEvent] = useState<ScheduleEvent>();
     const [gameIndex, setGameIndex] = useState<number>();
+    const [items, setItems] = useState<Item[]>();
 
     const matchId = match.params.gameid;
     let matchEventDetails = eventDetails
@@ -123,6 +125,7 @@ export function Match({ match }: any) {
                 console.groupEnd()
                 firstWindowReceived = true
                 setFirstWindowFrame(frames[0])
+                getitems(response.data.gameMetadata)
             });
         }
 
@@ -176,13 +179,20 @@ export function Match({ match }: any) {
                 console.groupEnd()
             });
         }
+
+        function getitems(metadata: GameMetadata) {
+            let formattedPatchVersion = metadata.patchVersion.split(`.`).slice(0, 2).join(`.`) + `.1`
+            getItemsResponse(formattedPatchVersion).then(response => {
+                setItems(response.data.data)
+            })
+        }
     }, [matchId]);
 
-    if (firstWindowFrame !== undefined && lastWindowFrame !== undefined && lastDetailsFrame !== undefined && metadata !== undefined && eventDetails !== undefined && scheduleEvent !== undefined && gameIndex !== undefined) {
+    if (firstWindowFrame !== undefined && lastWindowFrame !== undefined && lastDetailsFrame !== undefined && metadata !== undefined && eventDetails !== undefined && scheduleEvent !== undefined && gameIndex !== undefined && items !== undefined) {
         return (
             <div className='match-container'>
                 <MatchDetails eventDetails={eventDetails} gameMetadata={metadata} matchState={formatMatchState(eventDetails, lastWindowFrame, scheduleEvent)} records={records} results={results} scheduleEvent={scheduleEvent} />
-                <Game eventDetails={eventDetails} gameIndex={gameIndex} gameMetadata={metadata} firstWindowFrame={firstWindowFrame} lastDetailsFrame={lastDetailsFrame} lastWindowFrame={lastWindowFrame} records={records} results={results} videoLink={getStreamOrVod(eventDetails)} />
+                <Game eventDetails={eventDetails} gameIndex={gameIndex} gameMetadata={metadata} firstWindowFrame={firstWindowFrame} lastDetailsFrame={lastDetailsFrame} lastWindowFrame={lastWindowFrame} records={records} results={results} videoLink={getStreamOrVod(eventDetails)} items={items} />
             </div>
         );
     } else if (eventDetails !== undefined) {

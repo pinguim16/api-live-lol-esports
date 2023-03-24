@@ -1,15 +1,15 @@
-import {DetailsFrame} from "../types/baseTypes"
+import { DetailsFrame, Item } from "../types/baseTypes"
 
-import {ITEMS_URL} from "../../utils/LoLEsportsAPI"
+import { ITEMS_URL } from "../../utils/LoLEsportsAPI"
 
 type Props = {
     participantId: number,
-    lastFrame: DetailsFrame
+    lastFrame: DetailsFrame,
+    items: Item[]
 }
 
-export function ItemsDisplay({ participantId, lastFrame }: Props) {
-
-    const items = lastFrame.participants[participantId].items;
+export function ItemsDisplay({ participantId, lastFrame, items }: Props) {
+    const lastFrameItems = lastFrame.participants[participantId].items;
 
     /*
         A api da riot não nos retorna nada sobre o arauto, quando
@@ -29,9 +29,9 @@ export function ItemsDisplay({ participantId, lastFrame }: Props) {
     }*/
 
     let trinket = -1;
-    const itemsID = Array.from(new Set(items)).sort(sortItems);
+    const itemsID = Array.from(new Set(lastFrameItems)).sort(sortItems);
 
-    if(itemsID[0] !== undefined && (itemsID[0] === 3340 || itemsID[0] === 3363 || itemsID[0] === 3364)) {
+    if (itemsID[0] !== undefined && (itemsID[0] === 3340 || itemsID[0] === 3363 || itemsID[0] === 3364)) {
         trinket = itemsID.shift() as number;
     }
 
@@ -39,15 +39,20 @@ export function ItemsDisplay({ participantId, lastFrame }: Props) {
         <div className="player-stats-items" key={`${participantId}`}>
             {[...Array(6)].map((x, i) => {
 
-                if(itemsID[i] !== undefined) {
+                if (itemsID[i] !== undefined) {
+                    let currentItem = items[itemsID[i]]
                     return (
                         <div className="player-stats-item" key={`${participantId}_${i}_${itemsID[i]}`}>
-                            <img alt="" src={`${ITEMS_URL}${itemsID[i]}.png`}/>
+                            <div className="itemDescription">
+                                <div className="itemName">{currentItem.name}</div>
+                                {formatItemDescription(currentItem)}
+                            </div>
+                            <img alt="" src={`${ITEMS_URL}${itemsID[i]}.png`} />
                         </div>
                     )
-                }else{
+                } else {
                     return (
-                        <div className="player-stats-item" key={`${participantId}_${i}_${itemsID[i]}`}/>
+                        <div className="player-stats-item" key={`${participantId}_${i}_${itemsID[i]}`} />
                     )
                 }
 
@@ -58,12 +63,16 @@ export function ItemsDisplay({ participantId, lastFrame }: Props) {
             {trinket !== -1 ?
                 (
                     <div className="player-stats-item">
-                        <img alt="" src={`${ITEMS_URL}${trinket}.png`}/>
+                        <div className="itemDescription">
+                                <div className="itemName">{items[trinket].name}</div>
+                                {formatItemDescription(items[trinket])}
+                            </div>
+                        <img alt="" src={`${ITEMS_URL}${trinket}.png`} />
                     </div>
                 )
                 :
                 (
-                    <div className="player-stats-item"/>
+                    <div className="player-stats-item" />
                 )
             }
 
@@ -79,9 +88,18 @@ export function ItemsDisplay({ participantId, lastFrame }: Props) {
  */
 
 const sortItems = (a: number, b: number) => { // (3364, 3363, 3340) id das wards | 3513 id do arauto
-    if(a === 3364 || a === 3363 || a === 3340 || a === 3513) return -1;
-    if(b === 3364 || b === 3363 || b === 3340 || a === 3513) return 1;
+    if (a === 3364 || a === 3363 || a === 3340 || a === 3513) return -1;
+    if (b === 3364 || b === 3363 || b === 3340 || a === 3513) return 1;
 
     //return (a > b ? 1 : -1);
     return b - a;
+}
+
+function formatItemDescription(item: Item) {
+    let splitDescription = item.description.split(`<li>`).join(`<br>`).split(`<br>`)
+    return splitDescription.map(description => {
+        return (
+            <div>{description.replaceAll(/<\/\w+>/gi, ``).replaceAll(/<\w+>/gi, ``)}</div>
+        )
+    })
 }

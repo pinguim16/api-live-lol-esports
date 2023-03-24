@@ -5,7 +5,7 @@ import {GameDetails} from "./GameDetails"
 import {MiniHealthBar} from "./MiniHealthBar";
 import React, {useEffect, useState} from "react";
 import {toast} from 'react-toastify';
-import {DetailsFrame, EventDetails, GameMetadata, Participant, Record, Result, TeamStats, WindowFrame, WindowParticipant } from "../types/baseTypes";
+import {DetailsFrame, EventDetails, GameMetadata, Item, Participant, Record, Result, TeamStats, WindowFrame, WindowParticipant } from "../types/baseTypes";
 
 import {ReactComponent as TowerSVG} from '../../assets/images/tower.svg';
 import {ReactComponent as BaronSVG} from '../../assets/images/baron.svg';
@@ -35,7 +35,8 @@ type Props = {
     eventDetails: EventDetails,
     videoLink: JSX.Element,
     records?: Record[],
-    results?: Result[]
+    results?: Result[],
+    items: Item[]
 }
 
 enum GameState {
@@ -44,7 +45,7 @@ enum GameState {
     finished = "game ended"
 }
 
-export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, gameMetadata, gameIndex, eventDetails, videoLink, records, results } : Props) {
+export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, gameMetadata, gameIndex, eventDetails, videoLink, records, results, items } : Props) {
     const [gameState, setGameState] = useState<GameState>(GameState[lastWindowFrame.gameState as keyof typeof GameState]);
 
     useEffect(() => {
@@ -63,7 +64,7 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
             });
         }
 
-        var playerStatsRows = Array.from($('.player-stats-row'))
+        var playerStatsRows = Array.from($('.player-stats-row th'))
         var championStatsRows = Array.from($('.champion-stats-row span'))
         var chevrons = Array.from($('.player-stats-row .chevron-down'))
         playerStatsRows.forEach((playerStatsRow, index) => {
@@ -71,6 +72,28 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
             $(playerStatsRow).on('click', () => {
                 $(championStatsRows[index]).slideToggle()
                 $(chevrons[index]).toggleClass('rotated')
+            })
+        })
+
+        var itemImages = Array.from($('.player-stats-item img'))
+        var itemDescriptions = Array.from($('.itemDescription'))
+        itemImages.forEach((itemImage, index) => {
+            $(itemImage).off("mouseenter");
+            $(itemImage).off("mouseleave");
+            $(itemImage).on('mouseenter', () => {
+                $(itemDescriptions[index]).show();
+            })
+            $(itemImage).on('mouseleave', () => {
+                $(itemDescriptions[index]).hide();
+            })
+
+            $(itemImage).off("touchstart");
+            $(itemImage).off("touchend");
+            $(itemImage).on('touchstart', () => {
+                $(itemDescriptions[index]).show();
+            })
+            $(itemImage).on('touchend', () => {
+                $(itemDescriptions[index]).hide();
             })
         })
     }, [lastWindowFrame.gameState, gameState]);
@@ -204,7 +227,7 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
                                         <MiniHealthBar currentHealth={player.currentHealth} maxHealth={player.maxHealth}/>
                                     </td>
                                     <td>
-                                        <ItemsDisplay participantId={player.participantId - 1} lastFrame={lastDetailsFrame}/>
+                                        <ItemsDisplay participantId={player.participantId - 1} lastFrame={lastDetailsFrame} items={items}/>
                                     </td>
                                     <td>
                                         <div className=" player-stats">{player.creepScore}</div>
@@ -296,7 +319,7 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
                                         <MiniHealthBar currentHealth={player.currentHealth} maxHealth={player.maxHealth}/>
                                     </td>
                                     <td>
-                                        <ItemsDisplay participantId={player.participantId - 1} lastFrame={lastDetailsFrame}/>
+                                        <ItemsDisplay participantId={player.participantId - 1} lastFrame={lastDetailsFrame} items={items}/>
                                     </td>
                                     <td>
                                         <div className=" player-stats">{player.creepScore}</div>

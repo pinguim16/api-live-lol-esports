@@ -100,6 +100,10 @@ export function getStandingsResponse(tournamentId: string) {
     })
 }
 
+export function getItemsResponse(formattedPatchVersion: string) {
+    return axios.get(`https://ddragon.leagueoflegends.com/cdn/${formattedPatchVersion}/data/en_US/item.json`)
+}
+
 
 export function getISODateMultiplyOf10() {
     const date = new Date();

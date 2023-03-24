@@ -258,3 +258,19 @@ export interface WindowParticipant {
     currentHealth: number;
     maxHealth: number;
 }
+
+export interface Item {
+    name: string;
+    description: string;
+    colloq: string;
+    plaintext: string;
+    into: string[];
+    gold: Gold;
+}
+
+interface Gold {
+    base: string;
+    purchaseable: boolean;
+    total: string;
+    sell: string;
+}
