@@ -331,7 +331,7 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
                     </table>
                 </div>
                 <span className="footer-notes">
-                    Patch Version: {gameMetadata.patchVersion}
+                    <a target="_blank" href={`https://www.leagueoflegends.com/en-us/news/game-updates/patch-${gameMetadata.patchVersion.split(`.`).slice(0, 2).join(`-`)}-notes/`}>Patch Version: {gameMetadata.patchVersion}</a>
                 </span>
                 {videoLink}
             </div>
