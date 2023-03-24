@@ -7,6 +7,7 @@
 * Shows series information such as "Best of 5" and "European Semi-Finals" 🏆
 * Shows in-game timer & stream delay (approximate) ⏲
 * Show game start times and upcoming games 📅
+* Item Stats ⚔
 * More to come 👀
   * Player stats & damage?
   * Current betting odds from top betting sites?
