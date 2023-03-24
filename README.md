@@ -3,7 +3,7 @@
 # 🔑 Key Differences
 * Translated to English 🤠
 * Defaults to dark theme & sound muted 😎
-* Shows patch version 🤓
+* Shows patch version with link to patch notes 🤓
 * Shows series information such as "Best of 5" and "European Semi-Finals" 🏆
 * Shows in-game timer & stream delay (approximate) ⏲
 * Show game start times and upcoming games 📅
