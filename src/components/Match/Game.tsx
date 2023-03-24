@@ -75,27 +75,6 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
             })
         })
 
-        var itemImages = Array.from($('.player-stats-item:not(.empty)'))
-        var itemDescriptions = Array.from($('.itemDescription'))
-        itemImages.forEach((itemImage, index) => {
-            $(itemImage).off("mouseenter");
-            $(itemImage).off("mouseleave");
-            $(itemImage).on('mouseenter', () => {
-                $(itemDescriptions[index]).show();
-            })
-            $(itemImage).on('mouseleave', () => {
-                $(itemDescriptions[index]).hide();
-            })
-
-            $(itemImage).off("touchstart");
-            $(itemImage).off("touchend");
-            $(itemImage).on('touchstart', () => {
-                $(itemDescriptions[index]).show();
-            })
-            $(itemImage).on('touchend', () => {
-                $(itemDescriptions[index]).hide();
-            })
-        })
     }, [lastWindowFrame.gameState, gameState]);
 
     let blueTeam = eventDetails.match.teams[0];

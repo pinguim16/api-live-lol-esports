@@ -42,7 +42,13 @@ export function ItemsDisplay({ participantId, lastFrame, items }: Props) {
                 if (itemsID[i] !== undefined) {
                     let currentItem = items[itemsID[i]]
                     return (
-                        <div className="player-stats-item" key={`${participantId}_${i}_${itemsID[i]}`}>
+                        <div className="player-stats-item"
+                            key={`${participantId}_${i}_${itemsID[i]}`}
+                            id={`item_${participantId}_${i}_${itemsID[i]}`}
+                            onMouseEnter={() => showItemDescription(`item_${participantId}_${i}_${itemsID[i]}`)}
+                            onMouseLeave={() => hideItemDescription(`item_${participantId}_${i}_${itemsID[i]}`)}
+                            onTouchStart={() => showItemDescription(`item_${participantId}_${i}_${itemsID[i]}`)}
+                            onTouchEnd={() => hideItemDescription(`item_${participantId}_${i}_${itemsID[i]}`)}>
                             <div className="itemDescription">
                                 <div className="itemName">{currentItem.name}</div>
                                 {formatItemDescription(currentItem)}
@@ -63,10 +69,6 @@ export function ItemsDisplay({ participantId, lastFrame, items }: Props) {
             {trinket !== -1 ?
                 (
                     <div className="player-stats-item">
-                        <div className="itemDescription">
-                                <div className="itemName">{items[trinket].name}</div>
-                                {formatItemDescription(items[trinket])}
-                            </div>
                         <img alt="" src={`${ITEMS_URL}${trinket}.png`} />
                     </div>
                 )
@@ -102,4 +104,12 @@ function formatItemDescription(item: Item) {
             <div>{description.replaceAll(/<\/\w+>/gi, ``).replaceAll(/<\w+>/gi, ``)}</div>
         )
     })
+}
+
+function showItemDescription(elementId: string) {
+    $(`#${elementId} .itemDescription`).show()
+}
+
+function hideItemDescription(elementId: string) {
+    $(`#${elementId} .itemDescription`).hide()
 }
