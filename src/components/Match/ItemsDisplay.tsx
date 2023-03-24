@@ -52,7 +52,7 @@ export function ItemsDisplay({ participantId, lastFrame, items }: Props) {
                     )
                 } else {
                     return (
-                        <div className="player-stats-item" key={`${participantId}_${i}_${itemsID[i]}`} />
+                        <div className="player-stats-item empty" key={`${participantId}_${i}_${itemsID[i]}`} />
                     )
                 }
 
@@ -72,7 +72,7 @@ export function ItemsDisplay({ participantId, lastFrame, items }: Props) {
                 )
                 :
                 (
-                    <div className="player-stats-item" />
+                    <div className="player-stats-item empty" />
                 )
             }
 

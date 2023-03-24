@@ -75,7 +75,7 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
             })
         })
 
-        var itemImages = Array.from($('.player-stats-item img'))
+        var itemImages = Array.from($('.player-stats-item:not(.empty)'))
         var itemDescriptions = Array.from($('.itemDescription'))
         itemImages.forEach((itemImage, index) => {
             $(itemImage).off("mouseenter");
