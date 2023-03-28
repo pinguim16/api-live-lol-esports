@@ -1,3 +1,7 @@
+.adsbygoogle {
+    display: none;
+}
+
 .footer-container {
     display: flex;
     justify-content: center;
