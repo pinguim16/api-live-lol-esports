@@ -267,6 +267,16 @@ export function Match({ match }: any) {
                         : null
                     }
                 </div>
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4163525631983528" crossOrigin="anonymous"></script>
+                <ins className="adsbygoogle"
+                    data-ad-client="ca-pub-4163525631983528"
+                    data-ad-slot="8779621455"
+                    data-ad-format="auto"
+                    data-full-width-responsive="true">
+                </ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
             </div>
         )
     } else {
