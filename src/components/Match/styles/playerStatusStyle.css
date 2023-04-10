@@ -1,5 +1,5 @@
 .footer-notes a {
-  text-decoration: underline;
+    text-decoration: underline;
 }
 
 .mini-health-bar {
@@ -7,7 +7,7 @@
     align-items: center;
 }
 
-.mini-health-bar > div {
+.mini-health-bar>div {
     flex: 1;
     border-radius: 4px;
     min-width: 5rem;
@@ -15,7 +15,7 @@
     position: relative;
 }
 
-.mini-health-bar > div > div {
+.mini-health-bar>div>div {
     height: 28px;
     border-radius: 4px;
     transition: width 1s;
@@ -40,22 +40,22 @@ span.mini-current-health {
     align-items: center;
 }
 
-.live-game-stats-header-team-images > h1 {
+.live-game-stats-header-team-images>h1 {
     flex: 1;
     text-align: center;
 }
 
-.live-game-stats-header-team-images > h1 > div {
+.live-game-stats-header-team-images>h1>div {
     font-weight: 500;
     font-size: 1rem;
 }
 
-.live-game-stats-header-team-images > div {
+.live-game-stats-header-team-images>div {
     flex: 1;
     text-align: center;
 }
 
-.live-game-stats-header-team-images > .blue-team {
+.live-game-stats-header-team-images>.blue-team {
     flex: 1;
     display: flex;
     justify-content: center;
@@ -70,7 +70,7 @@ span.mini-current-health {
 
 }
 
-.live-game-stats-header-team-images > .red-team {
+.live-game-stats-header-team-images>.red-team {
     display: flex;
     flex: 1;
     flex-direction: row-reverse;
@@ -94,23 +94,23 @@ span.mini-current-health {
     display: flex;
 }
 
-.live-game-stats-header-status > .blue-team > .team-stats > svg > path {
+.live-game-stats-header-status>.blue-team>.team-stats>svg>path {
     fill: var(--blue-twitter);
 }
 
-.live-game-stats-header-status > .blue-team > .team-stats > svg > g {
+.live-game-stats-header-status>.blue-team>.team-stats>svg>g {
     fill: var(--blue-twitter);
 }
 
-.live-game-stats-header-status > .red-team > .team-stats > svg > path {
+.live-game-stats-header-status>.red-team>.team-stats>svg>path {
     fill: var(--red);
 }
 
-.live-game-stats-header-status > .red-team > .team-stats > svg > g {
+.live-game-stats-header-status>.red-team>.team-stats>svg>g {
     fill: var(--red);
 }
 
-.live-game-stats-header-status > .blue-team {
+.live-game-stats-header-status>.blue-team {
     flex: 1;
     display: flex;
     justify-content: space-between;
@@ -118,26 +118,42 @@ span.mini-current-health {
 }
 
 @media(max-width: 1080px) {
-    .live-game-stats-header-status > .blue-team {
+    .live-game-stats-header-status>.blue-team {
         margin-right: 10rem;
     }
 }
 
 @media(max-width: 720px) {
-    .live-game-stats-header-status > .blue-team {
+    .live-game-stats-header-status>.blue-team {
         margin-right: 1rem;
     }
 }
 
+@media(max-width: 520px) {
+    .game-selector {
+        flex-direction: column;
+    }
+}
+
+
 @media(max-width: 420px) {
-    .live-game-stats-header-status > .blue-team,
-    .live-game-stats-header-status > .red-team  {
+
+    .live-game-stats-header-status>.blue-team,
+    .live-game-stats-header-status>.red-team {
         flex-direction: column-reverse !important;
         align-items: center;
     }
 }
 
-.live-game-stats-header-status > .red-team {
+@media(min-width: 520px) {
+    .game-selector-item:hover {
+        transform: scale(1.1);
+        box-shadow: 0 2px 4px -1px var(--title);
+        z-index: 12;
+    }
+}
+
+.live-game-stats-header-status>.red-team {
     display: flex;
     flex: 1;
     flex-direction: row-reverse;
@@ -152,7 +168,7 @@ span.mini-current-health {
     width: 24px;
 }
 
-.team-stats > span {
+.team-stats>span {
     display: flex;
     justify-content: center;
 }
@@ -166,7 +182,9 @@ span.mini-current-health {
     background-color: var(--red);
 }
 
-.gamestate-bg-in-game,.gamestate-bg-game-paused, .gamestate-bg-game-ended {
+.gamestate-bg-in-game,
+.gamestate-bg-game-paused,
+.gamestate-bg-game-ended {
     color: white;
     margin: 0px auto 10px auto;
     padding: 2.5px 10px;
@@ -181,37 +199,37 @@ span.mini-current-health {
 
 @keyframes pulse {
     0% {
-        box-shadow: 0 0 0 0 rgba(40, 102, 25,.6)
+        box-shadow: 0 0 0 0 rgba(40, 102, 25, .6)
     }
 
     40% {
-        box-shadow: 0 0 0 5px rgba(40, 102, 25,.4)
+        box-shadow: 0 0 0 5px rgba(40, 102, 25, .4)
     }
 
     70% {
-        box-shadow: 0 0 0 10px rgba(255,44,44,0)
+        box-shadow: 0 0 0 10px rgba(255, 44, 44, 0)
     }
 
     to {
-        box-shadow: 0 0 0 0 rgba(255,44,44,0)
+        box-shadow: 0 0 0 0 rgba(255, 44, 44, 0)
     }
 }
 
 @keyframes pulse-paused {
     0% {
-        box-shadow: 0 0 0 0 rgba(43,43,43,.7)
+        box-shadow: 0 0 0 0 rgba(43, 43, 43, .7)
     }
 
     40% {
-        box-shadow: 0 0 0 5px rgba(43,43,43,.5)
+        box-shadow: 0 0 0 5px rgba(43, 43, 43, .5)
     }
 
     70% {
-        box-shadow: 0 0 0 12px rgba(43,43,43,0)
+        box-shadow: 0 0 0 12px rgba(43, 43, 43, 0)
     }
 
     to {
-        box-shadow: 0 0 0 0 rgba(43,43,43,0)
+        box-shadow: 0 0 0 0 rgba(43, 43, 43, 0)
     }
 }
 
@@ -224,36 +242,36 @@ Gold bar
     display: flex;
 }
 
-.live-game-stats-header-gold > .blue-team {
+.live-game-stats-header-gold>.blue-team {
     border-bottom: 4px solid var(--blue-twitter);
 }
 
-.live-game-stats-header-gold > .red-team {
+.live-game-stats-header-gold>.red-team {
     border-bottom: 4px solid var(--red);
 }
 
 /*
 Status dragons
 */
-.live-game-stats-header-dragons{
+.live-game-stats-header-dragons {
     display: flex;
     min-height: 24px;
 }
 
-.live-game-stats-header-dragons > .blue-team {
+.live-game-stats-header-dragons>.blue-team {
     flex: 1;
 }
 
-.live-game-stats-header-dragons > .red-team {
+.live-game-stats-header-dragons>.red-team {
     text-align: right;
     flex: 1;
 }
 
-.blue-team > .dragon {
+.blue-team>.dragon {
     margin-right: 0.75rem;
 }
 
-.red-team > .dragon {
+.red-team>.dragon {
     margin-left: 0.75rem;
 }
 
@@ -293,7 +311,7 @@ Status dragons
     align-items: center;
 }
 
-.player-champion-info-level{
+.player-champion-info-level {
     transform: translate(-50%, 100%);
     font-size: 12px;
 }
@@ -352,18 +370,18 @@ svg.player-champion {
     fill: var(--text);
     width: 28px;
     padding: 5px;
-    transition:all .4s;
+    transition: all .4s;
 }
 
 .rotated {
     transform: rotate(-180deg);
 }
 
-.table-top-row-champion{
+.table-top-row-champion {
     width: 12rem;
 }
 
-.table-top-row-vida{
+.table-top-row-vida {
     height: 28px;
     width: 15rem;
 }
@@ -377,7 +395,8 @@ svg.player-champion {
     height: 28px;
 }
 
-.player-stats, .footer-notes {
+.player-stats,
+.footer-notes {
     /*width: 64px;*/
     height: 28px;
     line-height: 28px;
@@ -421,7 +440,7 @@ svg.player-champion {
     justify-content: center;
 }
 
-.player-stats-item  > img {
+.player-stats-item>img {
     height: 26px;
     border-radius: 4px;
 }
@@ -457,7 +476,7 @@ svg.player-champion {
     display: block;
 }
 
-.loading-game-image{
+.loading-game-image {
     width: 20%;
 }
 
@@ -517,12 +536,6 @@ svg.player-champion {
     opacity: 0.5;
 }
 
-.game-selector-item:hover {
-    transform: scale(1.1);
-    box-shadow: 0 2px 4px -1px var(--title);
-    z-index: 12;
-}
-
 .itemName {
     font-weight: bold;
     text-decoration: underline;
@@ -542,7 +555,7 @@ svg.player-champion {
     color: var(--text);
 }
 
-.itemDescription > div {
+.itemDescription>div {
     margin-bottom: 5px;
 }
 
@@ -555,4 +568,4 @@ svg.player-champion {
     border-width: 12px;
     border-style: solid;
     border-color: var(--background) transparent transparent transparent;
-  }
+}
