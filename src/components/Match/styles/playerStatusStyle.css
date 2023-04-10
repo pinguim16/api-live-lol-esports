@@ -143,6 +143,10 @@ span.mini-current-health {
         flex-direction: column-reverse !important;
         align-items: center;
     }
+
+    .match-container .live-game-card-team-image {
+        margin: 0.5rem 1rem !important;
+    }
 }
 
 @media(min-width: 520px) {
