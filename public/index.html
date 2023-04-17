@@ -9,43 +9,97 @@
       })(window,document,'script','dataLayer','GTM-KLMCNKS');</script>
     <!-- End Google Tag Manager -->
     <script type="text/javascript">
-      function adsTerraBanner() {
-          atOptions = {
+      let count = 0
+      const observeUrlChange = () => {
+      let oldHref = document.location.href;
+      const body = document.querySelector("body");
+      const observer = new MutationObserver(mutations => {
+          mutations.forEach(() => {
+            if (oldHref !== document.location.href) {
+              oldHref = document.location.href;
+              /* Changed ! your code here */
+              console.log(`location changed`)
+              document.querySelectorAll(`[id*=banner], iframe`).forEach(thing => {
+                thing.remove()
+              })
+              count = 0
+            }
+          });
+        });
+        observer.observe(body, { childList: true, subtree: true });
+      };
+
+      window.onload = observeUrlChange;
+
+
+      let banner1 = {
+        atOptions: {
           'key' : '9cc58a4ef5e90b8f67623162c004a6c4',
           'format' : 'iframe',
           'height' : 50,
           'width' : 320,
           'params' : {}
-        };
-          let bannerScript = document.createElement('script');
-          bannerScript.id = `bannerScript`
-          bannerScript.type = "text/javascript";
-          bannerScript.src = 'https://www.profitabledisplaynetwork.com/9cc58a4ef5e90b8f67623162c004a6c4/invoke.js';
-          let footerInterval = setInterval(() => {
-            let footer = document.querySelector(`.footer-container`)
-            let root = document.querySelector(`#root`)
-            if (!root || document.querySelector(`#bannerScript`)) return
-            // if (!footer) return
-            // clearInterval(footerInterval)
-            // footer.parentElement.append(bannerScript);
-            root.append(bannerScript)
-            let random = Math.floor(Math.random() * 20);
-            if (random) return
-            let iframeClickInterval = setInterval(() => {
-              let iframe = document.querySelector(`#root iframe`)
-              if (!iframe || !iframe.contentDocument || !iframe.contentDocument.querySelector(`a`)) return
-              clearInterval(iframeClickInterval)
-              let preventClick = function(event) {
-                event.preventDefault()
-                return false
-              }
-              iframe.contentDocument.querySelector(`a`).addEventListener(`click`, preventClick)
-              iframe.contentDocument.querySelector(`a`).click()
-              iframe.contentDocument.querySelector(`a`).removeEventListener(`click`, preventClick)
-            }, 500)
-          }, 500)
-      }
-      adsTerraBanner()
+        }
+      };
+      let banner2 = {
+        atOptions: {
+          'key' : '770b2af773da72c8ad075bde0b7c3b22',
+          'format' : 'iframe',
+          'height' : 50,
+          'width' : 320,
+          'params' : {}
+        }
+      };
+      let banner3 = {
+        atOptions: {
+          'key' : '10f486bc4cb2544596bb01273ad71b9b',
+          'format' : 'iframe',
+          'height' : 50,
+          'width' : 320,
+          'params' : {}
+        }
+      };
+      let banner4 = {
+        atOptions: {
+          'key' : '84443a87ff73fc5faf3998b593db6bef',
+          'format' : 'iframe',
+          'height' : 50,
+          'width' : 320,
+          'params' : {}
+        }
+      };
+
+      let banners = [banner1, banner2, banner3, banner4]
+
+
+      let bannerInterval = setInterval(() => {
+        let banner = banners[count]
+        if (!root || count >= banners.length) return
+        if (document.querySelector(`#bannerScript_${banner.atOptions.key}`)) {
+            count++
+            return
+        }
+        atOptions = banner.atOptions
+        let bannerScript = document.createElement('script');
+        bannerScript.id = `bannerScript_${banner.atOptions.key}`
+        bannerScript.type = "text/javascript";
+        bannerScript.src = `https://www.profitabledisplaynetwork.com/${banner.atOptions.key}/invoke.js`;
+        document.querySelector(`.ads-container`).append(bannerScript)
+        let random = Math.floor(Math.random() * 20);
+        if (random) return
+        let iframeClickInterval = setInterval(() => {
+          let iframe = document.querySelector(`#root iframe`)
+          if (!iframe || !iframe.contentDocument || !iframe.contentDocument.querySelector(`a`)) return
+          clearInterval(iframeClickInterval)
+          let preventClick = function(event) {
+            event.preventDefault()
+            return false
+          }
+          iframe.contentDocument.querySelector(`a`).addEventListener(`click`, preventClick)
+          iframe.contentDocument.querySelector(`a`).click()
+          iframe.contentDocument.querySelector(`a`).removeEventListener(`click`, preventClick)
+        }, 500)
+      }, 150)
     </script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
