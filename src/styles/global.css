@@ -65,8 +65,3 @@ a {
     position: relative;
     overflow: auto;
 }
-
-.ads-container {
-    display: flex;
-    flex-wrap: wrap;
-}

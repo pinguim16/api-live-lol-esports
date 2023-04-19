@@ -25,9 +25,6 @@ function App() {
                 </div>
                 <Footer/>
             </div>
-            <div className='ads-container' style={{...theme as React.CSSProperties}}>
-
-            </div>
         </HashRouter>
     );
 }

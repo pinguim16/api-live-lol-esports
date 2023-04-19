@@ -35,8 +35,3 @@
     color: red;
     font: 500 1.25rem 'Inter', sans-serif;
 }
-
-#root iframe {
-    margin: 0px auto;
-    display: block;
-}
