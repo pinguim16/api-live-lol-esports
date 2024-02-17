@@ -5,10 +5,11 @@ import { ITEMS_URL } from "../../utils/LoLEsportsAPI"
 type Props = {
     participantId: number,
     lastFrame: DetailsFrame,
-    items: Item[]
+    items: Item[],
+    patchVersion: string
 }
 
-export function ItemsDisplay({ participantId, lastFrame, items }: Props) {
+export function ItemsDisplay({ participantId, lastFrame, items, patchVersion }: Props) {
     const lastFrameItems = lastFrame.participants[participantId].items;
 
     /*
@@ -35,6 +36,8 @@ export function ItemsDisplay({ participantId, lastFrame, items }: Props) {
         trinket = itemsID.shift() as number;
     }
 
+    const itemsUrlWithPatchVersion = ITEMS_URL.replace(`PATCH_VERSION`, patchVersion)
+
     return (
         <div className="player-stats-items" key={`${participantId}`}>
             {[...Array(6)].map((x, i) => {
@@ -53,7 +56,7 @@ export function ItemsDisplay({ participantId, lastFrame, items }: Props) {
                                 <div className="itemName">{currentItem.name}</div>
                                 {formatItemDescription(currentItem)}
                             </div>
-                            <img alt="" src={`${ITEMS_URL}${itemsID[i]}.png`} />
+                            <img alt="" src={`${itemsUrlWithPatchVersion}${itemsID[i]}.png`} />
                         </div>
                     )
                 } else {
@@ -69,7 +72,7 @@ export function ItemsDisplay({ participantId, lastFrame, items }: Props) {
             {trinket !== -1 ?
                 (
                     <div className="player-stats-item">
-                        <img alt="" src={`${ITEMS_URL}${trinket}.png`} />
+                        <img alt="" src={`${itemsUrlWithPatchVersion}${trinket}.png`} />
                     </div>
                 )
                 :

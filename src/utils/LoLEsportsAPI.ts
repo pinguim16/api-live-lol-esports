@@ -1,8 +1,11 @@
 import axios from "axios";
 
-//export const ITEMS_URL = "https://ddragon.leagueoflegends.com/cdn/11.5.1/img/item/"
-export const ITEMS_URL = "https://ddragon.bangingheads.net/cdn/14.3.1/img/item/"
-export const CHAMPIONS_URL = "https://ddragon.bangingheads.net/cdn/14.3.1/img/champion/"
+//export const ITEMS_URL = "https://ddragon.leagueoflegends.com/cdn/14.3.1/img/item/"
+// export const CHAMPIONS_URL = "https://ddragon.bangingheads.net/cdn/14.3.1/img/champion/"
+// const ITEMS_JSON_URL = `https://ddragon.leagueoflegends.com/cdn/14.3.1/data/en_US/item.json`
+export const ITEMS_URL = "https://ddragon.bangingheads.net/cdn/PATCH_VERSION/img/item/"
+export const CHAMPIONS_URL = "https://ddragon.bangingheads.net/cdn/PATCH_VERSION/img/champion/"
+const ITEMS_JSON_URL = `https://ddragon.leagueoflegends.com/cdn/PATCH_VERSION/data/en_US/item.json`
 
 const API_URL_PERSISTED = "https://esports-api.lolesports.com/persisted/gw"
 const API_URL_LIVE = "https://feed.lolesports.com/livestats/v1"
@@ -101,7 +104,7 @@ export function getStandingsResponse(tournamentId: string) {
 }
 
 export function getItemsResponse(formattedPatchVersion: string) {
-    return axios.get(`https://ddragon.leagueoflegends.com/cdn/${formattedPatchVersion}/data/en_US/item.json`)
+    return axios.get(ITEMS_JSON_URL.replace(`PATCH_VERSION`, formattedPatchVersion))
 }
 
 
@@ -116,4 +119,8 @@ export function getISODateMultiplyOf10() {
     date.setSeconds(date.getSeconds() - secondDelay);
 
     return date.toISOString();
+}
+
+export function getFormattedPatchVersion(patchVersion: string) {
+    return patchVersion.split(`.`).slice(0, 2).join(`.`) + `.1`
 }

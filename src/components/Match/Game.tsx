@@ -24,7 +24,7 @@ import {ReactComponent as ElderDragonSVG} from '../../assets/images/dragon-elder
 import {ItemsDisplay} from "./ItemsDisplay";
 
 import {LiveAPIWatcher} from "./LiveAPIWatcher";
-import { CHAMPIONS_URL } from '../../utils/LoLEsportsAPI';
+import { CHAMPIONS_URL, getFormattedPatchVersion } from '../../utils/LoLEsportsAPI';
 
 type Props = {
     firstWindowFrame: WindowFrame,
@@ -97,6 +97,8 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
     let inGameTime = getInGameTime(firstWindowFrame.rfc460Timestamp, lastWindowFrame.rfc460Timestamp)
     document.title = `${blueTeam.name} VS ${redTeam.name}`;
     let matchResults = results || eventDetails.match.teams.map(team=> team.result)
+    const formattedPatchVersion = getFormattedPatchVersion(gameMetadata.patchVersion)
+    const championsUrlWithPatchVersion = CHAMPIONS_URL.replace(`PATCH_VERSION`, formattedPatchVersion)
 
     return (
         <div className="status-live-game-card">
@@ -186,12 +188,12 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
                             let goldDifference = getGoldDifference(player, "blue", gameMetadata, lastWindowFrame);
                             let championDetails = lastDetailsFrame.participants[index]
                             return [(
-                                <tr className="player-stats-row" key={`${gameIndex}_${CHAMPIONS_URL}${gameMetadata.blueTeamMetadata.participantMetadata[player.participantId - 1].championId}`}>
+                                <tr className="player-stats-row" key={`${gameIndex}_${championsUrlWithPatchVersion}${gameMetadata.blueTeamMetadata.participantMetadata[player.participantId - 1].championId}`}>
                                     <th>
                                         <div className="player-champion-info">
                                             <svg className="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 429.3l22.6-22.6 192-192L493.3 192 448 146.7l-22.6 22.6L256 338.7 86.6 169.4 64 146.7 18.7 192l22.6 22.6 192 192L256 429.3z"/></svg>
                                             <div className='player-champion-wrapper'>
-                                                <img src={`${CHAMPIONS_URL}${gameMetadata.blueTeamMetadata.participantMetadata[player.participantId - 1].championId}.png`} className='player-champion' onError={({ currentTarget }) => { currentTarget.style.display = `none` }}/>
+                                                <img src={`${championsUrlWithPatchVersion}${gameMetadata.blueTeamMetadata.participantMetadata[player.participantId - 1].championId}.png`} className='player-champion' onError={({ currentTarget }) => { currentTarget.style.display = `none` }}/>
                                                 <TeamTBDSVG className='player-champion' />
                                             </div>
                                             <span className=" player-champion-info-level">{player.level}</span>
@@ -206,7 +208,7 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
                                         <MiniHealthBar currentHealth={player.currentHealth} maxHealth={player.maxHealth}/>
                                     </td>
                                     <td>
-                                        <ItemsDisplay participantId={player.participantId - 1} lastFrame={lastDetailsFrame} items={items}/>
+                                        <ItemsDisplay participantId={player.participantId - 1} lastFrame={lastDetailsFrame} items={items} patchVersion={formattedPatchVersion}/>
                                     </td>
                                     <td>
                                         <div className=" player-stats">{player.creepScore}</div>
@@ -229,7 +231,7 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
                                     </td>
                                 </tr>
                             ), (
-                            <tr key={`${gameIndex}_${CHAMPIONS_URL}${gameMetadata.blueTeamMetadata.participantMetadata[player.participantId - 1].championId}_stats`} className='champion-stats-row'>
+                            <tr key={`${gameIndex}_${championsUrlWithPatchVersion}${gameMetadata.blueTeamMetadata.participantMetadata[player.participantId - 1].championId}_stats`} className='champion-stats-row'>
                                 <td colSpan={9}>
                                     <span>
                                         {getFormattedChampionStats(championDetails)}
@@ -279,12 +281,12 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
                             let championDetails = lastDetailsFrame.participants[index + 5]
 
                             return [(
-                                <tr className="player-stats-row" key={`${gameIndex}_${CHAMPIONS_URL}${gameMetadata.redTeamMetadata.participantMetadata[player.participantId - 6].championId}`}>
+                                <tr className="player-stats-row" key={`${gameIndex}_${championsUrlWithPatchVersion}${gameMetadata.redTeamMetadata.participantMetadata[player.participantId - 6].championId}`}>
                                     <th>
                                         <div className="player-champion-info">
                                             <svg className="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 429.3l22.6-22.6 192-192L493.3 192 448 146.7l-22.6 22.6L256 338.7 86.6 169.4 64 146.7 18.7 192l22.6 22.6 192 192L256 429.3z"/></svg>
                                             <div className='player-champion-wrapper'>
-                                                <img src={`${CHAMPIONS_URL}${gameMetadata.redTeamMetadata.participantMetadata[player.participantId - 6].championId}.png`} className='player-champion' onError={({ currentTarget }) => { currentTarget.style.display = `none` }}/>
+                                                <img src={`${championsUrlWithPatchVersion}${gameMetadata.redTeamMetadata.participantMetadata[player.participantId - 6].championId}.png`} className='player-champion' onError={({ currentTarget }) => { currentTarget.style.display = `none` }}/>
                                                 <TeamTBDSVG className='player-champion' />
                                             </div>
                                             <span className=" player-champion-info-level">{player.level}</span>
@@ -298,7 +300,7 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
                                         <MiniHealthBar currentHealth={player.currentHealth} maxHealth={player.maxHealth}/>
                                     </td>
                                     <td>
-                                        <ItemsDisplay participantId={player.participantId - 1} lastFrame={lastDetailsFrame} items={items}/>
+                                        <ItemsDisplay participantId={player.participantId - 1} lastFrame={lastDetailsFrame} items={items} patchVersion={formattedPatchVersion}/>
                                     </td>
                                     <td>
                                         <div className=" player-stats">{player.creepScore}</div>
@@ -320,7 +322,7 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
                                     </td>
                                 </tr>
                             ), (
-                                <tr key={`${gameIndex}_${CHAMPIONS_URL}${gameMetadata.redTeamMetadata.participantMetadata[player.participantId - 6].championId}_stats`} className='champion-stats-row'>
+                                <tr key={`${gameIndex}_${championsUrlWithPatchVersion}${gameMetadata.redTeamMetadata.participantMetadata[player.participantId - 6].championId}_stats`} className='champion-stats-row'>
                                     <td colSpan={9}>
                                         <span>
                                             {getFormattedChampionStats(championDetails)}

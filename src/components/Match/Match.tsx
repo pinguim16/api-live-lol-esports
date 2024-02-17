@@ -7,7 +7,8 @@ import {
     getWindowResponse,
     getScheduleResponse,
     getStandingsResponse,
-    getItemsResponse
+    getItemsResponse,
+    getFormattedPatchVersion
 } from "../../utils/LoLEsportsAPI";
 import { useEffect, useState } from "react";
 import Loading from '../../assets/images/loading.svg'
@@ -181,7 +182,7 @@ export function Match({ match }: any) {
         }
 
         function getitems(metadata: GameMetadata) {
-            let formattedPatchVersion = metadata.patchVersion.split(`.`).slice(0, 2).join(`.`) + `.1`
+            const formattedPatchVersion = getFormattedPatchVersion(metadata.patchVersion)
             getItemsResponse(formattedPatchVersion).then(response => {
                 setItems(response.data.data)
             })
