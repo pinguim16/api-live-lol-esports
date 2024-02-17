@@ -15,7 +15,7 @@ import Loading from '../../assets/images/loading.svg'
 import { ReactComponent as TeamTBDSVG } from '../../assets/images/team-tbd.svg';
 import { MatchDetails } from "./MatchDetails"
 import { Game } from "./Game";
-import { EventDetails, DetailsFrame, GameMetadata, Item, Record, Result, ScheduleEvent, Standing, WindowFrame, ExtendedVod } from "../types/baseTypes"
+import { EventDetails, DetailsFrame, GameMetadata, Item, Outcome, Record, Result, ScheduleEvent, Standing, WindowFrame, ExtendedVod } from "../types/baseTypes"
 
 export function Match({ match }: any) {
     const [eventDetails, setEventDetails] = useState<EventDetails>();
@@ -25,6 +25,7 @@ export function Match({ match }: any) {
     const [metadata, setMetadata] = useState<GameMetadata>();
     const [records, setRecords] = useState<Record[]>();
     const [results, setResults] = useState<Result[]>();
+    const [currentGameOutcome, setCurrentGameOutcome] = useState<Array<Outcome>>();
     const [scheduleEvent, setScheduleEvent] = useState<ScheduleEvent>();
     const [gameIndex, setGameIndex] = useState<number>();
     const [items, setItems] = useState<Item[]>();
@@ -133,11 +134,38 @@ export function Match({ match }: any) {
             getWindowResponse(gameId, date).then(response => {
                 if (response === undefined) return
                 let frames: WindowFrame[] = response.data.frames;
-                if (frames === undefined || currentTimestamp > frames[frames.length - 1].rfc460Timestamp) return;
-                currentTimestamp = frames[frames.length - 1].rfc460Timestamp
+                if (frames === undefined) return
+                const lastWindowFrame = frames[frames.length - 1]
+                if (currentTimestamp > lastWindowFrame.rfc460Timestamp) return;
+                currentTimestamp = lastWindowFrame.rfc460Timestamp
 
-                setLastWindowFrame(frames[frames.length - 1])
+                setLastWindowFrame(lastWindowFrame)
                 setMetadata(response.data.gameMetadata)
+
+                if (matchEventDetails === undefined) return
+                const homeTeam = matchEventDetails.match.teams[0]
+                const awayTeam = matchEventDetails.match.teams[1]
+                const cleanSweep = matchEventDetails.match.games[currentGameIndex - 1].state === `completed` && (matchEventDetails.match.teams[0].result.gameWins === 0 || matchEventDetails.match.teams[1].result.gameWins === 0)
+
+                const blueTeam = matchEventDetails && matchEventDetails.match.games[currentGameIndex - 1].teams[0].id === homeTeam.id ? homeTeam : awayTeam
+                const redTeam = matchEventDetails && matchEventDetails.match.games[currentGameIndex - 1].teams[1].id === homeTeam.id ? homeTeam : awayTeam
+                const blueTeamWonMatch = matchEventDetails.match.games.every(game => game.state === `completed` || game.state === `unneeded`) && blueTeam.result.gameWins > redTeam.result.gameWins
+                const redTeamWonMatch = matchEventDetails.match.games.every(game => game.state === `completed` || game.state === `unneeded`) && redTeam.result.gameWins > blueTeam.result.gameWins
+
+                const blueTeamWonOnInhibitors = lastWindowFrame.blueTeam.inhibitors > 0 && lastWindowFrame?.redTeam.inhibitors === 0
+                const redTeamWonOnInhibitors = lastWindowFrame?.redTeam.inhibitors > 0 && lastWindowFrame?.blueTeam.inhibitors === 0
+                const blueTeamWon = blueTeam.result.outcome === `win` || (cleanSweep && blueTeam.result.gameWins > 0) || blueTeamWonOnInhibitors || (blueTeamWonMatch && (currentGameIndex - 1) === matchEventDetails.match.games.filter(game => game.state === "completed").length)
+                const redTeamWon = redTeam.result.outcome === `win` || (cleanSweep && redTeam.result.gameWins > 0) || redTeamWonOnInhibitors || (redTeamWonMatch && (currentGameIndex - 1) === matchEventDetails.match.games.filter(game => game.state === "completed").length)
+
+                const outcome: Array<Outcome> = [
+                    {
+                        outcome: blueTeamWon ? `win` : redTeamWon ? `loss` : undefined,
+                    },
+                    {
+                        outcome: redTeamWon ? `win` : blueTeamWon ? `loss` : undefined
+                    }
+                ]
+                setCurrentGameOutcome(outcome)
             });
         }
 
@@ -172,7 +200,7 @@ export function Match({ match }: any) {
                 if (match === undefined) return;
                 let teams = match.teams
                 let results = teams.map((team) => team.result)
-                setResults(teams.map((team) => team.result))
+                setResults(results)
                 console.groupCollapsed(`Results`)
                 console.log(results)
                 console.groupEnd()
@@ -187,11 +215,11 @@ export function Match({ match }: any) {
         }
     }, [matchId]);
 
-    if (firstWindowFrame !== undefined && lastWindowFrame !== undefined && lastDetailsFrame !== undefined && metadata !== undefined && eventDetails !== undefined && scheduleEvent !== undefined && gameIndex !== undefined && items !== undefined) {
+    if (firstWindowFrame !== undefined && lastWindowFrame !== undefined && lastDetailsFrame !== undefined && metadata !== undefined && eventDetails !== undefined && currentGameOutcome !== undefined && scheduleEvent !== undefined && gameIndex !== undefined && items !== undefined) {
         return (
             <div className='match-container'>
                 <MatchDetails eventDetails={eventDetails} gameMetadata={metadata} matchState={formatMatchState(eventDetails, lastWindowFrame, scheduleEvent)} records={records} results={results} scheduleEvent={scheduleEvent} />
-                <Game eventDetails={eventDetails} gameIndex={gameIndex} gameMetadata={metadata} firstWindowFrame={firstWindowFrame} lastDetailsFrame={lastDetailsFrame} lastWindowFrame={lastWindowFrame} records={records} results={results} videoLink={getStreamOrVod(eventDetails)} items={items} />
+                <Game eventDetails={eventDetails} gameIndex={gameIndex} gameMetadata={metadata} firstWindowFrame={firstWindowFrame} lastDetailsFrame={lastDetailsFrame} lastWindowFrame={lastWindowFrame} outcome={currentGameOutcome} records={records} results={results} videoLink={getStreamOrVod(eventDetails)} items={items} />
             </div>
         );
     } else if (eventDetails !== undefined) {
@@ -209,10 +237,10 @@ export function Match({ match }: any) {
                                         {eventDetails?.match.teams[0].name}
                                     </h4>
                                 </span>
-                                {eventDetails?.match.teams[0].result ?
+                                {currentGameOutcome ?
                                     (<span className="outcome">
-                                        <p className={eventDetails.match.teams[0].result.outcome}>
-                                            {eventDetails.match.teams[0].result.outcome}
+                                        <p className={currentGameOutcome[0].outcome}>
+                                            {currentGameOutcome[0].outcome}
                                         </p>
                                     </span>)
                                     : null}
@@ -244,10 +272,10 @@ export function Match({ match }: any) {
                                         {eventDetails?.match.teams[1].name}
                                     </h4>
                                 </span>
-                                {eventDetails?.match.teams[1].result ?
+                                {currentGameOutcome ?
                                     (<span className="outcome">
-                                        <p className={eventDetails?.match.teams[1].result.outcome}>
-                                            {eventDetails?.match.teams[1].result.outcome}
+                                        <p className={currentGameOutcome[1].outcome}>
+                                            {currentGameOutcome[1].outcome}
                                         </p>
                                     </span>)
                                     : null}
@@ -274,7 +302,7 @@ export function Match({ match }: any) {
                     data-full-width-responsive="true">
                 </ins>
                 <script>
-                    (adsbygoogle = window.adsbygoogle || []).push({});
+                    (adsbygoogle = window.adsbygoogle || []).push({ });
                 </script>
             </div>
         )

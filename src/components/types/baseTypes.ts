@@ -130,6 +130,10 @@ export interface Result {
     outcome?: "loss" | "win"
 }
 
+export interface Outcome {
+    outcome: `win` | `loss` | undefined,
+}
+
 export interface Schedule {
     events: ScheduleEvent[];
     pages: Pages;
