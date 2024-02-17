@@ -13,8 +13,6 @@ import {
 import { useEffect, useState } from "react";
 import Loading from '../../assets/images/loading.svg'
 import { ReactComponent as TeamTBDSVG } from '../../assets/images/team-tbd.svg';
-import { GameDetails } from "./GameDetails"
-import { LiveAPIWatcher } from "./LiveAPIWatcher";
 import { MatchDetails } from "./MatchDetails"
 import { Game } from "./Game";
 import { EventDetails, DetailsFrame, GameMetadata, Item, Record, Result, ScheduleEvent, Standing, WindowFrame, ExtendedVod } from "../types/baseTypes"
@@ -44,7 +42,7 @@ export function Match({ match }: any) {
             if (!matchEventDetails) return
             let newGameIndex = getGameIndex(matchEventDetails)
             let gameId = matchEventDetails.match.games[newGameIndex - 1].id
-            if (currentGameIndex != newGameIndex || !firstWindowReceived) {
+            if (currentGameIndex !== newGameIndex || !firstWindowReceived) {
                 currentTimestamp = ``
                 getFirstWindow(gameId)
                 setGameIndex(newGameIndex)
@@ -328,7 +326,7 @@ function formatMatchState(eventDetails: EventDetails, lastWindowFrame: WindowFra
         "inProgress": "In Progress"
     }
 
-    if (eventDetails.match.games.length == 1) return gameStates[lastWindowFrame.gameState]
-    let gamesFinished = eventDetails.match.games.filter(game => game.state == `completed` || game.state == `unneeded`)
+    if (eventDetails.match.games.length === 1) return gameStates[lastWindowFrame.gameState]
+    let gamesFinished = eventDetails.match.games.filter(game => game.state === `completed` || game.state === `unneeded`)
     return gameStates[gamesFinished.length >= eventDetails.match.games.length ? `completed` : scheduleEvent.state]
 }

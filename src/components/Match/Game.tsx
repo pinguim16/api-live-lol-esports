@@ -45,7 +45,7 @@ enum GameState {
     finished = "game ended"
 }
 
-export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, gameMetadata, gameIndex, eventDetails, videoLink, records, results, items } : Props) {
+export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, gameMetadata, gameIndex, eventDetails, videoLink, results, items } : Props) {
     const [gameState, setGameState] = useState<GameState>(GameState[lastWindowFrame.gameState as keyof typeof GameState]);
 
     useEffect(() => {
@@ -96,7 +96,6 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
     const goldPercentage = getGoldPercentage(lastWindowFrame.blueTeam.totalGold, lastWindowFrame.redTeam.totalGold);
     let inGameTime = getInGameTime(firstWindowFrame.rfc460Timestamp, lastWindowFrame.rfc460Timestamp)
     document.title = `${blueTeam.name} VS ${redTeam.name}`;
-    let matchResults = results || eventDetails.match.teams.map(team=> team.result)
     const formattedPatchVersion = getFormattedPatchVersion(gameMetadata.patchVersion)
     const championsUrlWithPatchVersion = CHAMPIONS_URL.replace(`PATCH_VERSION`, formattedPatchVersion)
 
@@ -193,7 +192,7 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
                                         <div className="player-champion-info">
                                             <svg className="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 429.3l22.6-22.6 192-192L493.3 192 448 146.7l-22.6 22.6L256 338.7 86.6 169.4 64 146.7 18.7 192l22.6 22.6 192 192L256 429.3z"/></svg>
                                             <div className='player-champion-wrapper'>
-                                                <img src={`${championsUrlWithPatchVersion}${gameMetadata.blueTeamMetadata.participantMetadata[player.participantId - 1].championId}.png`} className='player-champion' onError={({ currentTarget }) => { currentTarget.style.display = `none` }}/>
+                                                <img src={`${championsUrlWithPatchVersion}${gameMetadata.blueTeamMetadata.participantMetadata[player.participantId - 1].championId}.png`} alt="" className='player-champion' onError={({ currentTarget }) => { currentTarget.style.display = `none` }}/>
                                                 <TeamTBDSVG className='player-champion' />
                                             </div>
                                             <span className=" player-champion-info-level">{player.level}</span>
@@ -286,7 +285,7 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
                                         <div className="player-champion-info">
                                             <svg className="chevron-down" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 429.3l22.6-22.6 192-192L493.3 192 448 146.7l-22.6 22.6L256 338.7 86.6 169.4 64 146.7 18.7 192l22.6 22.6 192 192L256 429.3z"/></svg>
                                             <div className='player-champion-wrapper'>
-                                                <img src={`${championsUrlWithPatchVersion}${gameMetadata.redTeamMetadata.participantMetadata[player.participantId - 6].championId}.png`} className='player-champion' onError={({ currentTarget }) => { currentTarget.style.display = `none` }}/>
+                                                <img src={`${championsUrlWithPatchVersion}${gameMetadata.redTeamMetadata.participantMetadata[player.participantId - 6].championId}.png`} alt="" className='player-champion' onError={({ currentTarget }) => { currentTarget.style.display = `none` }}/>
                                                 <TeamTBDSVG className='player-champion' />
                                             </div>
                                             <span className=" player-champion-info-level">{player.level}</span>
@@ -342,41 +341,6 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
             <LiveAPIWatcher gameIndex={gameIndex} gameMetadata={gameMetadata} lastWindowFrame={lastWindowFrame} blueTeam={eventDetails.match.teams[0]} redTeam={eventDetails.match.teams[1]}/>
         </div>
     );
-}
-
-type TeamCardProps = {
-    eventDetails: EventDetails,
-    index: number,
-    matchResults?: Result[],
-    record?: Record,
-}
-
-function TeamCard({eventDetails, index, matchResults, record}: TeamCardProps) {
-    return (
-        <h1>
-            <div className="live-game-card-team">
-                <img className="live-game-card-team-image" src={eventDetails.match.teams[index].image}
-                    alt={eventDetails?.match.teams[index].name}/>
-                <span className='outcome'>
-                    {matchResults ? (<p className={matchResults[index].outcome}>
-                        {matchResults[index].outcome}
-                    </p>) : null}
-                </span>
-                <span>
-                    <h4>
-                        {eventDetails.match.teams[index].name}
-                    </h4>
-                </span>
-                {record ?
-                    (<span>
-                        <p>
-                            {record.wins} - {record.losses}
-                        </p>
-                    </span>)
-                : null}
-            </div>
-        </h1>
-    )
 }
 
 function HeaderStats(teamStats: TeamStats, teamColor: string) {

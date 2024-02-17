@@ -1,4 +1,3 @@
-import React from "react";
 import './styles/navbarStyle.css'
 import {ReactComponent as LoLLogoSVG} from '../../assets/images/league-of-legends.svg';
 

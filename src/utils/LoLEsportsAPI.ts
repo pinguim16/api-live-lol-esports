@@ -46,7 +46,7 @@ export function getWindowResponse(gameId: string, date?: string) {
 }
 
 export function getGameDetailsResponse(gameId: string, date: string, lastFrameSuccess: boolean) {
-    if (count++ % 10 == 0) {
+    if (count++ % 10 === 0) {
         failureCount = 0
         secondDelay -= 10
     }

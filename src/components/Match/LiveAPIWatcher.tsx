@@ -2,7 +2,7 @@ import './styles/playerStatusStyle.css'
 
 import { GameMetadata, Team, WindowFrame, WindowParticipant } from "../types/baseTypes";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import useSound from "use-sound";
 
@@ -52,7 +52,7 @@ type StatusWatcher = {
 export function LiveAPIWatcher({ lastWindowFrame, gameIndex, gameMetadata, blueTeam, redTeam }: Props) {
     let trueBlueTeam = blueTeam
     let trueRedTeam = redTeam
-    let swapTeams = blueTeam.id != gameMetadata.blueTeamMetadata.esportsTeamId
+    let swapTeams = blueTeam.id !== gameMetadata.blueTeamMetadata.esportsTeamId
     if (swapTeams) {
         trueBlueTeam = redTeam
         trueRedTeam = blueTeam
@@ -85,7 +85,7 @@ export function LiveAPIWatcher({ lastWindowFrame, gameIndex, gameMetadata, blueT
         let isPlaying = isMuted;
         let toastArray = []
 
-        if (status.gameIndex == gameIndex) {
+        if (status.gameIndex === gameIndex) {
             if (status.inhibitors.blue !== lastWindowFrame.blueTeam.inhibitors) {
                 toastArray.push(() => { createToast(true, isPlaying, inib_red.default, "Destroyed an inhibitor", trueBlueTeam.image) })
                 isPlaying = true

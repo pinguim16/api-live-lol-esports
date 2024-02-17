@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import './styles/navbarStyle.css'
 
 import { useTheme } from "../../theme/ThemeContext";
