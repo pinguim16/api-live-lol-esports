@@ -100,6 +100,19 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
     const formattedPatchVersion = getFormattedPatchVersion(gameMetadata.patchVersion)
     const championsUrlWithPatchVersion = CHAMPIONS_URL.replace(`PATCH_VERSION`, formattedPatchVersion)
 
+    $(`.copy-champion-names`).prop("onclick", null).off("click");
+    $(`.copy-champion-names`).on(`click`, () => {
+        console.log(gameMetadata)
+        let championNames: Array<String> = []
+        gameMetadata.blueTeamMetadata.participantMetadata.forEach(participant => {
+            championNames.push(participant.championId)
+        })
+
+        gameMetadata.redTeamMetadata.participantMetadata.forEach(participant => {
+            championNames.push(participant.championId)
+        })
+        navigator.clipboard.writeText(championNames.join("\t"));
+    })
     return (
         <div className="status-live-game-card">
             <GameDetails eventDetails={eventDetails} gameIndex={gameIndex} />
@@ -348,6 +361,11 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
                     <a target="_blank" href={`https://www.leagueoflegends.com/en-us/news/game-updates/patch-${gameMetadata.patchVersion.split(`.`).slice(0, 2).join(`-`)}-notes/`}>Patch Version: {gameMetadata.patchVersion}</a>
                 </span>
                 {videoLink}
+                <span className="footer-notes">
+                    <a href="javascript:void(0);" className="copy-champion-names">
+                        Copy Champion Names
+                    </a>
+                </span>
             </div>
             <LiveAPIWatcher gameIndex={gameIndex} gameMetadata={gameMetadata} lastWindowFrame={lastWindowFrame} blueTeam={eventDetails.match.teams[0]} redTeam={eventDetails.match.teams[1]} />
         </div>
