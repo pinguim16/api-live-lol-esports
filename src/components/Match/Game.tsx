@@ -367,7 +367,7 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
                     </a>
                 </span>
             </div>
-            <LiveAPIWatcher gameIndex={gameIndex} gameMetadata={gameMetadata} lastWindowFrame={lastWindowFrame} blueTeam={eventDetails.match.teams[0]} redTeam={eventDetails.match.teams[1]} />
+            <LiveAPIWatcher gameIndex={gameIndex} gameMetadata={gameMetadata} lastWindowFrame={lastWindowFrame} championsUrlWithPatchVersion={championsUrlWithPatchVersion} blueTeam={eventDetails.match.teams[0]} redTeam={eventDetails.match.teams[1]} />
         </div>
     );
 }

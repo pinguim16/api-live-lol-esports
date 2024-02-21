@@ -21,6 +21,7 @@ type Props = {
     lastWindowFrame: WindowFrame,
     gameIndex: number,
     gameMetadata: GameMetadata,
+    championsUrlWithPatchVersion: string,
     blueTeam: Team,
     redTeam: Team,
 }
@@ -49,7 +50,7 @@ type StatusWatcher = {
     gameIndex: number
 }
 
-export function LiveAPIWatcher({ lastWindowFrame, gameIndex, gameMetadata, blueTeam, redTeam }: Props) {
+export function LiveAPIWatcher({ lastWindowFrame, gameIndex, gameMetadata, championsUrlWithPatchVersion, blueTeam, redTeam }: Props) {
     let trueBlueTeam = blueTeam
     let trueRedTeam = redTeam
     let swapTeams = blueTeam.id !== gameMetadata.blueTeamMetadata.esportsTeamId
@@ -128,14 +129,14 @@ export function LiveAPIWatcher({ lastWindowFrame, gameIndex, gameMetadata, blueT
 
             for (let i = 0; i < status.participants.blue.length; i++) {
                 if (status.participants.blue[i].kills !== lastWindowFrame.blueTeam.participants[i].kills) {
-                    toastArray.push(() => { createToast(true, isPlaying, kill.default, "Killed an enemy", `http://ddragon.leagueoflegends.com/cdn/13.1.1/img/champion/${gameMetadata.blueTeamMetadata.participantMetadata[status.participants.blue[i].participantId - 1].championId}.png`, lastWindowFrame.blueTeam.participants[i].kills - status.participants.blue[i].kills) })
+                    toastArray.push(() => { createToast(true, isPlaying, kill.default, "Killed an enemy", `${championsUrlWithPatchVersion}${gameMetadata.blueTeamMetadata.participantMetadata[status.participants.blue[i].participantId - 1].championId}.png`, lastWindowFrame.blueTeam.participants[i].kills - status.participants.blue[i].kills) })
                     isPlaying = true
                 }
             }
 
             for (let i = 0; i < status.participants.red.length; i++) {
                 if (status.participants.red[i].kills !== lastWindowFrame.redTeam.participants[i].kills) {
-                    toastArray.push(() => { createToast(false, isPlaying, kill.default, "Killed an enemy", `http://ddragon.leagueoflegends.com/cdn/13.1.1/img/champion/${gameMetadata.redTeamMetadata.participantMetadata[status.participants.red[i].participantId - 6].championId}.png`, lastWindowFrame.redTeam.participants[i].kills - status.participants.red[i].kills) })
+                    toastArray.push(() => { createToast(false, isPlaying, kill.default, "Killed an enemy", `${championsUrlWithPatchVersion}${gameMetadata.redTeamMetadata.participantMetadata[status.participants.red[i].participantId - 6].championId}.png`, lastWindowFrame.redTeam.participants[i].kills - status.participants.red[i].kills) })
                     isPlaying = true
                 }
             }
