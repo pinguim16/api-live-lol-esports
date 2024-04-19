@@ -65,7 +65,7 @@ export function getGameDetailsResponse(gameId: string, date: string, lastFrameSu
         if (error.response) {
             // Request made and server responded
             console.error(error.response.data);
-            if (!error.response.data.message.includes(`window with end time less than 45 sec old`) || failureCount < 6) return
+            if (!error.response.data.message.includes(`window with end time less than`) || failureCount < 6) return
             count = 1
             failureCount = 0
             secondDelay += 10
