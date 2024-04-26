@@ -411,9 +411,34 @@ svg.player-champion {
     border-radius: 3px;
 }
 
+.chatDiv {
+    display: inline-block;
+    margin-right: 30px;
+}
+
+.chatDiv .toggle-container {
+    display: inline-block;
+    vertical-align: middle;
+}
+
 .footer-notes {
-    margin-right: 10px;
-    padding: 2px 5px;
+    padding: 0px 8px;
+    color: var(--text);
+    display: inline-block;
+    margin: 8px 8px 0px 0px;
+    max-width: 100%;
+    border: 0px;
+    cursor: pointer;
+}
+
+.chat-toggle {
+    margin-left: 35%;
+    cursor: pointer;
+    height: 1.5rem;
+    width: 2.5rem;
+    border-radius: 50px;
+    border: 3px solid var(--gray-line);
+    background-color: var(--theme-switch-bg);
 }
 
 .player-stats-kda {

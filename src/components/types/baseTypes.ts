@@ -44,10 +44,16 @@ export interface ExtendedGame {
 }
 
 export interface ExtendedVod {
+    coStreamer?: boolean;
     locale: string;
     offset: number;
     parameter: string;
     provider: "youtube" | "twitch";
+    mediaLocale: {
+        englishName: string;
+        translatedName: string;
+        locale: string;
+    }
 }
 
 export interface GameMetadata {

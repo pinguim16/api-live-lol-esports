@@ -38,11 +38,18 @@ body {
     }
 }
 
-body, input, textarea, button {
+body,
+input,
+textarea,
+button {
     font: 400 1rem 'Inter', sans-serif;
 }
 
-span, h1, h2, h3, h4 {
+span,
+h1,
+h2,
+h3,
+h4 {
     color: var(--text);
 }
 
@@ -64,4 +71,27 @@ a {
     flex-direction: column;
     position: relative;
     overflow: auto;
+}
+
+#video-player[added] {
+    margin-top: 10px;
+    width: 100%;
+    padding-top: 56.25%;
+    position: relative;
+}
+
+#video-player>iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+#video-player:not([added]) > iframe {
+    display: none;
+}
+
+#video-player[added].chatEnabled {
+    min-height: 600px;
 }

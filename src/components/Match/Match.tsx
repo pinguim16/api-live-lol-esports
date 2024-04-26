@@ -15,7 +15,7 @@ import Loading from '../../assets/images/loading.svg'
 import { ReactComponent as TeamTBDSVG } from '../../assets/images/team-tbd.svg';
 import { MatchDetails } from "./MatchDetails"
 import { Game } from "./Game";
-import { EventDetails, DetailsFrame, GameMetadata, Item, Outcome, Record, Result, ScheduleEvent, Standing, WindowFrame, ExtendedVod } from "../types/baseTypes"
+import { EventDetails, DetailsFrame, GameMetadata, Item, Outcome, Record, Result, ScheduleEvent, Standing, WindowFrame } from "../types/baseTypes"
 
 export function Match({ match }: any) {
     const [eventDetails, setEventDetails] = useState<EventDetails>();
@@ -219,7 +219,7 @@ export function Match({ match }: any) {
         return (
             <div className='match-container'>
                 <MatchDetails eventDetails={eventDetails} gameMetadata={metadata} matchState={formatMatchState(eventDetails, lastWindowFrame, scheduleEvent)} records={records} results={results} scheduleEvent={scheduleEvent} />
-                <Game eventDetails={eventDetails} gameIndex={gameIndex} gameMetadata={metadata} firstWindowFrame={firstWindowFrame} lastDetailsFrame={lastDetailsFrame} lastWindowFrame={lastWindowFrame} outcome={currentGameOutcome} records={records} results={results} videoLink={getStreamOrVod(eventDetails)} items={items} />
+                <Game eventDetails={eventDetails} gameIndex={gameIndex} gameMetadata={metadata} firstWindowFrame={firstWindowFrame} lastDetailsFrame={lastDetailsFrame} lastWindowFrame={lastWindowFrame} outcome={currentGameOutcome} records={records} results={results} items={items} />
             </div>
         );
     } else if (eventDetails !== undefined) {
@@ -321,27 +321,6 @@ function getNextUnstartedGameIndex(eventDetails: EventDetails) {
     let lastCompletedGame = eventDetails.match.games.slice().reverse().find(game => game.state === "completed")
     let nextUnstartedGame = eventDetails.match.games.find(game => game.state === "unstarted" || game.state === "inProgress")
     return nextUnstartedGame ? nextUnstartedGame.number : (lastCompletedGame ? lastCompletedGame.number : eventDetails.match.games.length)
-}
-
-function getStreamOrVod(eventDetails: EventDetails) {
-    let vods = eventDetails.match.games[getNextUnstartedGameIndex(eventDetails) - 1].vods
-    if (vods.length) {
-        return (<span className="footer-notes"><a href={getExtendedVodLink(vods[0])} target="_blank" rel="noreferrer">VOD Link</a></span>)
-    }
-
-    if (!eventDetails.streams || !eventDetails.streams.length) {
-        return (<span>No streams currently available</span>)
-    }
-    let shortestDelayStream = eventDetails.streams.reduce((previousVod, currentVod) => currentVod.offset < 0 && currentVod.offset > previousVod.offset ? currentVod : previousVod, eventDetails.streams[0])
-
-    let streamOffset = Math.round(shortestDelayStream.offset / 1000 / 60 * -1)
-    let link = shortestDelayStream.provider === "youtube" ? `https://www.youtube.com/watch?v=${shortestDelayStream.parameter}` : `https://www.twitch.tv/${shortestDelayStream.parameter}`
-    let delayString = streamOffset > 1 ? `Approximately ${streamOffset} minutes` : `Less than 1 minute`
-    return (<span className="footer-notes">Stream Delay: {delayString} - <a href={link} target="_blank" rel="noreferrer">Watch Stream</a></span>)
-}
-
-function getExtendedVodLink(extendedVod: ExtendedVod) {
-    return extendedVod.provider === "youtube" ? `https://www.youtube.com/watch?v=${extendedVod.parameter}` : `https://www.twitch.tv/${extendedVod.parameter}`
 }
 
 function formatMatchState(eventDetails: EventDetails, lastWindowFrame: WindowFrame, scheduleEvent: ScheduleEvent): string {

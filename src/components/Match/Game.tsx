@@ -5,7 +5,7 @@ import { GameDetails } from "./GameDetails"
 import { MiniHealthBar } from "./MiniHealthBar";
 import React, { useEffect, useState } from "react";
 import { toast } from 'react-toastify';
-import { DetailsFrame, EventDetails, GameMetadata, Item, Outcome, Participant, Record, Result, TeamStats, WindowFrame, WindowParticipant } from "../types/baseTypes";
+import { DetailsFrame, EventDetails, GameMetadata, Item, Outcome, Participant, Record, Result, TeamStats, WindowFrame, WindowParticipant, ExtendedVod } from "../types/baseTypes";
 
 import { ReactComponent as TowerSVG } from '../../assets/images/tower.svg';
 import { ReactComponent as BaronSVG } from '../../assets/images/baron.svg';
@@ -25,6 +25,8 @@ import { ItemsDisplay } from "./ItemsDisplay";
 
 import { LiveAPIWatcher } from "./LiveAPIWatcher";
 import { CHAMPIONS_URL, getFormattedPatchVersion } from '../../utils/LoLEsportsAPI';
+import { TwitchEmbed, TwitchEmbedLayout } from 'twitch-player';
+import { ChatToggler } from '../Navbar/ChatToggler';
 
 type Props = {
     firstWindowFrame: WindowFrame,
@@ -33,7 +35,6 @@ type Props = {
     gameIndex: number,
     gameMetadata: GameMetadata,
     eventDetails: EventDetails,
-    videoLink: JSX.Element,
     outcome: Array<Outcome>,
     records?: Record[],
     results?: Result[],
@@ -46,8 +47,12 @@ enum GameState {
     finished = "game ended"
 }
 
-export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, gameMetadata, gameIndex, eventDetails, outcome, videoLink, results, items }: Props) {
+export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, gameMetadata, gameIndex, eventDetails, outcome, results, items }: Props) {
     const [gameState, setGameState] = useState<GameState>(GameState[lastWindowFrame.gameState as keyof typeof GameState]);
+    const [videoProvider, setVideoProvider] = useState<string>();
+    const [videoParameter, setVideoParameter] = useState<string>();
+    const chatData = localStorage.getItem("chat");
+    const chatEnabled = chatData ? chatData === `unmute` : false
 
     useEffect(() => {
         let currentGameState: GameState = GameState[lastWindowFrame.gameState as keyof typeof GameState]
@@ -64,6 +69,12 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
                 draggable: true,
             });
         }
+
+        // const chatData = localStorage.getItem("chat");
+        // if (chatData) {
+        //     console.log(`here`)
+        //     setChatEnabled(chatData === `mute`)
+        // }
 
         var playerStatsRows = Array.from($('.player-stats-row th'))
         var championStatsRows = Array.from($('.champion-stats-row span'))
@@ -113,6 +124,172 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
         })
         navigator.clipboard.writeText(championNames.join("\t"));
     })
+
+    $(`#streamDropdown`).prop("onchange", null).off("change");
+    $(`#streamDropdown`).on(`change`, (e) => {
+        let optionSelected = $("option:selected", e.target);
+        console.log(optionSelected)
+        console.log(optionSelected.attr(`data-parameter`))
+        console.log(optionSelected.attr(`data-provider`))
+
+        setVideoParameter(optionSelected.attr(`data-parameter`) || videoParameter)
+        setVideoProvider(optionSelected.attr(`data-provider`) || videoProvider)
+        let videoPlayer = document.querySelector(`#video-player`)
+        if (videoPlayer) {
+            videoPlayer.removeAttribute(`added`)
+        }
+
+    })
+
+    function capitalizeFirstLetter(string: string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
+    const coStreamers: Array<ExtendedVod> = [
+        {
+            coStreamer: true,
+            locale: `en-US`,
+            offset: 0,
+            parameter: `caedrel`,
+            provider: `twitch`,
+            mediaLocale: {
+                englishName: `Caedrel`,
+                translatedName: `Caedrel`,
+                locale: `en-US`
+            }
+        },
+        {
+            coStreamer: true,
+            locale: `en-US`,
+            offset: 0,
+            parameter: `doublelift`,
+            provider: `twitch`,
+            mediaLocale: {
+                englishName: `Doublelift`,
+                translatedName: `Doublelift`,
+                locale: `en-US`
+            }
+        },
+        {
+            coStreamer: true,
+            locale: `en-ES`,
+            offset: 0,
+            parameter: `ibai`,
+            provider: `twitch`,
+            mediaLocale: {
+                englishName: `Ibai`,
+                translatedName: `Ibai`,
+                locale: `en-ES`
+            }
+        },
+        {
+            coStreamer: true,
+            locale: `en-US`,
+            offset: 0,
+            parameter: `iwdominate`,
+            provider: `twitch`,
+            mediaLocale: {
+                englishName: `IWillDominate`,
+                translatedName: `IWillDominate`,
+                locale: `en-US`
+            }
+        },
+        {
+            coStreamer: true,
+            locale: `en-US`,
+            offset: 0,
+            parameter: `imls`,
+            provider: `twitch`,
+            mediaLocale: {
+                englishName: `LS`,
+                translatedName: `LS`,
+                locale: `en-US`
+            }
+        },
+        {
+            coStreamer: true,
+            locale: `en-US`,
+            offset: 0,
+            parameter: `yamatocannon`,
+            provider: `twitch`,
+            mediaLocale: {
+                englishName: `YamatoCannon`,
+                translatedName: `YamatoCannon`,
+                locale: `en-US`
+            }
+        }]
+
+    function getStreamDropdown(eventDetails: EventDetails) {
+        const currentProvider = videoProvider
+        const currentParameter = videoParameter
+        let vods = eventDetails.match.games[gameIndex - 1].vods
+        // if (vods.length) {
+        //     return (<span className="footer-notes"><a href={getExtendedVodLink(vods[0])} target="_blank" rel="noreferrer">VOD Link</a></span>)
+        // }
+
+        if (!eventDetails.streams || !eventDetails.streams.length) {
+            return (<span>No streams currently available</span>)
+        }
+        let streamsSortedByDelay = eventDetails.streams.sort((a, b) => b.coStreamer ? b.offset - a.offset : 1)
+        coStreamers.forEach(streamer => {
+            const foundStream = streamsSortedByDelay.find(stream => stream.parameter === streamer.parameter)
+            if (!foundStream) {
+                streamsSortedByDelay.push(streamer)
+            }
+        })
+        let dropdown = streamsSortedByDelay.map(stream => {
+            let streamOffset = Math.round(stream.offset / 1000 / 60 * -1)
+            let delayString = streamOffset > 1 ? `~${streamOffset} minutes` : `<1 minute`
+            let streamString = stream.coStreamer ? stream.mediaLocale.englishName : stream.provider === `twitch` ? `${capitalizeFirstLetter(stream.provider)}(${stream.locale}) - ${stream.parameter} - Delay: ${delayString}` : `${capitalizeFirstLetter(stream.provider)}(${stream.locale}) - Delay: ${delayString}`
+            return <option value={stream.parameter} data-provider={stream.provider} data-parameter={stream.parameter}>{streamString}</option>
+        })
+
+        let videoPlayer = document.querySelector(`#video-player`)
+        if (videoPlayer && !videoPlayer.hasAttribute(`added`)) {
+            setVideoParameter(streamsSortedByDelay[0].parameter)
+            setVideoProvider(streamsSortedByDelay[0].provider)
+        }
+
+        return (<select id="streamDropdown" className='footer-notes'>{dropdown}</select>)
+    }
+
+    function getVideoPlayer() {
+        let videoPlayer = document.querySelector(`#video-player`)
+        if (!videoParameter || !videoProvider) return
+        if (videoPlayer && !videoPlayer.hasAttribute(`added`)) {
+            videoPlayer.setAttribute(`added`, `true`)
+            if (videoProvider === "youtube") {
+                videoPlayer.innerHTML = `
+                <iframe
+                    width="100%"
+                    height="100%"
+                    src="https://www.youtube.com/embed/${videoParameter}?autoplay=1"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    title="Embedded youtube"
+                    </iframe>`
+
+                if (chatEnabled) {
+                    videoPlayer.innerHTML += `<iframe width="350px" height="500px" src="https://www.youtube.com/live\_chat?v=${videoParameter}" ></iframe>`
+                }
+
+            } else {
+                videoPlayer.innerHTML = ``
+                const embed = new TwitchEmbed(`video-player`, {
+                    width: `100%`,
+                    height: `100%`,
+                    channel: videoParameter,
+                    layout: chatEnabled ? TwitchEmbedLayout.VIDEO_WITH_CHAT : TwitchEmbedLayout.VIDEO,
+                });
+            }
+        }
+    }
+
+    function getExtendedVodLink(extendedVod: ExtendedVod) {
+        return extendedVod.provider === "youtube" ? `https://www.youtube.com/watch?v=${extendedVod.parameter}` : `https://www.twitch.tv/${extendedVod.parameter}`
+    }
+
     return (
         <div className="status-live-game-card">
             <GameDetails eventDetails={eventDetails} gameIndex={gameIndex} />
@@ -360,12 +537,18 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
                 <span className="footer-notes">
                     <a target="_blank" href={`https://www.leagueoflegends.com/en-us/news/game-updates/patch-${gameMetadata.patchVersion.split(`.`).slice(0, 2).join(`-`)}-notes/`}>Patch Version: {gameMetadata.patchVersion}</a>
                 </span>
-                {videoLink}
                 <span className="footer-notes">
                     <a href="javascript:void(0);" className="copy-champion-names">
                         Copy Champion Names
                     </a>
                 </span>
+                {getStreamDropdown(eventDetails)}
+                <div className='chatDiv'>
+                    <span className='footer-notes'>Chat Enabled:</span>
+                    <ChatToggler />
+                </div>
+                <div id="video-player" className={chatEnabled ? `chatEnabled`: ``}></div>
+                {getVideoPlayer()}
             </div>
             <LiveAPIWatcher gameIndex={gameIndex} gameMetadata={gameMetadata} lastWindowFrame={lastWindowFrame} championsUrlWithPatchVersion={championsUrlWithPatchVersion} blueTeam={eventDetails.match.teams[0]} redTeam={eventDetails.match.teams[1]} />
         </div>
