@@ -7,15 +7,17 @@ import {
     getWindowResponse,
     getScheduleResponse,
     getStandingsResponse,
-    getItemsResponse,
-    getFormattedPatchVersion
+    getDataDragonResponse,
+    getFormattedPatchVersion,
+    ITEMS_JSON_URL,
+    RUNES_JSON_URL
 } from "../../utils/LoLEsportsAPI";
 import { useEffect, useState } from "react";
 import Loading from '../../assets/images/loading.svg'
 import { ReactComponent as TeamTBDSVG } from '../../assets/images/team-tbd.svg';
 import { MatchDetails } from "./MatchDetails"
 import { Game } from "./Game";
-import { EventDetails, DetailsFrame, GameMetadata, Item, Outcome, Record, Result, ScheduleEvent, Standing, WindowFrame } from "../types/baseTypes"
+import { EventDetails, DetailsFrame, GameMetadata, Item, Outcome, Record, Result, ScheduleEvent, Standing, WindowFrame, Rune } from "../types/baseTypes"
 
 export function Match({ match }: any) {
     const [eventDetails, setEventDetails] = useState<EventDetails>();
@@ -29,6 +31,7 @@ export function Match({ match }: any) {
     const [scheduleEvent, setScheduleEvent] = useState<ScheduleEvent>();
     const [gameIndex, setGameIndex] = useState<number>();
     const [items, setItems] = useState<Item[]>();
+    const [runes, setRunes] = useState<Rune[]>();
 
     const matchId = match.params.gameid;
     let matchEventDetails = eventDetails
@@ -125,7 +128,8 @@ export function Match({ match }: any) {
                 console.groupEnd()
                 firstWindowReceived = true
                 setFirstWindowFrame(frames[0])
-                getitems(response.data.gameMetadata)
+                getItems(response.data.gameMetadata)
+                getRunes(response.data.gameMetadata)
             });
         }
 
@@ -155,7 +159,7 @@ export function Match({ match }: any) {
                 const blueTeamWonOnInhibitors = lastWindowFrame.blueTeam.inhibitors > 0 && lastWindowFrame?.redTeam.inhibitors === 0
                 const redTeamWonOnInhibitors = lastWindowFrame?.redTeam.inhibitors > 0 && lastWindowFrame?.blueTeam.inhibitors === 0
                 const blueTeamWon = matchEventDetails.match.games[currentGameIndex - 1].state === `completed` && (blueTeam.result.outcome === `win` || (cleanSweep && blueTeam.result.gameWins > 0) || blueTeamWonOnInhibitors || (blueTeamWonMatch && (currentGameIndex - 1) === matchEventDetails.match.games.filter(game => game.state === "completed").length))
-                const redTeamWon = matchEventDetails.match.games[currentGameIndex - 1].state === `completed` &&  (redTeam.result.outcome === `win` || (cleanSweep && redTeam.result.gameWins > 0) || redTeamWonOnInhibitors || (redTeamWonMatch && (currentGameIndex - 1) === matchEventDetails.match.games.filter(game => game.state === "completed").length))
+                const redTeamWon = matchEventDetails.match.games[currentGameIndex - 1].state === `completed` && (redTeam.result.outcome === `win` || (cleanSweep && redTeam.result.gameWins > 0) || redTeamWonOnInhibitors || (redTeamWonMatch && (currentGameIndex - 1) === matchEventDetails.match.games.filter(game => game.state === "completed").length))
 
                 const outcome: Array<Outcome> = [
                     {
@@ -207,19 +211,26 @@ export function Match({ match }: any) {
             });
         }
 
-        function getitems(metadata: GameMetadata) {
+        function getItems(metadata: GameMetadata) {
             const formattedPatchVersion = getFormattedPatchVersion(metadata.patchVersion)
-            getItemsResponse(formattedPatchVersion).then(response => {
+            getDataDragonResponse(ITEMS_JSON_URL, formattedPatchVersion).then(response => {
                 setItems(response.data.data)
+            })
+        }
+        function getRunes(metadata: GameMetadata) {
+            const formattedPatchVersion = getFormattedPatchVersion(metadata.patchVersion)
+            getDataDragonResponse(RUNES_JSON_URL, formattedPatchVersion).then(response => {
+                setRunes(response.data)
+                console.log(response.data)
             })
         }
     }, [matchId]);
 
-    if (firstWindowFrame !== undefined && lastWindowFrame !== undefined && lastDetailsFrame !== undefined && metadata !== undefined && eventDetails !== undefined && currentGameOutcome !== undefined && scheduleEvent !== undefined && gameIndex !== undefined && items !== undefined) {
+    if (firstWindowFrame !== undefined && lastWindowFrame !== undefined && lastDetailsFrame !== undefined && metadata !== undefined && eventDetails !== undefined && currentGameOutcome !== undefined && scheduleEvent !== undefined && gameIndex !== undefined && items !== undefined && runes !== undefined) {
         return (
             <div className='match-container'>
                 <MatchDetails eventDetails={eventDetails} gameMetadata={metadata} matchState={formatMatchState(eventDetails, lastWindowFrame, scheduleEvent)} records={records} results={results} scheduleEvent={scheduleEvent} />
-                <Game eventDetails={eventDetails} gameIndex={gameIndex} gameMetadata={metadata} firstWindowFrame={firstWindowFrame} lastDetailsFrame={lastDetailsFrame} lastWindowFrame={lastWindowFrame} outcome={currentGameOutcome} records={records} results={results} items={items} />
+                <Game eventDetails={eventDetails} gameIndex={gameIndex} gameMetadata={metadata} firstWindowFrame={firstWindowFrame} lastDetailsFrame={lastDetailsFrame} lastWindowFrame={lastWindowFrame} outcome={currentGameOutcome} records={records} results={results} items={items} runes={runes} />
             </div>
         );
     } else if (eventDetails !== undefined) {

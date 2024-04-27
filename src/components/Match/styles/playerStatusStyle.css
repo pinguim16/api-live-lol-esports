@@ -598,3 +598,27 @@ svg.player-champion {
     border-style: solid;
     border-color: var(--background) transparent transparent transparent;
 }
+
+.rune img {
+    max-width: 48px;
+    max-height: 48px;
+}
+
+.rune-list div {
+    padding: 0px;
+    margin: 2px 0px;
+}
+
+.rune-list .name {
+    vertical-align: top;
+    margin-top: 16px;
+    margin-left: 8px;
+}
+
+.rune-list div.rune {
+    margin-bottom: 18px;
+}
+
+.rune-list .text {
+    display: block;
+}

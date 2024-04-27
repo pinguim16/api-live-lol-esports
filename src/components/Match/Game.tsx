@@ -5,7 +5,7 @@ import { GameDetails } from "./GameDetails"
 import { MiniHealthBar } from "./MiniHealthBar";
 import React, { useEffect, useState } from "react";
 import { toast } from 'react-toastify';
-import { DetailsFrame, EventDetails, GameMetadata, Item, Outcome, Participant, Record, Result, TeamStats, WindowFrame, WindowParticipant, ExtendedVod } from "../types/baseTypes";
+import { DetailsFrame, EventDetails, GameMetadata, Item, Outcome, Participant, Record, Result, TeamStats, WindowFrame, WindowParticipant, ExtendedVod, Rune, Slot, SlottedRune } from "../types/baseTypes";
 
 import { ReactComponent as TowerSVG } from '../../assets/images/tower.svg';
 import { ReactComponent as BaronSVG } from '../../assets/images/baron.svg';
@@ -24,7 +24,7 @@ import { ReactComponent as ElderDragonSVG } from '../../assets/images/dragon-eld
 import { ItemsDisplay } from "./ItemsDisplay";
 
 import { LiveAPIWatcher } from "./LiveAPIWatcher";
-import { CHAMPIONS_URL, getFormattedPatchVersion } from '../../utils/LoLEsportsAPI';
+import { CHAMPIONS_URL, RUNES_JSON_URL, getDataDragonResponse, getFormattedPatchVersion } from '../../utils/LoLEsportsAPI';
 import { TwitchEmbed, TwitchEmbedLayout } from 'twitch-player';
 import { ChatToggler } from '../Navbar/ChatToggler';
 
@@ -38,7 +38,8 @@ type Props = {
     outcome: Array<Outcome>,
     records?: Record[],
     results?: Result[],
-    items: Item[]
+    items: Item[],
+    runes: Rune[]
 }
 
 enum GameState {
@@ -47,7 +48,7 @@ enum GameState {
     finished = "game ended"
 }
 
-export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, gameMetadata, gameIndex, eventDetails, outcome, results, items }: Props) {
+export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, gameMetadata, gameIndex, eventDetails, outcome, results, items, runes }: Props) {
     const [gameState, setGameState] = useState<GameState>(GameState[lastWindowFrame.gameState as keyof typeof GameState]);
     const [videoProvider, setVideoProvider] = useState<string>();
     const [videoParameter, setVideoParameter] = useState<string>();
@@ -434,7 +435,7 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
                                     <tr key={`${gameIndex}_${championsUrlWithPatchVersion}${gameMetadata.blueTeamMetadata.participantMetadata[player.participantId - 1].championId}_stats`} className='champion-stats-row'>
                                         <td colSpan={9}>
                                             <span>
-                                                {getFormattedChampionStats(championDetails)}
+                                                {getFormattedChampionStats(championDetails, runes)}
                                             </span>
                                         </td>
                                     </tr>
@@ -525,7 +526,7 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
                                     <tr key={`${gameIndex}_${championsUrlWithPatchVersion}${gameMetadata.redTeamMetadata.participantMetadata[player.participantId - 6].championId}_stats`} className='champion-stats-row'>
                                         <td colSpan={9}>
                                             <span>
-                                                {getFormattedChampionStats(championDetails)}
+                                                {getFormattedChampionStats(championDetails, runes)}
                                             </span>
                                         </td>
                                     </tr>
@@ -547,7 +548,7 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
                     <span className='footer-notes'>Chat Enabled:</span>
                     <ChatToggler />
                 </div>
-                <div id="video-player" className={chatEnabled ? `chatEnabled`: ``}></div>
+                <div id="video-player" className={chatEnabled ? `chatEnabled` : ``}></div>
                 {getVideoPlayer()}
             </div>
             <LiveAPIWatcher gameIndex={gameIndex} gameMetadata={gameMetadata} lastWindowFrame={lastWindowFrame} championsUrlWithPatchVersion={championsUrlWithPatchVersion} blueTeam={eventDetails.match.teams[0]} redTeam={eventDetails.match.teams[1]} />
@@ -584,7 +585,7 @@ function HeaderStats(teamStats: TeamStats, teamColor: string) {
     )
 }
 
-function getFormattedChampionStats(championDetails: Participant) {
+function getFormattedChampionStats(championDetails: Participant, runes: Rune[]) {
     return (
         <div>
             <div className='footer-notes'>Attack Damage: {championDetails.attackDamage}</div>
@@ -598,6 +599,54 @@ function getFormattedChampionStats(championDetails: Participant) {
             <div className='footer-notes'>Damage Share: {Math.round(championDetails.championDamageShare * 10000) / 100}%</div>
             <div className='footer-notes'>Kill Participation: {Math.round(championDetails.killParticipation * 10000) / 100}%</div>
             <div className='footer-notes'>Skill Order: {championDetails.abilities.join('->')}</div>
+            {getFormattedRunes(championDetails, runes)}
+        </div>
+    )
+}
+
+function getRuneUrlFromIcon(runes: Rune[], icon: string) {
+    const perkImageUrl = `https://ddragon.leagueoflegends.com/cdn/img/PERK_ICON`
+    return perkImageUrl.replace(`PERK_ICON`, icon)
+}
+
+function getSlottedRunes(runes: Rune[]): Array<SlottedRune> {
+    const slottedRunes: Array<SlottedRune> = []
+    runes.forEach(rune => {
+        rune.slots.forEach(slot => {
+            slot.runes.forEach(slottedRune => {
+                slottedRunes.push(slottedRune)
+            })
+        })
+    })
+    return slottedRunes
+}
+
+function getRuneHTMLElement(slottedRune: SlottedRune) {
+    return <div dangerouslySetInnerHTML={{ __html: slottedRune.longDesc }}></div>
+}
+
+function getFormattedRunes(championDetails: Participant, runes: Rune[]) {
+    const slottedRunes = getSlottedRunes(runes)
+    const mappedRunes = championDetails.perkMetadata.perks.map(perk => {
+        return slottedRunes.find(slottedRune => slottedRune.id === perk)
+    })
+    if (!mappedRunes) return (<div className="StatsMatchupRunes"></div>)
+
+    return (
+        <div className="rune-list">
+            {mappedRunes.map(mappedRune => {
+                return mappedRune ?
+                    (
+                        <div className="rune">
+                            <div>
+                                <img className="image" src={getRuneUrlFromIcon(runes, mappedRune.icon)} alt="" />
+                                <div className="name">{mappedRune.name}</div>
+                            </div>
+                            <div className="text">
+                                <div className="description">{getRuneHTMLElement(mappedRune)}</div>
+                            </div>
+                        </div>) : null
+            })}
         </div>
     )
 }

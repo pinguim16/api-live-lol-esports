@@ -37,7 +37,7 @@ export interface EventDetails {
 
 export interface ExtendedGame {
     id: string;
-    number: 1 | 2 | 3 |4 |5;
+    number: 1 | 2 | 3 | 4 | 5;
     state: "completed" | "unstarted" | "inProgress" | "unneeded";
     teams: CustomTeam[];
     vods: ExtendedVod[];
@@ -107,8 +107,8 @@ export interface ParticipantMetadata {
 }
 
 export interface PerkMetadata {
-    styleId: number;
-    subStyleId: number;
+    styleId: 8000 | 8100 | 8200 | 8300 | 8400;
+    subStyleId: 8000 | 8100 | 8200 | 8300 | 8400;
     perks: number[];
 }
 
@@ -276,6 +276,27 @@ export interface Item {
     plaintext: string;
     into: string[];
     gold: Gold;
+}
+
+export interface Rune {
+    icon: string;
+    id: number;
+    key: string;
+    name: string;
+    slots: Array<Slot>;
+}
+
+export interface Slot {
+    runes: Array<SlottedRune>;
+}
+
+export interface SlottedRune {
+    icon: string;
+    id: number;
+    key: string;
+    longDesc: string;
+    name: string;
+    shortDesc: string;
 }
 
 interface Gold {
