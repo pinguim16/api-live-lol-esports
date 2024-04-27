@@ -221,7 +221,6 @@ export function Match({ match }: any) {
             const formattedPatchVersion = getFormattedPatchVersion(metadata.patchVersion)
             getDataDragonResponse(RUNES_JSON_URL, formattedPatchVersion).then(response => {
                 setRunes(response.data)
-                console.log(response.data)
             })
         }
     }, [matchId]);

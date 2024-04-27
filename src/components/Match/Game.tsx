@@ -71,23 +71,6 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
             });
         }
 
-        // const chatData = localStorage.getItem("chat");
-        // if (chatData) {
-        //     console.log(`here`)
-        //     setChatEnabled(chatData === `mute`)
-        // }
-
-        var playerStatsRows = Array.from($('.player-stats-row th'))
-        var championStatsRows = Array.from($('.champion-stats-row span'))
-        var chevrons = Array.from($('.player-stats-row .chevron-down'))
-        playerStatsRows.forEach((playerStatsRow, index) => {
-            $(playerStatsRow).prop("onclick", null).off("click");
-            $(playerStatsRow).on('click', () => {
-                $(championStatsRows[index]).slideToggle()
-                $(chevrons[index]).toggleClass('rotated')
-            })
-        })
-
     }, [lastWindowFrame.gameState, gameState]);
 
     let blueTeam = eventDetails.match.teams[0];
@@ -112,9 +95,19 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
     const formattedPatchVersion = getFormattedPatchVersion(gameMetadata.patchVersion)
     const championsUrlWithPatchVersion = CHAMPIONS_URL.replace(`PATCH_VERSION`, formattedPatchVersion)
 
+    let playerStatsRows = Array.from($('.player-stats-row th'))
+    let championStatsRows = Array.from($('.champion-stats-row span'))
+    let chevrons = Array.from($('.player-stats-row .chevron-down'))
+    playerStatsRows.forEach((playerStatsRow, index) => {
+        $(playerStatsRow).prop("onclick", null).off("click");
+        $(playerStatsRow).on('click', () => {
+            $(championStatsRows[index]).slideToggle()
+            $(chevrons[index]).toggleClass('rotated')
+        })
+    })
+
     $(`.copy-champion-names`).prop("onclick", null).off("click");
     $(`.copy-champion-names`).on(`click`, () => {
-        console.log(gameMetadata)
         let championNames: Array<String> = []
         gameMetadata.blueTeamMetadata.participantMetadata.forEach(participant => {
             championNames.push(participant.championId)
@@ -129,9 +122,6 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
     $(`#streamDropdown`).prop("onchange", null).off("change");
     $(`#streamDropdown`).on(`change`, (e) => {
         let optionSelected = $("option:selected", e.target);
-        console.log(optionSelected)
-        console.log(optionSelected.attr(`data-parameter`))
-        console.log(optionSelected.attr(`data-provider`))
 
         setVideoParameter(optionSelected.attr(`data-parameter`) || videoParameter)
         setVideoProvider(optionSelected.attr(`data-provider`) || videoProvider)
