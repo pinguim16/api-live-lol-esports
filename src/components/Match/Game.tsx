@@ -57,6 +57,8 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
 
     useEffect(() => {
         let currentGameState: GameState = GameState[lastWindowFrame.gameState as keyof typeof GameState]
+        let icon = currentGameState === GameState.finished ? "🔴" : currentGameState === GameState.paused ? "🟠" : "🟢"
+        document.title = `${icon} ${eventDetails.league.name} - ${blueTeam.name} vs. ${redTeam.name}`;
 
         if (currentGameState !== gameState) {
             setGameState(currentGameState);
@@ -91,7 +93,6 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
 
     const goldPercentage = getGoldPercentage(lastWindowFrame.blueTeam.totalGold, lastWindowFrame.redTeam.totalGold);
     let inGameTime = getInGameTime(firstWindowFrame.rfc460Timestamp, lastWindowFrame.rfc460Timestamp)
-    document.title = `${blueTeam.name} VS ${redTeam.name}`;
     const formattedPatchVersion = getFormattedPatchVersion(gameMetadata.patchVersion)
     const championsUrlWithPatchVersion = CHAMPIONS_URL.replace(`PATCH_VERSION`, formattedPatchVersion)
 

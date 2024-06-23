@@ -233,6 +233,7 @@ export function Match({ match }: any) {
             </div>
         );
     } else if (eventDetails !== undefined) {
+        document.title = `🟡 ${eventDetails.league.name} - ${eventDetails?.match.teams[0].name} vs. ${eventDetails?.match.teams[1].name}`;
         return (
             <div className="loading-game-container">
                 <div>
