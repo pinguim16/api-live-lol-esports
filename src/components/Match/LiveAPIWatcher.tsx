@@ -178,6 +178,7 @@ function createToast(blueTeam: boolean, soundIsPlaying: boolean, sound: string, 
                 <h4 style={{ color: "#FFF" }}>{message}</h4>
             </div>
             , {
+                icon: false,
                 pauseOnHover: false,
                 pauseOnFocusLoss: false,
                 position: toast.POSITION.TOP_LEFT,
@@ -192,6 +193,7 @@ function createToast(blueTeam: boolean, soundIsPlaying: boolean, sound: string, 
                 <h4 style={{ color: "#FFF" }}>{message}</h4>
             </div>
             , {
+                icon: false,
                 pauseOnHover: false,
                 pauseOnFocusLoss: false,
                 position: toast.POSITION.TOP_RIGHT,
