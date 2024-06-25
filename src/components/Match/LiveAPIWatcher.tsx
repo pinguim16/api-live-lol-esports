@@ -181,7 +181,8 @@ function createToast(blueTeam: boolean, soundIsPlaying: boolean, sound: string, 
                 pauseOnHover: false,
                 pauseOnFocusLoss: false,
                 position: toast.POSITION.TOP_LEFT,
-                toastId: toastId
+                toastId: toastId,
+                theme: "colored"
             }
         )
     } else {
@@ -194,7 +195,8 @@ function createToast(blueTeam: boolean, soundIsPlaying: boolean, sound: string, 
                 pauseOnHover: false,
                 pauseOnFocusLoss: false,
                 position: toast.POSITION.TOP_RIGHT,
-                toastId: toastId
+                toastId: toastId,
+                theme: "colored"
             }
         )
     }
