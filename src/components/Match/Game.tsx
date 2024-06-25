@@ -63,14 +63,45 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
         if (currentGameState !== gameState) {
             setGameState(currentGameState);
 
-            toast.info(`Game status changed: ${currentGameState.toUpperCase()}`, {
-                position: "top-right",
-                autoClose: 15000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-            });
+            if (currentGameState === GameState.in_game) {
+                toast.success(`Game Resumed`, {
+                    icon: "▶",
+                    delay: 15000,
+                    position: "top-right",
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: false,
+                    pauseOnFocusLoss: false,
+                    draggable: true,
+                    toastId: `gameStatus`,
+                    theme: "colored"
+                })
+            } else if (currentGameState === GameState.finished) {
+                toast.error(`Game Ended`, {
+                    delay: 15000,
+                    position: "top-right",
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: false,
+                    pauseOnFocusLoss: false,
+                    draggable: true,
+                    toastId: `gameStatus`,
+                    theme: "colored"
+                })
+            } else {
+                toast.warning(`Game Paused`, {
+                    delay: 15000,
+                    position: "top-right",
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: false,
+                    pauseOnFocusLoss: false,
+                    draggable: true,
+                    toastId: `gameStatus`,
+                    theme: "colored"
+                })
+            }
+
         }
 
     }, [lastWindowFrame.gameState, gameState]);
