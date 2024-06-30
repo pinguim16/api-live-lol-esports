@@ -10,15 +10,14 @@ type Props = {
 }
 
 export function GameDetails({ eventDetails, gameIndex }: Props) {
-    useEffect(() => {
-
-    }, []);
-
+    useEffect(() => { }, []);
+    console.log(eventDetails);
+    console.log(gameIndex);
     return (
         (eventDetails.match.games.length > 1) ? (
             <div className='game-selector'>
                 {eventDetails.match.games.map((game) => {
-                    return <a className={`game-selector-item ${game.state} ${gameIndex === game.number ? `selected` : ``}`} href={`/live-lol-esports/#/live/${eventDetails.id}/game-index/${game.number}`} key={`game-selector-${game.id}`}>
+                    return <a className={`game-selector-item ${game.state} ${gameIndex === game.number ? `selected` : ``}`} href={`/api-live-lol-esports/#/live/${eventDetails.id}/game-index/${game.number}`} key={`game-selector-${game.id}`}>
                         <span className={`#/live/${game.state}`}>Game {game.number} - {capitalizeFirstLetter(game.state)}</span>
                     </a>
                 })}
