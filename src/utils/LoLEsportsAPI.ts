@@ -17,7 +17,7 @@ let count = 0
 let failureCount = 0
 
 export function getScheduleResponse() {
-    return axios.get(`${API_URL_PERSISTED}/getSchedule?hl=en-US`, {
+    return axios.get(`${API_URL_PERSISTED}/getSchedule?hl=pt-BR`, {
         headers: {
             "x-api-key": API_KEY,
         },
@@ -83,7 +83,7 @@ export function getGameDetailsResponse(gameId: string, date: string, lastFrameSu
 export function getEventDetailsResponse(gameId: string) {
     return axios.get(`${API_URL_PERSISTED}/getEventDetails`, {
         params: {
-            "hl": "en-US",
+            "hl": "pt-BR",
             "id": gameId,
         },
         headers: {
@@ -95,7 +95,7 @@ export function getEventDetailsResponse(gameId: string) {
 export function getStandingsResponse(tournamentId: string) {
     return axios.get(`${API_URL_PERSISTED}/getStandings`, {
         params: {
-            "hl": "en-US",
+            "hl": "pt-BR",
             "tournamentId": tournamentId,
         },
         headers: {

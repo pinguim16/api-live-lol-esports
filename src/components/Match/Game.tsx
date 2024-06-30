@@ -43,9 +43,9 @@ type Props = {
 }
 
 enum GameState {
-    in_game = "in game",
-    paused = "game paused",
-    finished = "game ended"
+    in_game = "jogo rolando",
+    paused = "jogo pausado",
+    finished = "jogo finalizado"
 }
 
 export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, gameMetadata, gameIndex, eventDetails, outcome, results, items, runes }: Props) {
@@ -64,7 +64,7 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
             setGameState(currentGameState);
 
             if (currentGameState === GameState.in_game) {
-                toast.success(`Game Resumed`, {
+                toast.success(`Jogo Retomado`, {
                     icon: "▶",
                     delay: 15000,
                     position: "top-right",
@@ -74,10 +74,10 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
                     pauseOnFocusLoss: false,
                     draggable: true,
                     toastId: `gameStatus`,
-                    theme: "colored"
+                    theme: `colored`,
                 })
             } else if (currentGameState === GameState.finished) {
-                toast.error(`Game Ended`, {
+                toast.error(`Jogo Finalizado`, {
                     delay: 15000,
                     position: "top-right",
                     hideProgressBar: false,
@@ -86,10 +86,10 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
                     pauseOnFocusLoss: false,
                     draggable: true,
                     toastId: `gameStatus`,
-                    theme: "colored"
+                    theme: `colored`,
                 })
             } else {
-                toast.warning(`Game Paused`, {
+                toast.warning(`Jogo Pausado`, {
                     delay: 15000,
                     position: "top-right",
                     hideProgressBar: false,
@@ -98,7 +98,7 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
                     pauseOnFocusLoss: false,
                     draggable: true,
                     toastId: `gameStatus`,
-                    theme: "colored"
+                    theme: `colored`,
                 })
             }
 

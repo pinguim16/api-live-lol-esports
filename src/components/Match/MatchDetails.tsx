@@ -40,7 +40,7 @@ export function MatchDetails({ gameMetadata, eventDetails, matchState, records, 
     return (
         <div className="">
             <div className="status-live-game-card-content">
-                {eventDetails ? (<h3>{eventDetails.league.name} - {scheduleEvent.blockName}  - Best of {eventDetails.match.strategy.count}</h3>) : null}
+                {eventDetails ? (<h3>{eventDetails.league.name} - {scheduleEvent.blockName}  - Melhor de {eventDetails.match.strategy.count}</h3>) : null}
                 <h3>{new Date(scheduleEvent.startTime).toLocaleTimeString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit' })}</h3>
                 <div className="live-game-stats-header">
                     <div className="live-game-stats-header-team-images">

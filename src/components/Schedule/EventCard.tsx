@@ -38,7 +38,7 @@ export function EventCard({ scheduleEvent }: Props) {
                     </div>
 
                     <div className="game-card-versus">
-                        <span>BEST OF {scheduleEvent.match.strategy.count}</span>
+                        <span>Melhor de {scheduleEvent.match.strategy.count}</span>
                         <span>
                             <p>
                                 {scheduleEvent.match.teams[0].result && scheduleEvent.match.teams[1].result ? `${scheduleEvent.match.teams[0].result.gameWins} - ${scheduleEvent.match.teams[1].result.gameWins}` : null}

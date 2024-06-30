@@ -265,7 +265,7 @@ export function Match({ match }: any) {
                             </span>
                         </div>
                         <div className="game-card-versus">
-                            <span>BEST OF {eventDetails.match.strategy.count}</span>
+                            <span>Melhor de {eventDetails.match.strategy.count}</span>
                             {eventDetails.match.teams[0].result && eventDetails.match.teams[1].result ?
                                 (<span>
                                     <p>
@@ -301,7 +301,7 @@ export function Match({ match }: any) {
                         </div>
                     </div>
                     {scheduleEvent && eventDetails ?
-                        (<h3>Game {getNextUnstartedGameIndex(eventDetails)} out of {eventDetails.match.strategy.count} will start at {new Date(scheduleEvent.startTime).toLocaleTimeString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit' })}</h3>)
+                        (<h3>Jogo {getNextUnstartedGameIndex(eventDetails)} de {eventDetails.match.strategy.count} vai começar em {new Date(scheduleEvent.startTime).toLocaleTimeString([], { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit' })}</h3>)
                         : null
                     }
                 </div>
@@ -336,12 +336,12 @@ function getNextUnstartedGameIndex(eventDetails: EventDetails) {
 
 function formatMatchState(eventDetails: EventDetails, lastWindowFrame: WindowFrame, scheduleEvent: ScheduleEvent): string {
     let gameStates = {
-        "in_game": "In Progress",
-        "paused": "Paused",
-        "finished": "Finished",
-        "completed": "Finished",
-        "unstarted": "Unstarted",
-        "inProgress": "In Progress"
+        "in_game": "Em progresso",
+        "paused": "Pausado",
+        "finished": "Finalizado",
+        "completed": "Finalizado",
+        "unstarted": "Aguardando Começo",
+        "inProgress": "Em progresso"
     }
 
     if (eventDetails.match.games.length === 1) return gameStates[lastWindowFrame.gameState]
