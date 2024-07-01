@@ -131,8 +131,6 @@ export function getVoidGrubs(gameId: string) {
     console.log("Entrou");
     return axios.get('https://feed.lolesports.com/livestats/v1/details/' + gameId, {
         headers: {
-            accept: 'application/json',
-            authorization: 'Bearer '
         }
     })
 }
