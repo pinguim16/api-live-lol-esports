@@ -43,7 +43,7 @@ type Props = {
 }
 
 enum GameState {
-    in_game = "jogo rolando",
+    in_game = "trocação de soco rolando",
     paused = "jogo pausado",
     finished = "jogo finalizado"
 }
@@ -356,8 +356,8 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
                         {HeaderStats(lastWindowFrame.redTeam, 'red-team')}
                     </div>
                     <div className="live-game-stats-header-gold">
-                        <div className="blue-team" style={{ flex: goldPercentage.goldBluePercentage }} />
-                        <div className="red-team" style={{ flex: goldPercentage.goldRedPercentage }} />
+                        <div className="blue-team" style={{ flex: goldPercentage.goldBluePercentage }}><span>{(goldPercentage.goldBluePercentage)}</span></div>
+                        <div className="red-team" style={{ flex: goldPercentage.goldRedPercentage }}><span>{(goldPercentage.goldRedPercentage)}</span></div>
                     </div>
                     <div className="live-game-stats-header-dragons">
                         <div className="blue-team">
@@ -381,7 +381,7 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
                                     <span>{blueTeam.name.toUpperCase()}</span>
                                 </th>
                                 <th className="table-top-row-vida" title="life">
-                                    <span>Health</span>
+                                    <span>Vida</span>
                                 </th>
                                 <th className="table-top-row-items" title="items">
                                     <span>Items</span>
@@ -399,7 +399,7 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
                                     <span>A</span>
                                 </th>
                                 <th className="table-top-row" title="gold">
-                                    <span>Gold</span>
+                                    <span>Ouro</span>
                                 </th>
                                 <th className="table-top-row" title="gold difference">
                                     <span>+/-</span>
@@ -473,7 +473,7 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
                                     <span>{redTeam.name.toUpperCase()}</span>
                                 </th>
                                 <th className="table-top-row-vida" title="life">
-                                    <span>Health</span>
+                                    <span>Vida</span>
                                 </th>
                                 <th className="table-top-row-items" title="items">
                                     <span>Items</span>
@@ -491,7 +491,7 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
                                     <span>A</span>
                                 </th>
                                 <th className="table-top-row" title="gold">
-                                    <span>Gold</span>
+                                    <span>Ouro</span>
                                 </th>
                                 <th className="table-top-row" title="gold difference">
                                     <span>+/-</span>
@@ -725,7 +725,7 @@ function getDragonSVG(dragonName: string, teamColor: string, index: number) {
 function getGoldPercentage(goldBlue: number, goldRed: number) {
     const total = goldBlue + goldRed;
     return {
-        goldBluePercentage: ((goldBlue / 100) * total),
-        goldRedPercentage: ((goldRed / 100) * total),
+        goldBluePercentage:  ((goldBlue * 100) / total),
+        goldRedPercentage: ((goldRed * 100) / total),
     }
 }

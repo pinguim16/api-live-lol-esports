@@ -9,6 +9,7 @@ import {
     getStandingsResponse,
     getDataDragonResponse,
     getFormattedPatchVersion,
+    getVoidGrubs,
     ITEMS_JSON_URL,
     RUNES_JSON_URL
 } from "../../utils/LoLEsportsAPI";
@@ -54,6 +55,7 @@ export function Match({ match }: any) {
             }
             getLiveWindow(gameId);
             getLastDetailsFrame(gameId);
+            getVoidGrub(gameId);
         }, 500);
 
         return () => {
@@ -124,7 +126,7 @@ export function Match({ match }: any) {
                 console.log(response.data.gameMetadata)
                 console.groupEnd()
                 console.groupCollapsed(`First Frame`)
-                console.log(frames[0])
+                console.log(frames)
                 console.groupEnd()
                 firstWindowReceived = true
                 setFirstWindowFrame(frames[0])
@@ -185,6 +187,13 @@ export function Match({ match }: any) {
             });
         }
 
+        function getVoidGrub(gameId: string){
+            getVoidGrubs(gameId).then(response =>{
+                console.log(response);
+            })
+        }
+
+
         function getResults(eventDetails: EventDetails) {
             if (eventDetails === undefined) return;
             getStandingsResponse(eventDetails.tournament.id).then(response => {
@@ -206,7 +215,6 @@ export function Match({ match }: any) {
                 let results = teams.map((team) => team.result)
                 setResults(results)
                 console.groupCollapsed(`Results`)
-                console.log(results)
                 console.groupEnd()
             });
         }

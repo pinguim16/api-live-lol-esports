@@ -177,28 +177,34 @@ span.mini-current-health {
     justify-content: center;
 }
 
-.gamestate-bg-in-game {
+.gamestate-bg-in-game,
+.gamestate-bg-jogo-rolando {
     background-color: var(--green);
     animation: pulse 2s infinite;
 }
 
-.gamestate-bg-game-ended {
+.gamestate-bg-game-ended,
+.gamestate-bg-jogo-finalizado {
     background-color: var(--red);
+}
+
+.gamestate-bg-game-paused,
+.gamestate-bg-jogo-pausado {
+    background-color: var(--gray-line);
+    animation: pulse-paused 7s infinite
 }
 
 .gamestate-bg-in-game,
 .gamestate-bg-game-paused,
-.gamestate-bg-game-ended {
+.gamestate-bg-game-ended,
+.gamestate-bg-jogo-pausado,
+.gamestate-bg-jogo-finalizado,
+.gamestate-bg-jogo-rolando {
     color: white;
     margin: 0px auto 10px auto;
     padding: 2.5px 10px;
     border-radius: 9999px;
     display: inline-block;
-}
-
-.gamestate-bg-game-paused {
-    background-color: var(--gray-line);
-    animation: pulse-paused 7s infinite
 }
 
 @keyframes pulse {
@@ -241,17 +247,26 @@ span.mini-current-health {
 Gold bar
 */
 
+.live-game-stats-header-gold .blue-team span,
+.live-game-stats-header-gold .red-team span {
+    position: absolute;
+    z-index: 1; /* Faz com que o span fique acima do div */
+    color: white; /* Define a cor do texto do span */
+    padding: 2px 5px; /* Espaçamento interno do span */
+    border-radius: 3px; /* Bordas arredondadas para o span */
+}
+
 .live-game-stats-header-gold {
     margin: 1rem 0;
     display: flex;
 }
 
 .live-game-stats-header-gold>.blue-team {
-    border-bottom: 4px solid var(--blue-twitter);
+    border-bottom: 20px solid var(--blue-twitter);
 }
 
 .live-game-stats-header-gold>.red-team {
-    border-bottom: 4px solid var(--red);
+    border-bottom: 20px solid var(--red);
 }
 
 /*

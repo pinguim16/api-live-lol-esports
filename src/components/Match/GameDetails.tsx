@@ -11,8 +11,6 @@ type Props = {
 
 export function GameDetails({ eventDetails, gameIndex }: Props) {
     useEffect(() => { }, []);
-    console.log(eventDetails);
-    console.log(gameIndex);
     return (
         (eventDetails.match.games.length > 1) ? (
             <div className='game-selector'>

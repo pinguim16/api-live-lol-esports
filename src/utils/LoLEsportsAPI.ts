@@ -11,6 +11,7 @@ export const ITEMS_JSON_URL = `https://ddragon.leagueoflegends.com/cdn/PATCH_VER
 const API_URL_PERSISTED = "https://esports-api.lolesports.com/persisted/gw"
 const API_URL_LIVE = "https://feed.lolesports.com/livestats/v1"
 const API_KEY = "0TvQnueqKa5mxJntVWt0w4LpLfEkrV1Ta8rQBb9Z"
+const API_VOIDGRUBS = "https://api.pandascore.co/lol/games/LOL_GAME_ID/frames?page=1&per_page=50'";
 
 let secondDelay = 60
 let count = 0
@@ -34,14 +35,14 @@ export function getWindowResponse(gameId: string, date?: string) {
     }).catch(function (error) {
         if (error.response) {
             // Request made and server responded
-            console.error(error.response.data);
+            //console.error(error.response.data);
             //   console.error(error.response.headers);
         } else if (error.request) {
             // The request was made but no response was received
-            console.error(error.request);
+            //console.error(error.request);
         } else {
             // Something happened in setting up the request that triggered an Error
-            console.error('Error', error.message);
+            //console.error('Error', error.message);
         }
     })
 }
@@ -65,17 +66,17 @@ export function getGameDetailsResponse(gameId: string, date: string, lastFrameSu
     }).catch(function (error) {
         if (error.response) {
             // Request made and server responded
-            console.error(error.response.data);
+            //console.error(error.response.data);
             if (!error.response.data.message.includes(`window with end time less than`) || failureCount < 6) return
             count = 1
             failureCount = 0
             secondDelay += 10
         } else if (error.request) {
             // The request was made but no response was received
-            console.error(error.request);
+            //console.error(error.request);
         } else {
             // Something happened in setting up the request that triggered an Error
-            console.error('Error', error.message);
+            //console.error('Error', error.message);
         }
     })
 }
@@ -124,4 +125,14 @@ export function getISODateMultiplyOf10() {
 
 export function getFormattedPatchVersion(patchVersion: string) {
     return patchVersion.split(`.`).slice(0, 2).join(`.`) + `.1`
+}
+
+export function getVoidGrubs(gameId: string) {
+    console.log("Entrou");
+    return axios.get('https://feed.lolesports.com/livestats/v1/details/' + gameId, {
+        headers: {
+            accept: 'application/json',
+            authorization: 'Bearer '
+        }
+    })
 }
