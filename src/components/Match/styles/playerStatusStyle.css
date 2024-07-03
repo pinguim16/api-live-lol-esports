@@ -178,7 +178,8 @@ span.mini-current-health {
 }
 
 .gamestate-bg-in-game,
-.gamestate-bg-jogo-rolando {
+.gamestate-bg-jogo-rolando,
+.gamestate-bg-trocação-de-soco-rolando {
     background-color: var(--green);
     animation: pulse 2s infinite;
 }
@@ -199,13 +200,15 @@ span.mini-current-health {
 .gamestate-bg-game-ended,
 .gamestate-bg-jogo-pausado,
 .gamestate-bg-jogo-finalizado,
-.gamestate-bg-jogo-rolando {
+.gamestate-bg-jogo-rolando,
+.gamestate-bg-trocação-de-soco-rolando {
     color: white;
     margin: 0px auto 10px auto;
     padding: 2.5px 10px;
     border-radius: 9999px;
     display: inline-block;
 }
+
 
 @keyframes pulse {
     0% {
@@ -637,3 +640,12 @@ svg.player-champion {
 .rune-list .text {
     display: block;
 }
+
+.stats-title {
+    font-size: 12px;
+    font-weight: bold;
+    color: var(--text);
+    margin-top: 10px;
+    text-align: center;
+}
+

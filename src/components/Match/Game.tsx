@@ -122,7 +122,7 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
         redTeam = auxBlueTeam;
     }
 
-    const goldPercentage = getGoldPercentage(lastWindowFrame.blueTeam.totalGold, lastWindowFrame.redTeam.totalGold);
+    const goldPercentage = getGoldPercentage(lastWindowFrame.blueTeam, lastWindowFrame.redTeam);
     let inGameTime = getInGameTime(firstWindowFrame.rfc460Timestamp, lastWindowFrame.rfc460Timestamp)
     const formattedPatchVersion = getFormattedPatchVersion(gameMetadata.patchVersion)
     const championsUrlWithPatchVersion = CHAMPIONS_URL.replace(`PATCH_VERSION`, formattedPatchVersion)
@@ -355,9 +355,12 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
                         {HeaderStats(lastWindowFrame.blueTeam, 'blue-team')}
                         {HeaderStats(lastWindowFrame.redTeam, 'red-team')}
                     </div>
-                    <div className="live-game-stats-header-gold">
-                        <div className="blue-team" style={{ flex: goldPercentage.goldBluePercentage }}><span>{(goldPercentage.goldBluePercentage)}</span></div>
-                        <div className="red-team" style={{ flex: goldPercentage.goldRedPercentage }}><span>{(goldPercentage.goldRedPercentage)}</span></div>
+                    <div className="live-game-stats">
+                    <h2 className="stats-title">Estatísticas com base nos objetivos para vitória</h2>
+                        <div className="live-game-stats-header-gold">
+                            <div className="blue-team" style={{ flex: goldPercentage.bluePercentage }}><span>{(goldPercentage.bluePercentage)} %</span></div>
+                            <div className="red-team" style={{ flex: goldPercentage.redPercentage }}><span>{(goldPercentage.redPercentage)} %</span></div>
+                        </div>
                     </div>
                     <div className="live-game-stats-header-dragons">
                         <div className="blue-team">
@@ -722,10 +725,48 @@ function getDragonSVG(dragonName: string, teamColor: string, index: number) {
     }
 }
 
-function getGoldPercentage(goldBlue: number, goldRed: number) {
-    const total = goldBlue + goldRed;
+function getGoldPercentage(teamBlue: TeamStats, teamRed: TeamStats) {
+   
+    const totalGold = teamBlue.totalGold + teamRed.totalGold;
+    var goldBluePercentage =  ((teamBlue.totalGold * 100) / totalGold);
+    var goldRedPercentage = ((teamRed.totalGold * 100) / totalGold);
+
+    var towerBluePercentage = (teamBlue.towers / 22) * 100;
+    var towerRedPercentage = (teamRed.towers / 22) * 100;
+
+    const baronsTotal = teamBlue.barons + teamRed.barons;
+    var baronsPercentageBlue = teamBlue.barons != 0 ? (teamBlue.barons / baronsTotal) * 100 : 0; 
+    var baronsPercentageRed = teamRed.barons != 0 ? (teamRed.barons / baronsTotal) * 100 : 0 
+
+    const dragons = teamBlue.dragons.length + teamRed.dragons.length;
+    var dragonsBlue = (teamBlue.dragons.length / dragons) * 100; 
+    var dragonsRed = (teamRed.dragons.length / dragons) * 100; 
+
+    const levelTotalBlue = (teamBlue.participants[0].level + teamBlue.participants[1].level + teamBlue.participants[2].level + teamBlue.participants[3].level + teamBlue.participants[4].level) / 5;
+    const levelTotalRed = (teamRed.participants[0].level + teamRed.participants[1].level + teamRed.participants[2].level + teamRed.participants[3].level + teamRed.participants[4].level) / 5;
+
+    var levelBlueMedia = (levelTotalBlue /18) * 100;
+    var levelRedMedia = (levelTotalRed /18) * 100;
+    
+    const killsTotal = teamBlue.totalKills + teamRed.totalKills;
+    var killPercentageBlue = (teamBlue.totalKills / killsTotal) * 100;
+    var killPercentageRed = (teamRed.totalKills / killsTotal) * 100;
+
+    var inibiBlue = (teamBlue.inhibitors/ 6) * 100;
+    var inibiRed = (teamRed.inhibitors/ 6) * 100;
+
+    var percentageBlue = (goldBluePercentage * 0.3) + (towerBluePercentage * 0.2) + (dragonsBlue * 0.15) + (baronsPercentageBlue * 0.1) + (levelBlueMedia * 0.1) 
+    + (killPercentageBlue * 0.1) + (inibiBlue + 0.05) ;
+    
+    var percentageRed = (goldRedPercentage * 0.3) + (towerRedPercentage * 0.2) + (dragonsRed * 0.15) + (baronsPercentageRed * 0.1) + (levelRedMedia * 0.1) 
+    + (killPercentageRed * 0.1) + (inibiRed + 0.05) ;
+
+    var totalPercentage = percentageBlue + percentageRed;
+    var probabilityBlue = (percentageBlue / totalPercentage) * 100;
+    var probabilityRed = (percentageRed / totalPercentage) * 100;
+
     return {
-        goldBluePercentage:  ((goldBlue * 100) / total),
-        goldRedPercentage: ((goldRed * 100) / total),
+        bluePercentage: probabilityBlue.toFixed(2),
+        redPercentage: probabilityRed.toFixed(2),
     }
 }

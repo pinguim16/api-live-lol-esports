@@ -126,11 +126,3 @@ export function getISODateMultiplyOf10() {
 export function getFormattedPatchVersion(patchVersion: string) {
     return patchVersion.split(`.`).slice(0, 2).join(`.`) + `.1`
 }
-
-export function getVoidGrubs(gameId: string) {
-    console.log("Entrou");
-    return axios.get('https://feed.lolesports.com/livestats/v1/details/' + gameId, {
-        headers: {
-        }
-    })
-}

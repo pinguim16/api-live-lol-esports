@@ -46,7 +46,7 @@ export function MatchDetails({ gameMetadata, eventDetails, matchState, records, 
                     <div className="live-game-stats-header-team-images">
                         {TeamCard({ eventDetails, index: 0, matchResults, record: records ? records[0] : undefined })}
                         <h1>
-                            <div>Match {matchState}</div>
+                            <div>Confronto {matchState}</div>
                             {matchResults ? (<div>{matchResults[0].gameWins}-{matchResults[1].gameWins}</div>) : null}
                             VS
                         </h1>

@@ -9,7 +9,6 @@ import {
     getStandingsResponse,
     getDataDragonResponse,
     getFormattedPatchVersion,
-    getVoidGrubs,
     ITEMS_JSON_URL,
     RUNES_JSON_URL
 } from "../../utils/LoLEsportsAPI";
@@ -55,7 +54,6 @@ export function Match({ match }: any) {
             }
             getLiveWindow(gameId);
             getLastDetailsFrame(gameId);
-            getVoidGrub(gameId);
         }, 500);
 
         return () => {
@@ -186,13 +184,6 @@ export function Match({ match }: any) {
                 setLastDetailsFrame(frames[frames.length - 1])
             });
         }
-
-        function getVoidGrub(gameId: string){
-            getVoidGrubs(gameId).then(response =>{
-                console.log(response);
-            })
-        }
-
 
         function getResults(eventDetails: EventDetails) {
             if (eventDetails === undefined) return;
