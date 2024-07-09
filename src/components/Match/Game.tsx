@@ -48,7 +48,7 @@ enum GameState {
     finished = "jogo finalizado"
 }
 
-export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, gameMetadata, gameIndex, eventDetails, outcome, results, items, runes }: Props) {
+export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, gameMetadata, gameIndex, eventDetails, records, outcome, results, items, runes }: Props) {
     const [gameState, setGameState] = useState<GameState>(GameState[lastWindowFrame.gameState as keyof typeof GameState]);
     const [videoProvider, setVideoProvider] = useState<string>();
     const [videoParameter, setVideoParameter] = useState<string>();
@@ -122,7 +122,8 @@ export function Game({ firstWindowFrame, lastWindowFrame, lastDetailsFrame, game
         redTeam = auxBlueTeam;
     }
 
-    const goldPercentage = getGoldPercentage(lastWindowFrame.blueTeam, lastWindowFrame.redTeam);
+    var recordTeams = records != undefined ? records : [];
+    const goldPercentage = getGoldPercentage(lastWindowFrame.blueTeam, lastWindowFrame.redTeam, recordTeams);
     let inGameTime = getInGameTime(firstWindowFrame.rfc460Timestamp, lastWindowFrame.rfc460Timestamp)
     const formattedPatchVersion = getFormattedPatchVersion(gameMetadata.patchVersion)
     const championsUrlWithPatchVersion = CHAMPIONS_URL.replace(`PATCH_VERSION`, formattedPatchVersion)
@@ -725,22 +726,27 @@ function getDragonSVG(dragonName: string, teamColor: string, index: number) {
     }
 }
 
-function getGoldPercentage(teamBlue: TeamStats, teamRed: TeamStats) {
+function getGoldPercentage(teamBlue: TeamStats, teamRed: TeamStats, records:Record[]) {
    
+    //calculo de vitorias e derrotas para a probabilidade
+    if(records != undefined){
+    }
+
+
     const totalGold = teamBlue.totalGold + teamRed.totalGold;
     var goldBluePercentage =  ((teamBlue.totalGold * 100) / totalGold);
     var goldRedPercentage = ((teamRed.totalGold * 100) / totalGold);
 
-    var towerBluePercentage = (teamBlue.towers / 22) * 100;
-    var towerRedPercentage = (teamRed.towers / 22) * 100;
+    var towerBluePercentage = teamBlue.towers != 0 ? (teamBlue.towers / 22) * 100 : 0;
+    var towerRedPercentage = teamRed.towers != 0 ? (teamRed.towers / 22) * 100: 0;
 
     const baronsTotal = teamBlue.barons + teamRed.barons;
     var baronsPercentageBlue = teamBlue.barons != 0 ? (teamBlue.barons / baronsTotal) * 100 : 0; 
-    var baronsPercentageRed = teamRed.barons != 0 ? (teamRed.barons / baronsTotal) * 100 : 0 
+    var baronsPercentageRed = teamRed.barons != 0 ? (teamRed.barons / baronsTotal) * 100 : 0; 
 
     const dragons = teamBlue.dragons.length + teamRed.dragons.length;
-    var dragonsBlue = (teamBlue.dragons.length / dragons) * 100; 
-    var dragonsRed = (teamRed.dragons.length / dragons) * 100; 
+    var dragonsBlue = teamBlue.dragons.length != 0 ? (teamBlue.dragons.length / dragons) * 100 : 0; 
+    var dragonsRed = teamRed.dragons.length != 0 ? (teamRed.dragons.length / dragons) * 100 : 0; 
 
     const levelTotalBlue = (teamBlue.participants[0].level + teamBlue.participants[1].level + teamBlue.participants[2].level + teamBlue.participants[3].level + teamBlue.participants[4].level) / 5;
     const levelTotalRed = (teamRed.participants[0].level + teamRed.participants[1].level + teamRed.participants[2].level + teamRed.participants[3].level + teamRed.participants[4].level) / 5;
@@ -749,11 +755,11 @@ function getGoldPercentage(teamBlue: TeamStats, teamRed: TeamStats) {
     var levelRedMedia = (levelTotalRed /18) * 100;
     
     const killsTotal = teamBlue.totalKills + teamRed.totalKills;
-    var killPercentageBlue = (teamBlue.totalKills / killsTotal) * 100;
-    var killPercentageRed = (teamRed.totalKills / killsTotal) * 100;
+    var killPercentageBlue = teamBlue.totalKills != 0 ? (teamBlue.totalKills / killsTotal) * 100 : 0;
+    var killPercentageRed =  teamRed.totalKills != 0 ? (teamRed.totalKills / killsTotal) * 100 : 0;
 
-    var inibiBlue = (teamBlue.inhibitors/ 6) * 100;
-    var inibiRed = (teamRed.inhibitors/ 6) * 100;
+    var inibiBlue = teamBlue.inhibitors!= 0 ?  (teamBlue.inhibitors/ 6) * 100 : 0;
+    var inibiRed = teamRed.inhibitors!= 0 ?   (teamRed.inhibitors/ 6) * 100 : 0;
 
     var percentageBlue = (goldBluePercentage * 0.3) + (towerBluePercentage * 0.2) + (dragonsBlue * 0.15) + (baronsPercentageBlue * 0.1) + (levelBlueMedia * 0.1) 
     + (killPercentageBlue * 0.1) + (inibiBlue + 0.05) ;

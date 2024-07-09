@@ -39,6 +39,8 @@ export function Match({ match }: any) {
     let lastFrameSuccess = false
     let currentTimestamp = ``
     let firstWindowReceived = false
+
+    var recordsForPercentage = scheduleEvent?.match.teams[0].record && scheduleEvent.match.teams[1].record ? [scheduleEvent.match.teams[0].record, scheduleEvent.match.teams[1].record] : undefined
     useEffect(() => {
         getEventDetails(getInitialGameIndex());
 
@@ -93,7 +95,7 @@ export function Match({ match }: any) {
             setGameIndex(newGameIndex)
             return newGameIndex
         }
-
+        
         function getScheduleEvent(eventDetails: EventDetails) {
             getScheduleResponse().then(response => {
                 let scheduleEvents: ScheduleEvent[] = response.data.data.schedule.events
@@ -227,7 +229,7 @@ export function Match({ match }: any) {
     if (firstWindowFrame !== undefined && lastWindowFrame !== undefined && lastDetailsFrame !== undefined && metadata !== undefined && eventDetails !== undefined && currentGameOutcome !== undefined && scheduleEvent !== undefined && gameIndex !== undefined && items !== undefined && runes !== undefined) {
         return (
             <div className='match-container'>
-                <MatchDetails eventDetails={eventDetails} gameMetadata={metadata} matchState={formatMatchState(eventDetails, lastWindowFrame, scheduleEvent)} records={records} results={results} scheduleEvent={scheduleEvent} />
+                <MatchDetails eventDetails={eventDetails} gameMetadata={metadata} matchState={formatMatchState(eventDetails, lastWindowFrame, scheduleEvent)} records={recordsForPercentage} results={results} scheduleEvent={scheduleEvent} />
                 <Game eventDetails={eventDetails} gameIndex={gameIndex} gameMetadata={metadata} firstWindowFrame={firstWindowFrame} lastDetailsFrame={lastDetailsFrame} lastWindowFrame={lastWindowFrame} outcome={currentGameOutcome} records={records} results={results} items={items} runes={runes} />
             </div>
         );
