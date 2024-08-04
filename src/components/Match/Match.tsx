@@ -63,6 +63,7 @@ export function Match({ match }: any) {
         }
 
         function getEventDetails(gameIndex: number) {
+            console.log("GameIndex " + matchId);
             getEventDetailsResponse(matchId).then(response => {
                 let eventDetails: EventDetails = response.data.data.event;
                 if (eventDetails === undefined) return undefined;
@@ -122,7 +123,7 @@ export function Match({ match }: any) {
                 let frames: WindowFrame[] = response.data.frames;
                 if (frames === undefined) return;
 
-                console.groupCollapsed(`Meta Data`)
+                console.groupCollapsed(`Meta Data - getWindowResponse`)
                 console.log(response.data.gameMetadata)
                 console.groupEnd()
                 console.groupCollapsed(`First Frame`)

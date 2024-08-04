@@ -57,6 +57,8 @@ export function getGameDetailsResponse(gameId: string, date: string, lastFrameSu
     } else {
         failureCount++
     }
+
+    console.log(gameId + "gameId");
     return axios.get(`${API_URL_LIVE}/details/${gameId}`, {
         params: {
             "startingTime": date,
@@ -119,7 +121,6 @@ export function getISODateMultiplyOf10() {
     }
 
     date.setSeconds(date.getSeconds() - secondDelay);
-
     return date.toISOString();
 }
 
