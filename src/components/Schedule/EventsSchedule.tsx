@@ -14,7 +14,7 @@ export function EventsSchedule() {
     useEffect(() => {
         getScheduleResponse().then(response => {
             let schedule: Schedule = response.data.data.schedule
-            console.groupCollapsed(`Scheduled Matches - getScheduleResponse: ${schedule.events.length}`)
+            console.groupCollapsed(`Scheduled Matches - getScheduleResponse: ${schedule.events.length}` )
             console.table(schedule.events)
             console.groupEnd()
             setLiveEvents(schedule.events.filter(filterLiveEvents))
